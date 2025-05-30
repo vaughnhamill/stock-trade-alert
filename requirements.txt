@@ -1,0 +1,9 @@
+yfinance
+pandas
+pandas-ta
+xgboost
+scikit-learn
+requests
+numpy
+finvizfinance
+pytz
