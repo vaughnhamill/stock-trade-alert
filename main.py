@@ -392,11 +392,11 @@ def run_algorithm():
     tickers = scan_day_trade_candidates()
     if not tickers:
         current_time_est = datetime.now(est)
-        send_telegram_message(f"⚠️ No tickers found at {current_time_est.strftime('%Y-%m-%d %H:%M:%S %Z%z')}")
+        print(f"⚠️ No tickers found at {current_time_est.strftime('%Y-%m-%d %H:%M:%S %Z%z')}")
         return
     
     top_tickers = tickers[:10]
-    send_telegram_message(f"📊 Analyzing: {', '.join(top_tickers)}")
+    print(f"📊 Analyzing: {', '.join(top_tickers)}")
     
     for ticker in top_tickers:
         print(f"\n🔍 Processing {ticker}")
@@ -413,7 +413,7 @@ def run_algorithm():
     
     if best_model is None:
         current_time_est = datetime.now(est)
-        send_telegram_message(f"⚠️ No valid models found {current_time_est.strftime('%Y-%m-%d %H:%M:%S %Z%z')}")
+        print(f"⚠️ No valid models found {current_time_est.strftime('%Y-%m-%d %H:%M:%S %Z%z')}")
         return
     
     # Final analysis on best ticker
