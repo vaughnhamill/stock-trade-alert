@@ -16,73 +16,34 @@ import os
 warnings.filterwarnings('ignore')
 
 # --- Global Config ---
-thresholds = [0.50, 0.25, 0.10, 0.05, 0.025, 0.01, 0.005, 0.0015]
-windows = [5, 10, 15, 20, 25, 30, 45, 60, 90, 120, 180, 240, 300]
+thresholds = [0.50, 0.25, 0.10, 0.05, 0.025, 0.01, 0.005, 0.0025, 0.001] # in percentage
+windows = [10, 15, 20, 25, 30, 45, 60, 90, 120, 180, 240, 300, 360, 480, 720]  # in minutes
 best_score = -np.inf
 best_ticker = None
 best_params = None
 best_model = None
 best_feature_cols = None
 best_close_col = None
+final_ticker_interval = None
 est = pytz.timezone('America/New_York')
-
-
-# --- Telegram Config ---
+ 
+# --- Telegram Config and Function---
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-def fetch_stock_data(ticker, interval="5m", fallback_intervals=["15m", "1h", "1d"], max_attempts=3):
-    """
-    Robust stock data fetcher with multiple fallback options.
-    
-    Args:
-        ticker (str): Stock symbol
-        interval (str): Preferred data interval
-        fallback_intervals (list): Fallback intervals to try
-        max_attempts (int): Maximum fetch attempts
-        
-    Returns:
-        pd.DataFrame: Stock data or None if all attempts fail
-    """
-    attempts = 0
-    current_interval = interval
-    intervals_to_try = [interval] + fallback_intervals
-    
-    while attempts < max_attempts and intervals_to_try:
-        try:
-            print(f"📊 Fetching {ticker} ({current_interval} interval)...")
-            
-            # Adjust period based on interval
-            if current_interval in ["1m", "5m", "15m", "30m", "60m", "90m"]:
-                period = "60d"
-            else:
-                period = "2y"
-            
-            df = yf.download(
-                ticker,
-                period=period,
-                interval=current_interval,
-                auto_adjust=True,
-                progress=False,
-                threads=True
-            )
-            
-            if not df.empty:
-                print(f"✅ Successfully fetched {len(df)} rows for {ticker}")
-                return df
-            
-            print(f"⚠️ Empty data for {ticker} ({current_interval})")
-            
-        except Exception as e:
-            print(f"⚠️ Error fetching {ticker} ({current_interval}): {str(e)}")
-        
-        # Move to next fallback interval
-        if intervals_to_try:
-            current_interval = intervals_to_try.pop(0)
-            attempts += 1
-    
-    print(f"❌ All attempts failed for {ticker}")
-    return None
+def send_telegram_message(message):
+    """Send notification via Telegram."""
+    try:
+        requests.get(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+            params={'chat_id': CHAT_ID, 'text': message},
+            timeout=2
+        )
+        print("📬 Notification sent")
+    except Exception as e:
+        print(f"⚠️ Telegram error: {str(e)}")
+
+# --- Main Functions ---
 
 def scan_day_trade_candidates():
     """Scan Finviz for potential day trading candidates."""
@@ -117,6 +78,7 @@ def scan_day_trade_candidates():
 
         def float_to_num(s):
             if isinstance(s, str):
+                print(f"Converting float string: {s}")
                 s = s.strip()
                 if s.endswith('M'):
                     return float(s[:-1]) * 1e6
@@ -142,17 +104,53 @@ def scan_day_trade_candidates():
         print(f"⚠️ Finviz error: {str(e)}")
         return []
 
-def send_telegram_message(message):
-    """Send notification via Telegram."""
-    try:
-        requests.get(
-            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
-            params={'chat_id': CHAT_ID, 'text': message},
-            timeout=2
-        )
-        print("📬 Notification sent")
-    except Exception as e:
-        print(f"⚠️ Telegram error: {str(e)}")
+def fetch_stock_data(ticker, interval={"5m": "60d", "10m": "60d", "15m": "60d"}, max_attempts=3):
+    global final_ticker_interval
+    """
+    Stock data fetcher with multiple fallback options.
+    
+    Args:
+        ticker (str): Stock symbol
+        interval (str): Preferred data interval
+        fallback_intervals (list): Fallback intervals to try
+        max_attempts (int): Maximum fetch attempts
+        
+    Returns:
+        pd.DataFrame: Stock data or None if all attempts fail
+    """
+    attempts = 0
+    intervals_to_try = list(interval.items())
+    
+    while attempts < max_attempts and intervals_to_try:
+        current_interval, period = intervals_to_try.pop(0)
+        print(f"📊 Attempt {attempts + 1}: Fetching {ticker} ({current_interval}, period={period})")
+
+        try:            
+            df = yf.download(
+                ticker,
+                period=period,
+                interval=current_interval,
+                auto_adjust=True,
+                progress=False,
+                threads=True
+            )
+
+            final_ticker_interval = current_interval
+            
+            if not df.empty:
+                print(f"✅ Successfully fetched {len(df)} rows for {ticker}")
+                return df
+            
+            print(f"⚠️ Empty data for {ticker} ({current_interval})")
+            
+        except Exception as e:
+            print(f"⚠️ Error fetching {ticker} ({current_interval}): {str(e)}")
+        
+        # Move to next fallback interval
+        attempts += 1
+    
+    print(f"❌ All attempts failed for {ticker}")
+    return None
 
 def add_indicators(df):
     """Add technical indicators to DataFrame."""
@@ -171,10 +169,10 @@ def add_indicators(df):
         'rsi': (ta.rsi, [df[close_col]], {'length': 14}),
         'adx': (ta.adx, [df[high_col], df[low_col], df[close_col]], {'length': 14}),
         'atr': (ta.atr, [df[high_col], df[low_col], df[close_col]], {'length': 14}),
-        'macd': (ta.macd, [df[close_col]], {}),
-        'bollinger': (ta.bbands, [df[close_col]], {'length': 20}),
+        'macd': (ta.macd, [df[close_col]], {'fast': 8, 'slow': 21, 'signal': 9}),
+        'bollinger': (ta.bbands, [df[close_col]], {'length': 20, 'std': 2}),
         'obv': (ta.obv, [df[close_col], df[volume_col]], {}),
-        'stoch': (ta.stoch, [df[high_col], df[low_col], df[close_col]], {})
+        'stoch': (ta.stoch, [df[high_col], df[low_col], df[close_col]], {'k': 14, 'd': 3, 'smooth_k': 3})
     }
 
     for name, (func, args, kwargs) in indicators.items():
@@ -196,38 +194,49 @@ def label_intraday(df, threshold, window):
     """Label data for intraday trading strategy."""
     close_col = next((col for col in df.columns if "Close" in col), None)
     if not close_col:
+        print("❌ No Close column found")
         return None
 
     df = df.copy()
+    # print(f"📊 Using close column: {close_col}")
+    
     df['FutureMax'] = df[close_col].shift(-window).rolling(window=window, min_periods=1).max()
+
     if df['FutureMax'].isna().all():
+        print("❌ FutureMax is all NaN")
         return None
     if df[close_col].isna().all():
+        print("❌ Close column is all NaN")
         return None
 
     try:
         df['Target'] = ((df['FutureMax'] / df[close_col] - 1) > threshold).astype(int)
+        # print("✅ Target column created")
     except Exception as e:
         print(f"⚠️ Error creating Target: {str(e)}")
         return None
 
-    # Robust check before dropping NaNs
-    if 'Target' not in df.columns or df['Target'].isna().all():
-        return None
+    # print(f"🧪 Target column exists: {'Target' in df.columns}")
+    # print(f"🧪 Target NaNs: {df['Target'].isna().sum()} out of {len(df)}")
 
-    # Only dropna if Target exists and is not all NaN
     try:
-        df = df.dropna(subset=['Target'])
-    except KeyError:
+        if 'Target' in df.columns and not df['Target'].isna().all() or df.empty or df['Target'].nunique() < 2:
+            df = df.dropna(subset=['Target'])
+            # print("✅ Dropped rows with NaN in Target (if any)")
+        else:
+            print("❌ Target column missing, is empty, is all NaN, or has only one unique value")
+            return None
+    except KeyError as e:
+        print(f"KeyError during dropna: {e}")
+        print(f"df.columns: {df.columns.tolist()}")
         return None
 
-    if df.empty or df['Target'].nunique() < 2:
-        return None
     return df
 
 def evaluate_model_profitability(df, model, feature_cols, close_col, threshold):
     """Evaluate model profitability metrics."""
     if df.empty or model is None:
+        print("❌ Empty DataFrame or model is None")
         return None
 
     try:
@@ -278,22 +287,19 @@ def run_and_select_best(ticker, df):
         for w in windows:
             print(f"🧪 Testing {ticker}: threshold={th:.4f}, window={w}")
             
-            df_labeled = label_intraday(df.copy(), th, w)
+            df_labeled = label_intraday(df, th, w)
             if df_labeled is None:
                 continue
                 
             feature_cols = [col for col in df_labeled.columns 
                           if col not in ['Target', 'FutureMax'] 
                           and pd.api.types.is_numeric_dtype(df_labeled[col])]
-            
+
             if not feature_cols:
                 continue
                 
             X = df_labeled[feature_cols]
             y = df_labeled['Target']
-            
-            if y.nunique() < 2:
-                continue
                 
             split_idx = int(0.8 * len(X))
             X_train, X_test = X.iloc[:split_idx], X.iloc[split_idx:]
@@ -301,14 +307,15 @@ def run_and_select_best(ticker, df):
             
             try:
                 model = XGBClassifier(
-                    n_estimators=100,
+                    n_estimators=200,
                     max_depth=3,
                     learning_rate=0.1,
                     subsample=0.8,
                     colsample_bytree=0.8,
                     eval_metric='logloss',
                     early_stopping_rounds=10,
-                    random_state=42
+                    random_state=42,
+                    base_score=0.5
                 )
                 
                 model.fit(X_train, y_train, eval_set=[(X_test, y_test)], verbose=False)
@@ -328,7 +335,7 @@ def run_and_select_best(ticker, df):
                         'model': model,
                         'features': feature_cols,
                         'close_col': close_col,
-                        'metrics': metrics
+                        'metrics': metrics,
                     })
                     
             except Exception as e:
@@ -345,13 +352,21 @@ def run_and_select_best(ticker, df):
         
         print(f"🏆 New best: {ticker} (score: {best_score:.4f})")
 
-def simulate_sell_signal(df, model, feature_cols, close_col, steps=60, increase_rate=0.0015):
+def simulate_sell_signal(df, model, feature_cols, close_col, steps, increase_rate):
     """Simulate future price movements to predict sell signals."""
     if df.empty or model is None:
+        print("❌ Empty DataFrame or model is None")
         return None
+    
+    interval_map = {
+        "1m": timedelta(minutes=1),
+        "5m": timedelta(minutes=5),
+        "15m": timedelta(minutes=15),
+        "1h": timedelta(hours=1),
+    }
 
     last_row = df.iloc[-1]
-    interval = df.index[-1] - df.index[-2] if len(df) > 1 else timedelta(minutes=5)
+    interval = interval_map.get(final_ticker_interval, timedelta(minutes=1))
     
     simulated = []
     for i in range(1, steps + 1):
@@ -359,16 +374,59 @@ def simulate_sell_signal(df, model, feature_cols, close_col, steps=60, increase_
         future_time = df.index[-1] + i * interval
         
         # Simulate price and indicators
-        future_row[close_col] *= (1 + increase_rate)
+        future_row[close_col] *= (1 + increase_rate)  # simulate close price increase
+
         for col in feature_cols:
             if col == close_col:
+                # Close price already simulated above
+                # print(f"Skipping {col} as it's the close price")
                 continue
-            if 'rsi' in col:
-                future_row[col] = min(70, max(30, future_row[col] + np.random.uniform(-1, 1)))
-            elif any(x in col for x in ['sma', 'ema']):
+
+            # RSI: bounded between 0 and 100, usually oscillates between ~30-70
+            if 'rsi' in col.lower():
+                future_row[col] = np.clip(future_row[col] + np.random.uniform(-1, 1), 0, 100)
+                # print(f"Simulated {col}: {future_row[col]}")
+            
+            # SMA/EMA: moving averages — generally smooth, so small proportional changes
+            elif any(x in col.lower() for x in ['sma', 'ema']):
                 future_row[col] *= (1 + increase_rate * 0.9)
+                # print(f"Simulated {col}: {future_row[col]}")
+
+            # ADX: bounded roughly 0-100, but often below 60, measure trend strength
+            elif 'adx' in col.lower():
+                future_row[col] = np.clip(future_row[col] + np.random.uniform(-0.5, 0.5), 0, 100)
+                # print(f"Simulated {col}: {future_row[col]}")
+
+            # ATR: average true range, positive and fluctuates around volatility scale, allow small noise
+            elif 'atr' in col.lower():
+                future_row[col] = max(0, future_row[col] * (1 + np.random.uniform(-0.05, 0.05)))
+                # print(f"Simulated {col}: {future_row[col]}")
+
+            # MACD components: can be positive or negative, small random walk
+            elif 'macd' in col.lower():
+                future_row[col] += np.random.uniform(-0.01, 0.01)
+                # print(f"Simulated {col}: {future_row[col]}")
+
+            # Bollinger Bands: upper, middle, lower bands, reflect price volatility, small proportional noise
+            elif 'bollinger' in col.lower() or 'bb_' in col.lower():
+                future_row[col] *= (1 + np.random.uniform(-0.01, 0.01))
+                # print(f"Simulated {col}: {future_row[col]}")
+
+            # OBV: cumulative volume, can be very large; simulate small random walk
+            elif 'obv' in col.lower():
+                future_row[col] += np.random.randint(-1000, 1000)
+                # print(f"Simulated {col}: {future_row[col]}")
+
+            # Stochastic Oscillator: bounded 0-100, oscillates fast; add small noise bounded 0-100
+            elif 'stoch' in col.lower():
+                future_row[col] = np.clip(future_row[col] + np.random.uniform(-2, 2), 0, 100)
+                # print(f"Simulated {col}: {future_row[col]}")
+
+            # For any other numeric columns, apply slight random noise
             elif pd.api.types.is_numeric_dtype(future_row[col]):
                 future_row[col] *= (1 + np.random.uniform(-0.005, 0.005))
+                # print(f"Simulated {col}: {future_row[col]}")
+
         
         future_row.name = future_time
         simulated.append(future_row)
@@ -397,7 +455,6 @@ def run_algorithm():
     
     top_tickers = tickers[:10]
     print(f"📊 Analyzing: {', '.join(top_tickers)}")
-    
     for ticker in top_tickers:
         print(f"\n🔍 Processing {ticker}")
         
@@ -408,7 +465,11 @@ def run_algorithm():
         df = add_indicators(df)
         if df is None:
             continue
-            
+
+        # Flatten MultiIndex columns if needed
+        if isinstance(df.columns[0], tuple):
+            df.columns = ['_'.join(filter(None, col)) if isinstance(col, tuple) else col for col in df.columns]
+ 
         run_and_select_best(ticker, df)
     
     if best_model is None:
@@ -416,10 +477,14 @@ def run_algorithm():
         print(f"⚠️ No valid models found {current_time_est.strftime('%Y-%m-%d %H:%M:%S %Z%z')}")
         return
     
-    # Final analysis on best ticker
+    # # Final analysis on best ticker
     print(f"\n🏆 Running final analysis on {best_ticker}")
     df = fetch_stock_data(best_ticker)
     df = add_indicators(df)
+
+    # Flatten MultiIndex columns if needed
+    if isinstance(df.columns[0], tuple):
+        df.columns = ['_'.join(filter(None, col)) if isinstance(col, tuple) else col for col in df.columns]
     
     close_col = best_close_col
     current_price = df[close_col].iloc[-1]
@@ -431,8 +496,8 @@ def run_algorithm():
     proba = best_model.predict_proba(latest_features)[0][1]
     
     message = [
-        f"📈 {best_ticker} Analysis Results",
-        f"🕒 Time: {current_time.strftime('%Y-%m-%d %I:%M %p %Z')}",
+        f"📈 {best_ticker} Analysis Results (Threshold: {best_params[0]*100}%, Window: {best_params[1]} min)",
+        f"🕒 Time: {current_time.strftime('%m-%d-%Y %I:%M %p %Z')}",
         f"💰 Price: ${current_price:.2f}",
         f"🔮 Signal: {'BUY' if prediction == 1 else 'HOLD'} ({proba:.1%} confidence)"
     ]
@@ -443,22 +508,24 @@ def run_algorithm():
             best_model,
             best_feature_cols,
             best_close_col,
-            steps=120,
-            increase_rate=best_params[0]/10
+            steps=best_params[1],
+            increase_rate = (1 + best_params[0]/100) ** (1 / best_params[1]) - 1
         )
-        
+
         if sell_info:
             sell_time, sell_price = sell_info
             profit_pct = (sell_price/current_price - 1) * 100
             message.extend([
                 "",
                 "🎯 Predicted Sell Signal:",
-                f"⏰ Time: {sell_time.tz_convert('US/Eastern').strftime('%Y-%m-%d %I:%M %p %Z')}",
+                f"⏰ Time: {sell_time.tz_convert('US/Eastern').strftime('%m-%d-%Y %I:%M %p %Z')}",
                 f"💰 Price: ${sell_price:.2f}",
                 f"📊 Potential Profit: {profit_pct:.2f}%"
             ])
-    
-    send_telegram_message("\n".join(message))
+        
+        send_telegram_message("\n".join(message))
+
+    print("\n".join(message))
 
 if __name__ == "__main__":
     run_algorithm()
