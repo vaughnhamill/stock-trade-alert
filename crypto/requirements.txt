@@ -1,0 +1,9 @@
+numpy==1.23.5
+pandas
+pandas-ta
+xgboost
+pytz
+requests
+pycoingecko
+scikit-learn
+joblib
