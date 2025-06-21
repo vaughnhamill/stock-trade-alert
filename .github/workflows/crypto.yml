@@ -30,4 +30,4 @@ jobs:
           echo "CHAT_ID=${{ secrets.CHAT_ID }}" >> $GITHUB_ENV
 
       - name: Run script
-        run: python cyrpto/main.py
+        run: python crypto/main.py
