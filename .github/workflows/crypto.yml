@@ -2,7 +2,7 @@ name: Run Crypto Script
 
 on:
   schedule:
-    - cron: '*/30 7-23 * * *'  # Every 10 min, 13:00–19:59 UTC (8:00–3:59 ET) Mon–Fri
+    - cron: '*/30 2-18 * * *'  # Every 30 min 07:00–22:59 UTC (7:00–10:59 ET) all days
   workflow_dispatch:  # Allows manual trigger from GitHub UI
 
 jobs:
