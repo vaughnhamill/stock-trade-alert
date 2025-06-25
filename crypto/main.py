@@ -94,15 +94,15 @@ class CryptoTrader:
                 coins = cg.get_coins_markets(
                     vs_currency='usd',
                     order='market_cap_desc',
-                    per_page=50,
-                    price_change_percentage='24h'
+                    per_page=1000,
+                    price_change_percentage='1h'
                 )
 
                 return [{
                     'id': c['id'],
                     'symbol': c['symbol'].upper(),
-                    'price_change_percentage_24h': c['price_change_percentage_24h']
-                } for c in coins if c['price_change_percentage_24h'] > 5]  # Min 5% daily change
+                    'price_change_percentage_1h': c['price_change_percentage_1h_in_currency']
+                } for c in coins if c['price_change_percentage_1h_in_currency'] > 5]  # Min 5% hourly change
 
             except Exception as e:
                 print(f"⚠️ Error scanning candidates: {str(e)}")
@@ -606,7 +606,7 @@ class CryptoTrader:
         prediction = best_model.predict(current_features)[0]
         proba = best_model.predict_proba(current_features)[0][1]
 
-        if prediction == 1 and proba > 0.7:  # Confidence threshold
+        if prediction == 1 and proba > 0.5:  # Confidence threshold
           message = None
           current_time = datetime.now()
           entry_price = df['close'].iloc[-1]
@@ -657,10 +657,10 @@ class CryptoTrader:
           # Record price based on threshold and window
           self.evaluate_pending_trades(best_params[1])
 
-          self.save_state()
-
         else:
           print("❌ No buy signal predicted")
+    
+        self.save_state()
 
 if __name__ == "__main__":
     trader = CryptoTrader()
