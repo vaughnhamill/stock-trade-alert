@@ -102,7 +102,7 @@ class CryptoTrader:
                     'id': c['id'],
                     'symbol': c['symbol'].upper(),
                     'price_change_percentage_1h': c['price_change_percentage_1h_in_currency']
-                } for c in coins if c['price_change_percentage_1h_in_currency'] > 5]  # Min 5% hourly change
+                } for c in coins if c['price_change_percentage_1h_in_currency'] > 2]  # Min % hourly change
 
             except Exception as e:
                 print(f"⚠️ Error scanning candidates: {str(e)}")
