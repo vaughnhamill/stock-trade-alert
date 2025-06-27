@@ -18,8 +18,8 @@ import hashlib
 warnings.filterwarnings('ignore')
 
 # --- Configuration ---
-THRESHOLDS = [0.50, 0.25, 0.10, 0.05]  # Percentage targets
-WINDOWS = [15, 30, 60, 120, 240, 360]  # Minutes
+THRESHOLDS = [0.50, 0.25, 0.10, 0.05, 0.025]  # Percentage targets
+WINDOWS = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 420, 480, 540, 600]  # Minutes
 MIN_DATA_POINTS = 1000  # Minimum candles required
 EST = pytz.timezone('America/New_York')
 MODEL_DIR = 'models'
