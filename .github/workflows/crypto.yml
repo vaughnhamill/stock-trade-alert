@@ -44,3 +44,7 @@ jobs:
           git add models/*.joblib model_metadata.json trade_history.json || true
           git commit -m "🔁 Auto update models and trade history [skip ci]" || echo "No changes to commit"
           git push || echo "Nothing to push"
+
+      - name: List generated files (Debug feature - remove if not needed)
+        run: |
+          ls -R
