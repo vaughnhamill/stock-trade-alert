@@ -2,7 +2,7 @@ name: Run Crypto Script
 
 on:
   schedule:
-    - cron: '*/5 2-19 * * *'  # Every 5 min, 02:00–18:59 UTC, all days
+    - cron: '*/20 2-19 * * *'  # Every 20 min, 02:00–18:59 UTC, all days
   workflow_dispatch:
 
 jobs:
