@@ -34,8 +34,8 @@ jobs:
       - name: Commit and push model + history files
         if: ${{ github.event_name == 'schedule' }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "vaughnhamill"
+          git config --global user.email "vaughnhamill@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
           
           git add crypto/models/*.joblib crypto/model_metadata.json crypto/trade_history.json || true
