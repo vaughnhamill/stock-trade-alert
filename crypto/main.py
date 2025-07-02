@@ -397,12 +397,17 @@ class CryptoTrader:
                 continue  # Too early to evaluate
 
             # Fetch real price at current time
-            future_price = cg.get_price(ids=best_coin['id'], vs_currencies='usd')
-
+            price_data = cg.get_price(ids=best_coin['id'], vs_currencies='usd')
+            future_price = price_data.get(best_coin['id'], {}).get('usd', None)
+            
+            if future_price is None:
+                print(f"❌ Failed to retrieve price for {best_coin['id']}")
+                continue
+            
             target_price = trade['entry_price'] * (1 + trade['threshold'])
             trade['exit_price'] = future_price
             trade['evaluated_at'] = now.isoformat()
-
+            
             if future_price >= target_price:
                 trade['outcome'] = 1
             else:
