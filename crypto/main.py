@@ -22,9 +22,9 @@ THRESHOLDS = [0.50, 0.25, 0.10, 0.05, 0.025]  # Percentage targets
 WINDOWS = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 420, 480, 540, 600]  # Minutes
 MIN_DATA_POINTS = 1000  # Minimum candles required
 EST = pytz.timezone('America/New_York')
-MODEL_DIR = 'models'
-TRADE_HISTORY_FILE = 'trade_history.json'
-MODEL_METADATA_FILE = 'model_metadata.json'
+MODEL_DIR = 'crypto/models'
+TRADE_HISTORY_FILE = 'crypto/trade_history.json'
+MODEL_METADATA_FILE = 'crypto/model_metadata.json'
 FEEDBACK_INTERVAL_HOURS = 3  # How often to retrain models
 GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS', 'false').lower() == 'true'
 best_score = -np.inf
