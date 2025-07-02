@@ -33,14 +33,14 @@ jobs:
 
       - name: Commit and push model + history files
         if: ${{ github.event_name == 'schedule' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name "vaughnhamill"
-          git config --global user.email "vaughnhamill@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
-          
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add crypto/models/*.joblib crypto/model_metadata.json crypto/trade_history.json || true
           git commit -m "🔁 Auto update models and trade history [skip ci]" || echo "No changes to commit"
-          git push || echo "Nothing to push"
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git || echo "Nothing to push"
 
       - name: List generated files (Debug feature - optional)
         run: |
