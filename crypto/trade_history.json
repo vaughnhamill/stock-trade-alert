@@ -346,7 +346,10 @@
     },
     "prediction": 1,
     "entry_price": 2.062482020752885e-05,
-    "status": "pending"
+    "status": "evaluated",
+    "exit_price": 2.158e-05,
+    "evaluated_at": "2025-07-06T12:36:46.104812",
+    "outcome": 0
   },
   {
     "id": "f83278e2971f38c92a09d4ebc457ab9b",
@@ -375,7 +378,10 @@
     },
     "prediction": 1,
     "entry_price": 2.1015124185365202e-05,
-    "status": "pending"
+    "status": "evaluated",
+    "exit_price": 2.158e-05,
+    "evaluated_at": "2025-07-06T12:36:46.104812",
+    "outcome": 0
   },
   {
     "id": "b670f7c38de6a76f5141eb16cacde57d",
@@ -404,7 +410,10 @@
     },
     "prediction": 1,
     "entry_price": 2.1640705030567428e-05,
-    "status": "pending"
+    "status": "evaluated",
+    "exit_price": 2.158e-05,
+    "evaluated_at": "2025-07-06T12:36:46.104812",
+    "outcome": 0
   },
   {
     "id": "373b2b76cc75d7c641373d92ca673937",
@@ -433,7 +442,10 @@
     },
     "prediction": 1,
     "entry_price": 0.06442374671660109,
-    "status": "pending"
+    "status": "evaluated",
+    "exit_price": 2.158e-05,
+    "evaluated_at": "2025-07-06T12:36:46.104812",
+    "outcome": 0
   },
   {
     "id": "bc4f9e323e127a807a3a3b623f133b40",
@@ -462,6 +474,38 @@
     },
     "prediction": 1,
     "entry_price": 2.197253226579039e-05,
+    "status": "evaluated",
+    "exit_price": 2.158e-05,
+    "evaluated_at": "2025-07-06T12:36:46.104812",
+    "outcome": 0
+  },
+  {
+    "id": "bac39c8d0f40b9b119f946da15e49351",
+    "symbol": "BONK",
+    "threshold": 0.1,
+    "timestamp": "2025-07-06T12:36:46.022105",
+    "features": {
+      "price": 2.1578904067699493e-05,
+      "volume": 1300169286.4063287,
+      "open": 2.1578904067699493e-05,
+      "high": 2.1578904067699493e-05,
+      "low": 2.1578904067699493e-05,
+      "close": 2.1578904067699493e-05,
+      "returns": 0.005599952198626079,
+      "volatility": 0.01675381593057588,
+      "rsi": 76.67536967458082,
+      "macd": 9.852070224977553e-07,
+      "bollinger": 1.9900970530293775e-05,
+      "atr": 2.510264584162275e-07,
+      "sma_20": 1.9900970530293775e-05,
+      "ema_20": 2.026002448448185e-05,
+      "adx": 45.69054242721966,
+      "obv": -3454676983.7175155,
+      "STOCHk_14_3_3": 87.16381151060482,
+      "STOCHd_14_3_3": 89.8729833998583
+    },
+    "prediction": 1,
+    "entry_price": 2.1578904067699493e-05,
     "status": "pending"
   }
 ]
