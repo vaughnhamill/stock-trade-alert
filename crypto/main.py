@@ -68,8 +68,12 @@ class CryptoTrader:
         """Load saved models and trade history"""
         # Load trade history
         if os.path.exists(TRADE_HISTORY_FILE):
-            with open(TRADE_HISTORY_FILE, 'r') as f:
-                self.trade_history = json.load(f)
+            try:
+                with open(TRADE_HISTORY_FILE, 'r') as f:
+                    self.trade_history = json.load(f)
+
+            except e as Exception:
+                print(e)
 
         # Load model metadata
         if os.path.exists(MODEL_METADATA_FILE):
