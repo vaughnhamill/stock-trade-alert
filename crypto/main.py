@@ -385,7 +385,7 @@ class CryptoTrader:
               'status': 'pending'  # Mark as unresolved
           })
 
-    def evaluate_pending_trades(self, delay_minutes):
+    def evaluate_pending_trades(self):
         """Evaluate outcome of pending trades"""
         now = datetime.now()
         for trade in self.trade_history:
@@ -393,7 +393,7 @@ class CryptoTrader:
                 continue
 
             entry_time = datetime.fromisoformat(trade['timestamp'])
-            if (now - entry_time).total_seconds() < delay_minutes * 60:
+            if (now - entry_time).total_seconds() < trade['window'] * 60:
                 continue  # Too early to evaluate
 
             # Fetch real price at current time
@@ -406,7 +406,8 @@ class CryptoTrader:
             
             target_price = trade['entry_price'] * (1 + trade['threshold'])
             trade['exit_price'] = future_price
-            trade['evaluated_at'] = now.isoformat()
+            trade['exit_time'] = now.isoformat()
+            trade['time_to_exit'] = trade['exit_time'] - trade['entry_time']
             
             if future_price >= target_price:
                 trade['outcome'] = 1
@@ -621,6 +622,7 @@ class CryptoTrader:
           self.record_trade(
               symbol=coin['symbol'],
               threshold=best_params[0],
+              window=best_params[1],
               features=df[best_features].iloc[-1].to_dict(),
               prediction=prediction,
               entry_price=entry_price,
@@ -661,7 +663,7 @@ class CryptoTrader:
               print("✅ Buy signal predicted \n❌ No sell signal predicted")
           
           # Record price based on threshold and window
-          self.evaluate_pending_trades(best_params[1])
+          self.evaluate_pending_trades()
 
         else:
           print("❌ No buy signal predicted")
