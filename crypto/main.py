@@ -72,7 +72,7 @@ class CryptoTrader:
                 with open(TRADE_HISTORY_FILE, 'r') as f:
                     self.trade_history = json.load(f)
 
-            except e as Exception:
+            except Exception as e:
                 print(e)
 
         # Load model metadata
