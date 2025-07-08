@@ -362,7 +362,7 @@ class CryptoTrader:
             print(f"⚠️ Evaluation error: {str(e)}")
             return None
 
-    def record_trade(self, symbol, threshold, features, prediction, entry_price, entry_time):
+    def record_trade(self, symbol, threshold, window, features, prediction, entry_price, entry_time):
         """Store trade details for later outcome evaluation"""
         trade_id = hashlib.md5(
             f"{symbol}{threshold}{entry_time.isoformat()}".encode()
