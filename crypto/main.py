@@ -399,6 +399,7 @@ class CryptoTrader:
                 continue
 
             entry_time = datetime.fromisoformat(trade['entry_time'])
+            now = datetime.now(EST)
             if (now - entry_time).total_seconds() < trade['window'] * 60:
                 continue  # Too early to evaluate
 
