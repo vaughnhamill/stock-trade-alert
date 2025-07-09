@@ -413,7 +413,10 @@ class CryptoTrader:
             target_price = trade['entry_price'] * (1 + trade['threshold'])
             trade['exit_price'] = future_price
             trade['exit_time'] = now.isoformat()
-            trade['time_to_exit'] = trade['exit_time'] - trade['entry_time']
+            
+            entry_time = datetime.fromisoformat(trade['entry_time'])
+            exit_time = datetime.fromisoformat(trade['exit_time'])
+            trade['time_to_exit'] = str(exit_time - entry_time)
             
             if future_price >= target_price:
                 trade['outcome'] = 1
@@ -637,7 +640,7 @@ class CryptoTrader:
 
           message = [
               f"📈 {best_coin['symbol']} Analysis Results (Threshold: {best_params[0]*100}%, Window: {best_params[1]} min)",
-              f"🕒 Time: {current_time.strftime('%m-%d-%Y %I:%M %p %Z')}",
+              f"🕒 Time: {current_time.tz_convert('US/Eastern').strftime('%m-%d-%Y %I:%M %p %Z')}",
               f"💰 Price: ${current_price:.2f}",
               f"🔮 Signal: {'BUY' if prediction == 1 else 'HOLD'} ({proba:.1%} confidence)"
           ]
