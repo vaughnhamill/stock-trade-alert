@@ -624,7 +624,7 @@ class CryptoTrader:
 
         if prediction == 1 and proba > 0.5:  # Confidence threshold
           message = None
-          current_time = datetime.now()
+          current_time = datetime.now(EST)
           entry_price = df['close'].iloc[-1]
           print(f"🚀 Trade signal: {coin['symbol']} at {best_params[0]:.2%} threshold")
 
@@ -640,7 +640,7 @@ class CryptoTrader:
 
           message = [
               f"📈 {best_coin['symbol']} Analysis Results (Threshold: {best_params[0]*100}%, Window: {best_params[1]} min)",
-              f"🕒 Time: {current_time.tz_convert('US/Eastern').strftime('%m-%d-%Y %I:%M %p %Z')}",
+              f"🕒 Time: {current_time.strftime('%m-%d-%Y %I:%M %p %Z')}",
               f"💰 Price: ${current_price:.2f}",
               f"🔮 Signal: {'BUY' if prediction == 1 else 'HOLD'} ({proba:.1%} confidence)"
           ]
