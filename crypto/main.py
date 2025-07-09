@@ -523,13 +523,17 @@ class CryptoTrader:
 
     def retrain_models(self):
         """Retrain models with new trade data"""
-        recent_trades = [
-            t for t in self.trade_history:
-                entry_time = datetime.fromisoformat(trade['entry_time'])
-                if entry_time.tzinfo is None:
-                    entry_time = EST.localize(entry_time)  # localize if naive
-                if (datetime.now(EST) - dentry_time).days < 7
-        ]
+        recent_trades = []
+        now = datetime.now(EST)
+
+        for trade in self.trade_history:
+            entry_time = datetime.fromisoformat(trade['entry_time'])
+    
+            if entry_time.tzinfo is None:
+                entry_time = EST.localize(entry_time)
+    
+            if (now - entry_time).days < 7:
+                recent_trades.append(trade)
 
         if len(recent_trades) < 50:  # Minimum trades for retraining
             return
