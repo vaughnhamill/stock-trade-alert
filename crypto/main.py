@@ -42,7 +42,17 @@ cg = CoinGeckoAPI()
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-def send_telegram_message(self, message):
+# --- File System Setup ---
+os.makedirs(MODEL_DIR, exist_ok=True)
+
+class CryptoTrader:
+    def __init__(self):
+        self.models = {}
+        self.trade_history = []
+        self.model_metadata = {}
+        self.load_state()
+
+    def send_telegram_message(self, message):
     """Send notification via Telegram."""
     try:
         requests.get(
@@ -54,15 +64,6 @@ def send_telegram_message(self, message):
     except Exception as e:
         print(f"⚠️ Telegram error: {str(e)}")
 
-# --- File System Setup ---
-os.makedirs(MODEL_DIR, exist_ok=True)
-
-class CryptoTrader:
-    def __init__(self):
-        self.models = {}
-        self.trade_history = []
-        self.model_metadata = {}
-        self.load_state()
 
     def load_state(self):
         """Load saved models and trade history"""
@@ -383,7 +384,7 @@ class CryptoTrader:
               'symbol': symbol,
               'threshold': threshold,
               'window': window,
-              'timestamp': entry_time.isoformat(),
+              'entry_time': entry_time.isoformat(),
               'features': processed_features,  # Use the processed features
               'prediction': int(prediction),  # Ensure prediction is a standard int
               'entry_price': float(entry_price), # Ensure entry_price is a standard float
@@ -397,7 +398,7 @@ class CryptoTrader:
             if trade['status'] != 'pending':
                 continue
 
-            entry_time = datetime.fromisoformat(trade['timestamp'])
+            entry_time = datetime.fromisoformat(trade['entry_time'])
             if (now - entry_time).total_seconds() < trade['window'] * 60:
                 continue  # Too early to evaluate
 
