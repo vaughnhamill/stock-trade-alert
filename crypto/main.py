@@ -416,8 +416,9 @@ class CryptoTrader:
             trade['exit_price'] = future_price
             trade['exit_time'] = now.isoformat()
             
-            entry_time = datetime.fromisoformat(trade['entry_time'])
             exit_time = datetime.fromisoformat(trade['exit_time'])
+            if exit_time.tzinfo is None:
+                exit_time = EST.localize(exit_time)
             trade['time_to_exit'] = str(exit_time - entry_time)
             
             if future_price >= target_price:
