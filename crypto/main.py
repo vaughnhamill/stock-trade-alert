@@ -53,16 +53,16 @@ class CryptoTrader:
         self.load_state()
 
     def send_telegram_message(self, message):
-    """Send notification via Telegram."""
-    try:
-        requests.get(
-            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
-            params={'chat_id': CHAT_ID, 'text': message},
-            timeout=2
-        )
-        print("📬 Notification sent")
-    except Exception as e:
-        print(f"⚠️ Telegram error: {str(e)}")
+        """Send notification via Telegram."""
+        try:
+            requests.get(
+                 f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+                 params={'chat_id': CHAT_ID, 'text': message},
+                 timeout=2
+            )
+            print("📬 Notification sent")
+        except Exception as e:
+            print(f"⚠️ Telegram error: {str(e)}")
 
 
     def load_state(self):
