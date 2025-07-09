@@ -525,7 +525,7 @@ class CryptoTrader:
         """Retrain models with new trade data"""
         recent_trades = [
             t for t in self.trade_history
-            if (datetime.now() - datetime.fromisoformat(t['timestamp'])).days < 7
+            if (datetime.now(EST) - datetime.fromisoformat(t['entry_time'])).days < 7
         ]
 
         if len(recent_trades) < 50:  # Minimum trades for retraining
