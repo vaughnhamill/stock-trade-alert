@@ -382,6 +382,7 @@ class CryptoTrader:
               'id': trade_id,
               'symbol': symbol,
               'threshold': threshold,
+              'window': window,
               'timestamp': entry_time.isoformat(),
               'features': processed_features,  # Use the processed features
               'prediction': int(prediction),  # Ensure prediction is a standard int
