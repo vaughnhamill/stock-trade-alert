@@ -555,7 +555,7 @@ class CryptoTrader:
             return sorted_coins
 
         except Exception as e:
-            print(f'⚠️ Error scanning candidates: {str(e)}')
+            print(f"⚠️ Error scanning candidates: {str(e)}")
             return []
 
     def get_coinbase_pairs(self):
@@ -948,11 +948,11 @@ class CryptoTrader:
                 print(f"⚠️ DataFrame for {df_type} is empty after cleaning")
                 return None
 
-            print(f'✅ Technical indicators added for {df_type} data')
+            print(f"✅ Technical indicators added for {df_type} data")
             return df
 
         except Exception as e:
-            print(f'⚠️ Error in calculate_features for {df_type}: {str(e)}')
+            print(f"⚠️ Error in calculate_features for {df_type}: {str(e)}")
             return None
     
     def label_1m_model(self, coin, df, window=360, min_return=THRESHOLDS[0], max_return=THRESHOLDS[1]):
@@ -990,7 +990,7 @@ class CryptoTrader:
             return labeled_df
 
         except Exception as e:
-            print(f'⚠️ Error preparing 1m data: {str(e)}')
+            print(f"⚠️ Error preparing 1m data: {str(e)}")
             return None
 
     def label_1h_model(self, coin, df, forward_hours=6, min_return=THRESHOLDS[0], max_return=THRESHOLDS[1]):
@@ -1029,7 +1029,7 @@ class CryptoTrader:
             return labeled_df
         
         except Exception as e:
-            print(f'⚠️ Error preparing 1h data: {str(e)}')
+            print(f"" Error preparing 1h data: {str(e)}")
             return None
 
     def train_hybrid_model(self, df, coin, df_type):
@@ -1100,7 +1100,7 @@ class CryptoTrader:
                 print('\nBest Classifier Report:')
                 print(classification_report(best_class_result['y_class_test'], best_class_result['y_pred']))
             else:
-                print(f'⚠️ Skipping classifier training for {df_type} — only one class in training/test set')
+                print(f"⚠️ Skipping classifier training for {df_type} — only one class in training/test set")
 
             # Regressor training (always attempt if target_return exists)
             best_reg_result = None
@@ -1142,17 +1142,17 @@ class CryptoTrader:
                                 }
                 print(f"\nBest Regressor RMSE: {best_reg_result['rmse']:.5f}")
             else:
-                print(f'❕ Skipping regressor for {df_type} — no valid "target_return" values')
+                print(f"❕ Skipping regressor for {df_type} — no valid "target_return" values")
 
             return best_class_result, best_reg_result, features
         
         except Exception as e:
-            print(f'⚠️ Error training hybrid model: {str(e)}')
+            print(f"⚠️ Error training hybrid model: {str(e)}")
             return None, None, None
 
     def predict_future_movement(self, expected_return, sentiment):
         """Predict the future movement of the best coin by simulating realistic data points."""
-        print(f'\n🔮 Predicting future movement for {best_coin['symbol']}')
+        print(f"\n🔮 Predicting future movement for {best_coin['symbol']}")
 
         # Ensure latest timestamp is in EST
         latest_timestamp = best_1m_df.index[-1]
@@ -1186,7 +1186,7 @@ class CryptoTrader:
             vol_forecast = garch_fit.forecast(horizon=1)
             init_vol = np.sqrt(vol_forecast.variance.values[-1, 0]) / 100
         except Exception as e:
-            print(f'⚠️ GARCH fitting failed: {str(e)}, using historical volatility')
+            print(f"⚠️ GARCH fitting failed: {str(e)}, using historical volatility")
             init_vol = recent_data['volatility'].mean()
         
         # Initialize DataFrame for simulation
@@ -1262,7 +1262,7 @@ class CryptoTrader:
                 break
         
         if not found_signal:
-            print(f'❌ No sell signal found for {best_coin['symbol']} within 6 hours')
+            print(f"❌ No sell signal found for {best_coin['symbol']} within 6 hours")
 
         return signal_time, predicted_return
 
