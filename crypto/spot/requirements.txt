@@ -12,5 +12,5 @@ textblob>=0.18.0
 scipy>=1.14.0
 arch>=7.0.0
 ccxt>=4.3.65
-imblearn==0.12.3
+imbalanced-learn==0.12.3
 setuptools<81
