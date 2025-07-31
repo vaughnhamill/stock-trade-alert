@@ -961,7 +961,7 @@ class CryptoTrader:
             print(f"⚠️ Invalid or empty DataFrame for {coin['symbol']} (1m), cannot label")
             return None
         try:
-            print(f'📊 Attempting to label 1m model for {coin['symbol']}')
+            print(f"📊 Attempting to label 1m model for {coin['symbol']}")
 
             df = df.copy()
             df['future_max'] = df['close'].shift(-1).rolling(window=window, min_periods=1).max()
@@ -999,7 +999,7 @@ class CryptoTrader:
             print(f"⚠️ Invalid or empty DataFrame for {coin['symbol']} (1h), cannot label")
             return None
         try:
-            print(f'📊 Attempting to label 1h model for {coin['symbol']}')
+            print(f"📊 Attempting to label 1h model for {coin['symbol']}")
             df = df.copy()
             df['fwd_return'] = df['close'].shift(-forward_hours) / df['close'] - 1
             df['future_max'] = df['close'].shift(-1).rolling(window=forward_hours, min_periods=1).max()
@@ -1040,7 +1040,7 @@ class CryptoTrader:
         drop_cols = ['close', 'future_max', 'fwd_return']
 
         try:
-            print(f'📊 Training {coin['symbol']} hybrid model for {df_type} data')
+            print(f"📊 Training {coin['symbol']} hybrid model for {df_type} data")
 
             df = df.copy()
             features = [col for col in df.columns if col not in ['label', 'target_return'] + drop_cols and pd.api.types.is_numeric_dtype(df[col])]
@@ -1140,7 +1140,7 @@ class CryptoTrader:
                                         'reg_lambda': reg_lambda
                                     }
                                 }
-                print(f'\nBest Regressor RMSE: {best_reg_result['rmse']:.5f}')
+                print(f"\nBest Regressor RMSE: {best_reg_result['rmse']:.5f}")
             else:
                 print(f'❕ Skipping regressor for {df_type} — no valid "target_return" values')
 
@@ -1165,9 +1165,9 @@ class CryptoTrader:
         current_time = datetime.now(EST)
         time_diff = (current_time - latest_timestamp).total_seconds() / 60
         if time_diff > 60:  # More than 1 hour old
-            print(f'⚠️ Warning: Latest data timestamp {latest_timestamp.strftime('%m-%d-%Y %H:%M:%S %Z%z')} is {time_diff:.2f} minutes old, may be stale')
+            print(f"⚠️ Warning: Latest data timestamp {latest_timestamp.strftime('%m-%d-%Y %H:%M:%S %Z%z')} is {time_diff:.2f} minutes old, may be stale")
             return None, None
-        print(f'📅 Latest data timestamp: {latest_timestamp.strftime('%m-%d-%Y %H:%M:%S %Z%z')}')
+        print(f"📅 Latest data timestamp: {latest_timestamp.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
         
         # Parameters
         max_minutes = 360  # 6 hours
@@ -1272,23 +1272,23 @@ class CryptoTrader:
         global best_score, best_coin, best_analysis, best_1m_df, best_1h_df
         print('🚀 Starting trading algorithm')
         current_time = datetime.now(EST)
-        print(f'📅 Analysis started at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}')
+        print(f"📅 Analysis started at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
         
         # Scan for candidates
         candidates = self.scan_candidates()
 
         if not candidates:
-            print(f'❌ No candidates found at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}')
+            print(f"❌ No candidates found at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
             return
 
         # Analyze each candidate
         for coin in candidates:
-            print(f'\n📊 Analyzing {coin['symbol']} ({coin['selected_symbol']} on {coin['exchange']})')
+            print(f"\n📊 Analyzing {coin['symbol']} ({coin['selected_symbol']} on {coin['exchange']})")
             df_1m = self.fetch_data(coin['selected_symbol'], '1m', coin['exchange'])
             df_1h = self.fetch_data(coin['selected_symbol'], '1h', coin['exchange'])
             
             if df_1m is None or df_1h is None:
-                print(f'⚠️ Skipping {coin['symbol']} due to data fetch error')
+                print(f"⚠️ Skipping {coin['symbol']} due to data fetch error")
                 continue
 
             # Add sentiment to dataframes
@@ -1299,7 +1299,7 @@ class CryptoTrader:
             df_1m, df_1h = self.calculate_features(df_1m, '1m'), self.calculate_features(df_1h, '1h')
 
             if df_1m is None or df_1h is None:
-                print(f'⚠️ Skipping {coin['symbol']} due to calculation error')
+                print(f"⚠️ Skipping {coin['symbol']} due to calculation error")
                 continue
 
             # Label data
@@ -1307,7 +1307,7 @@ class CryptoTrader:
             labeled_1h = self.label_1h_model(coin, df_1h)
 
             if labeled_1m is None or labeled_1h is None:
-                print(f'⚠️ Skipping {coin['symbol']} due to labeling error')
+                print(f"⚠️ Skipping {coin['symbol']} due to labeling error")
                 continue
 
             # Train models
@@ -1333,7 +1333,7 @@ class CryptoTrader:
                 print(f"🏆 New best: {coin['symbol']} ({coin['selected_symbol']} on {coin['exchange']}) (Score: {best_score:.4f})")
         
         if best_analysis is None:
-            print(f'❌ No valid models found at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}')
+            print(f"❌ No valid models found at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
             return
         
         # Run final analysis on the best coin
@@ -1368,15 +1368,15 @@ class CryptoTrader:
             # Final buy report
             message = [
                 f"✅ Action: BUY {best_coin['symbol']} ({best_coin['selected_symbol']} at {close_price:.4f} on {best_coin['exchange']})",
-                f'🤖 Buy score: {buy_score:.2f} (1m: {prob_1m:.2f}, 1h: {prob_1h:.2f}, sentiment: {sentiment_score:.2f})',
-                f'📈 Expected return: {expected_return * 100:.2f}%',
-                f'💰 Position size: {position_size_pct * 100:.1f}% (${position_size_dollars:.2f})'
+                f"🤖 Buy score: {buy_score:.2f} (1m: {prob_1m:.2f}, 1h: {prob_1h:.2f}, sentiment: {sentiment_score:.2f})",
+                f"📈 Expected return: {expected_return * 100:.2f}%",
+                f"💰 Position size: {position_size_pct * 100:.1f}% (${position_size_dollars:.2f})"
             ]
 
             signal_time, predicted_return = self.predict_future_movement(expected_return, sentiment_score)
 
             if signal_time is None or predicted_return is None:
-                print(f'❌ No valid future movement prediction for {best_coin['symbol']}')
+                print(f"❌ No valid future movement prediction for {best_coin['symbol']}")
             else:
                 self.record_trade(
                     coin=best_coin,
@@ -1393,8 +1393,8 @@ class CryptoTrader:
 
                 message.extend([
                     "",
-                    f'🎯 Predicted sell signal for {best_coin['symbol']} at {signal_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}',
-                    f'📈 Predicted sell price: {(1 + predicted_return) * close_price::.4f} (predicted return: {predicted_return * 100:.2f}%)'
+                    f"🎯 Predicted sell signal for {best_coin['symbol']} at {signal_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}",
+                    f"📈 Predicted sell price: {(1 + predicted_return) * close_price::.4f} (predicted return: {predicted_return * 100:.2f}%)"
                 ])
 
                 self.send_telegram_message("\n".join(message))
