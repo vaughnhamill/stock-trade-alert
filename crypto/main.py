@@ -1029,7 +1029,7 @@ class CryptoTrader:
             return labeled_df
         
         except Exception as e:
-            print(f"" Error preparing 1h data: {str(e)}")
+            print(f" Error preparing 1h data: {str(e)}")
             return None
 
     def train_hybrid_model(self, df, coin, df_type):
@@ -1142,7 +1142,7 @@ class CryptoTrader:
                                 }
                 print(f"\nBest Regressor RMSE: {best_reg_result['rmse']:.5f}")
             else:
-                print(f"❕ Skipping regressor for {df_type} — no valid "target_return" values")
+                print(f"❕ Skipping regressor for {df_type} — no valid 'target_return' values")
 
             return best_class_result, best_reg_result, features
         
