@@ -546,7 +546,7 @@ class CryptoTrader:
                         subprocess.run(['git', 'commit', '-m', commit_message], check=True)
                         repo_url = os.getenv('GITHUB_REPOSITORY')
                         if repo_url:
-                            token = os.getenv('GITHUB_TOKEN', '')
+                            token = os.getenv('GH_PAT', '')
                             if not token:
                                 print("⚠️ GITHUB_TOKEN not set, skipping Git push")
                                 self.send_telegram_message("GITHUB_TOKEN not set, skipping Git push")
