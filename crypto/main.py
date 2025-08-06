@@ -1,6 +1,9 @@
 # ------------- API DOCUMENTATION ------------- #
 # Binance US - https://docs.binance.us/
 # Coinbase - https://api.exchange.coinbase.com/
+# Kraken - https://docs.kraken.com/rest/
+# OKX - https://www.okx.com/help-center/
+# Crypto.com - https://exchange-docs.crypto.com/
 
 # ------------- IMPORTS ------------- #
 import numpy as np
@@ -32,20 +35,24 @@ warnings.filterwarnings('ignore')
 
 # --- Configuration ---
 THRESHOLDS = [0.02, 0.99]  # Min, Max
-MAX_WINDOW_MINUTES = 500
 EST = pytz.timezone('America/New_York')
 MODEL_DIR = 'crypto/spot/models'
 TRADE_HISTORY_FILE = 'crypto/spot/trade_history.json'
 MODEL_METADATA_FILE = 'crypto/spot/model_metadata.json'
-FEEDBACK_INTERVAL_HOURS = 3  # How often to retrain models
 SENTIMENT_CACHE_FILE = 'crypto/spot/sentiment_cache.pkl'
-SENTIMENT_CACHE_TTL = 14400  # Cache sentiment for 4 hours
-GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS', 'false').lower() == 'true'
 RATE_LIMIT_HIT = False
+FEEDBACK_INTERVAL_HOURS = 3  # How often to retrain models
+SENTIMENT_CACHE_TTL = 14400  # Cache sentiment for 4 hours
 W_1M = 0.75  # Weight for 1 min df in buy score
 W_1H = 0.25  # Weight for 1 hour df in buy score
 W_SENTIMENT = 0.1  # Weight for sentiment in buy score
 PORTFOLIO_SIZE = 1000  # Portfolio size for position sizing
+MIN_CANDLES_1M = 300
+MIN_CANDLES_1H = 100
+FRESHNESS_THRESHOLD_1M = 5  # Minutes  
+FRESHNESS_THRESHOLD_1H = 60  # Minutes
+FRESHNESS_THRESHOLD_1D = 1440  # Minutes
+RATE_LIMIT_DELAY = 1  # Seconds between retries
 best_score = -np.inf
 best_coin = None
 best_analysis = None
@@ -53,13 +60,33 @@ best_1m_df = None
 best_1h_df = None
 
 # Load environment variables
+GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS', 'false').lower() == 'true'
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 
 # Initialize APIs
 cg = CoinGeckoAPI()
-binanceus = ccxt.binanceus()
+binanceus = ccxt.binanceus({
+    'enableRateLimit': True,
+    'rateLimit': 100,  # 100ms delay (conservative for 1200 requests/minute)
+})
+coinbase = ccxt.coinbase({
+    'enableRateLimit': True,
+    'rateLimit': 360,  # 360ms delay (conservative for 10,000 requests/hour)
+})
+kraken = ccxt.kraken({
+    'enableRateLimit': True,
+    'rateLimit': 3100,  # 3100ms delay (Freqtrade recommendation for 15 calls/15s)
+})
+okx = ccxt.okx({
+    'enableRateLimit': True,
+    'rateLimit': 50,  # 50ms delay (conservative for 100 requests/2s)
+})
+cryptocom = ccxt.cryptocom({
+    'enableRateLimit': True,
+    'rateLimit': 500,  # 500ms delay (conservative estimate for 100-200 requests/minute)
+})
 
 # ------------- File System Setup ---------------- #
 os.makedirs(os.path.dirname(SENTIMENT_CACHE_FILE), exist_ok=True)
@@ -73,8 +100,10 @@ class CryptoTrader:
         self.model_metadata = {}
         self.coinbase_pairs = None
         self.binanceus_pairs = None
+        self.kraken_pairs = None
+        self.okx_pairs = None
+        self.cryptocom_pairs = None
         self.sentiment_cache = {}
-        self.last_buy_signal = None
         self.load_sentiment_cache()
         self.load_state()
 
@@ -107,20 +136,26 @@ class CryptoTrader:
                 with open(TRADE_HISTORY_FILE, 'r') as f:
                     content = f.read().strip()
                     if content:  # Check if file is not empty
-                        self.trade_history = json.load(f)
+                        self.trade_history = json.loads(content)
                         print(f"✅ Loaded trade history with {len(self.trade_history)} entries")
                     else:
-                        print(f"⚠️ Trade history file is empty, initializing empty trade history")
+                        print("⚠️ Trade history file is empty, initializing empty trade history")
                         self.trade_history = []
             except json.JSONDecodeError as e:
                 print(f"⚠️ Invalid JSON in trade history: {str(e)}, initializing empty trade history")
                 self.trade_history = []
+                with open(TRADE_HISTORY_FILE, 'w') as f:
+                    json.dump(self.trade_history, f, indent=2)
             except Exception as e:
                 print(f"⚠️ Error loading trade history: {str(e)}, initializing empty trade history")
                 self.trade_history = []
+                with open(TRADE_HISTORY_FILE, 'w') as f:
+                    json.dump(self.trade_history, f, indent=2)
         else:
-            print(f"⚠️ Trade history file not found, initializing empty trade history")
+            print("⚠️ Trade history file not found, initializing empty trade history")
             self.trade_history = []
+            with open(TRADE_HISTORY_FILE, 'w') as f:
+                json.dump(self.trade_history, f, indent=2)
 
         # Load model metadata
         if os.path.exists(MODEL_METADATA_FILE):
@@ -128,7 +163,7 @@ class CryptoTrader:
                 with open(MODEL_METADATA_FILE, 'r') as f:
                     content = f.read().strip()
                     if content:
-                        self.model_metadata = json.load(f)
+                        self.model_metadata = json.loads(content)
                         print(f"✅ Loaded model metadata with {len(self.model_metadata)} entries")
                         for key, meta in self.model_metadata.items():
                             coin, timeframe, threshold = key.split('_')
@@ -144,16 +179,22 @@ class CryptoTrader:
                             }
                         print(f"✅ Loaded {len(self.models)} models from disk")
                     else:
-                        print(f"⚠️ Model metadata file is empty, initializing empty metadata")
+                        print("⚠️ Model metadata file is empty, initializing empty metadata")
                         self.model_metadata = {}
+                        with open(MODEL_METADATA_FILE, 'w') as f:
+                            json.dump(self.model_metadata, f, indent=2)
             except json.JSONDecodeError as e:
                 print(f"⚠️ Invalid JSON in model metadata: {str(e)}, initializing empty metadata")
                 self.model_metadata = {}
+                with open(MODEL_METADATA_FILE, 'w') as f:
+                    json.dump(self.model_metadata, f, indent=2)
             except Exception as e:
                 print(f"⚠️ Error loading models: {str(e)}, initializing empty metadata")
                 self.model_metadata = {}
                 self.models = {}
-    
+                with open(MODEL_METADATA_FILE, 'w') as f:
+                    json.dump(self.model_metadata, f, indent=2)
+
     def load_sentiment_cache(self):
         """Load sentiment cache from disk."""
         os.makedirs(os.path.dirname(SENTIMENT_CACHE_FILE), exist_ok=True)
@@ -162,9 +203,16 @@ class CryptoTrader:
                 with open(SENTIMENT_CACHE_FILE, 'rb') as f:
                     self.sentiment_cache = pickle.load(f)
                 print(f"✅ Loaded sentiment cache with {len(self.sentiment_cache)} entries")
+            else:
+                print("⚠️ Sentiment cache file not found, initializing empty cache")
+                self.sentiment_cache = {}
+                with open(SENTIMENT_CACHE_FILE, 'wb') as f:
+                    pickle.dump(self.sentiment_cache, f)
         except (PermissionError, pickle.PickleError) as e:
             print(f"⚠️ Error loading sentiment cache: {str(e)}, initializing empty cache")
             self.sentiment_cache = {}
+            with open(SENTIMENT_CACHE_FILE, 'wb') as f:
+                pickle.dump(self.sentiment_cache, f)
 
     def save_sentiment_cache(self):
         """Save sentiment cache to disk and commit to Git if in GitHub Actions."""
@@ -209,29 +257,14 @@ class CryptoTrader:
 
     # ------------- Record Trades and Retrain Models ------------- #
     def record_trade(self, coin, entry_price, expected_return, entry_time, sell_time, features_1m, features_1h, buy_score, position_size_pct, exchange):
-        """Store trade details for later outcome evaluation"""
+        """Store trade details for later outcome evaluation."""
         trade_id = hashlib.md5(
             f"{coin['symbol']}{expected_return}{entry_time.isoformat()}".encode()
         ).hexdigest()
 
         # Convert NumPy types in features dictionary to standard Python types
-        processed_features_1m = {}
-        for key, value in features_1m.items():
-            if isinstance(value, (np.int64, np.int32)):
-                processed_features_1m[key] = int(value)
-            elif isinstance(value, (np.float64, np.float32)):
-                processed_features_1m[key] = float(value)
-            else:
-                processed_features_1m[key] = value
-
-        processed_features_1h = {}
-        for key, value in features_1h.items():
-            if isinstance(value, (np.int64, np.int32)):
-                processed_features_1h[key] = int(value)
-            elif isinstance(value, (np.float64, np.float32)):
-                processed_features_1h[key] = float(value)
-            else:
-                processed_features_1h[key] = value
+        processed_features_1m = {key: float(value) if isinstance(value, (np.float64, np.float32)) else int(value) if isinstance(value, (np.int64, np.int32)) else value for key, value in features_1m.items()}
+        processed_features_1h = {key: float(value) if isinstance(value, (np.float64, np.float32)) else int(value) if isinstance(value, (np.int64, np.int32)) else value for key, value in features_1h.items()}
 
         self.trade_history.append({
             'trade_id': trade_id,
@@ -256,7 +289,7 @@ class CryptoTrader:
         self.save_state()
 
     def evaluate_pending_trades(self):
-        """Evaluate outcome of pending trades"""
+        """Evaluate outcome of pending trades."""
         print("🔍 Evaluating pending trades...")
         now = datetime.now(EST)
         for trade in self.trade_history:
@@ -271,16 +304,14 @@ class CryptoTrader:
             symbol = trade['trade_info']['selected_symbol']
             exchange = trade['exchange']
             print(f"📊 Evaluating trade for {symbol} at sell time {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
-            price_data = self.fetch_data(symbol, '1m', exchange, limit=10, start_time=sell_time - timedelta(minutes=5), end_time=sell_time + timedelta(minutes=5))
+            price_data = self.fetch_trade_data(symbol, '1m', exchange, start_time=sell_time - timedelta(minutes=5), end_time=sell_time + timedelta(minutes=5))
 
             if price_data is None or price_data.empty:
                 print(f"⚠️ No price data available for {symbol} on {exchange} around {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}, skipping evaluation")
                 continue
-            
-            # Ensure price_data index is in EST
+
             price_data.index = price_data.index.tz_convert(EST)
 
-            # Search for exact sell_time in price_data index
             if sell_time in price_data.index:
                 sell_price = price_data.loc[sell_time]['close']
                 print(f"✅ Found exact sell time {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')} with close price: ${sell_price:.6f}")
@@ -323,7 +354,7 @@ class CryptoTrader:
                 f"Trade evaluated: {trade['symbol']} {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)"
             )
 
-            self.save_state()
+        self.save_state()
 
         # Trigger retrain if enough new trades
         self.retrain_models()
@@ -517,7 +548,7 @@ class CryptoTrader:
 
         except Exception as e:
             print(f"⚠️ Error saving state: {str(e)}")
-    
+
     # ------------- Candidate Scanning and Mapping ------------- #
     def scan_candidates(self):
         """Find potential trading candidates using CoinGecko API and include sentiment scores."""
@@ -530,19 +561,31 @@ class CryptoTrader:
                 price_change_percentage='1h'
             )
 
+            top_coins = coins[:20]
+            thresh_1h, thresh_24h = self.calculate_dynamic_thresholds(top_coins)
+
             sorted_coins = []
             for c in coins:
-                if c['price_change_percentage_1h_in_currency'] > 1.5 and c['price_change_percentage_24h'] > 3: # Min % hourly change
+                symbol = c['symbol'].upper()
+                price_change_1h = c.get('price_change_percentage_1h_in_currency', 0.0)
+                price_change_24h = c.get('price_change_percentage_24h', 0.0)
+                
+                if price_change_1h > thresh_1h and price_change_24h > thresh_24h:
                     coin = {
                         'id': c['id'],
-                        'symbol': c['symbol'].upper(),
-                        'price_change_percentage_1h': c['price_change_percentage_1h_in_currency'],
-                        'price_change_percentage_24h': c['price_change_percentage_24h'],
+                        'symbol': symbol,
+                        'price_change_percentage_1h': price_change_1h,
+                        'price_change_percentage_24h': price_change_24h,
                     }
                     sorted_coins.append(coin)
+            sorted_coins = sorted(
+                sorted_coins,
+                key=lambda x: (x['price_change_percentage_1h'], x['price_change_percentage_24h']),
+                reverse=True
+            )
+            sorted_coins = sorted_coins[:10]  # Limit to top 10 candidates
             sorted_coins = self.map_coingecko_to_exchange(sorted_coins)
 
-            sorted_coins = sorted_coins[:10]  # Limit to top 10 candidates
             for c in sorted_coins:
                 c['sentiment'] = self.fetch_news_sentiment(c['symbol'], c['id'])
                 time.sleep(0.5)
@@ -557,33 +600,212 @@ class CryptoTrader:
         except Exception as e:
             print(f"⚠️ Error scanning candidates: {str(e)}")
             return []
+        
+    def calculate_dynamic_thresholds(self, top_coins):
+        """Calculate dynamic thresholds based on 7-day market-wide volatility."""
+        try:
+            if not top_coins:
+                print("⚠️ No top coins retrieved, using default thresholds")
+                return 1.5, 3.0
+            
+            mapped_coins = self.map_coingecko_to_exchange(top_coins)
+            if not mapped_coins:
+                print("⚠️ No mapped coins available, using default thresholds")
+                return 1.5, 3.0
+                        
+            vol_1h_list = []
+            vol_1d_list = []
+            min_valid_coins = 5
 
-    def get_coinbase_pairs(self):
+            for coin in mapped_coins:
+                symbol = coin.get('selected_symbol')
+                exchange = coin.get('exchange')
+                if not symbol or not exchange:
+                    print(f"⚠️ Skipping {coin.get('symbol', 'unknown')} due to missing symbol or exchange")
+                    continue
+
+                # Fetch 1-hour and 1-day data
+                df_1h = self.fetch_data(symbol, '1h', exchange)
+                df_1d = self.fetch_data(symbol, '1d', exchange)
+
+                if df_1h is not None and not df_1h.empty and df_1d is not None and not df_1d.empty:
+                    returns_1h = df_1h['close'].pct_change().dropna()
+                    returns_1d = df_1d['close'].pct_change().dropna()
+                    if not returns_1h.empty and not returns_1d.empty:
+                        vol_1h = returns_1h.std() * 1.5
+                        vol_1d = returns_1d.std() * 1.5
+                        vol_1h_list.append(vol_1h)
+                        vol_1d_list.append(vol_1d)
+                        print(f"✅ Calculated volatility for {coin['symbol']} on {exchange}: 1h={vol_1h:.4f}, 1d={vol_1d:.4f}")
+
+            if len(vol_1h_list) < min_valid_coins or len(vol_1d_list) < min_valid_coins:
+                print(f"⚠️ Insufficient valid coins ({len(vol_1h_list)} < {min_valid_coins}), using default thresholds")
+                return 1.5, 3.0
+            
+            # Compute market-wide thresholds as the median of individual coin volatilities
+            market_vol_1h = np.median(vol_1h_list)
+            market_vol_1d = np.median(vol_1d_list)
+            
+            # Ensure minimum thresholds
+            final_vol_1h = max(market_vol_1h, 1.5)
+            final_vol_1d = max(market_vol_1d, 3.0)
+            
+            print(f"✅ Market-wide thresholds: 1h={final_vol_1h:.4f}, 1d={final_vol_1d:.4f} (based on {len(vol_1h_list)} coins)")
+            return final_vol_1h, final_vol_1d
+
+        except Exception as e:
+            print(f"⚠️ Error calculating market-wide thresholds: {str(e)}")
+            return 1.5, 3.0
+        
+    def map_coingecko_to_exchange(self, coins):
+        """Map CoinGecko coins to valid trading pairs across multiple exchanges."""
+        cg_sorted_coins = []
+        coinbase_pairs = self.coinbase_pairs
+        binanceus_pairs = self.binanceus_pairs
+        kraken_pairs = self.kraken_pairs
+        okx_pairs = self.okx_pairs
+        cryptocom_pairs = self.cryptocom_pairs
+        
+        try:
+            for coin in coins:
+                symbol = coin['symbol'].upper()
+                coin_id = coin['id'].lower().replace('-', '')
+                coin_copy = coin.copy()
+                exchange_pairs = {
+                    'coinbase': None,
+                    'binanceus': None,
+                    'kraken': None,
+                    'okx': None,
+                    'cryptocom': None
+                }
+
+                # Map pairs for each exchange
+                for exchange, pairs in [
+                    ('coinbase', coinbase_pairs),
+                    ('binanceus', binanceus_pairs),
+                    ('kraken', kraken_pairs),
+                    ('okx', okx_pairs),
+                    ('cryptocom', cryptocom_pairs)
+                ]:
+                    for pair, base_currency in pairs.items():
+                        base_currency_normalized = base_currency.lower().replace('-', '')
+                        if symbol.lower() == base_currency_normalized or coin_id == base_currency_normalized:
+                            exchange_pairs[exchange] = pair
+                            coin_copy[f'{exchange}_symbol'] = pair
+                            print(f"✅ Found {exchange.capitalize()} pair for {symbol} ({coin['id']}): {pair}") # Debugging line
+                            break
+
+                # Fetch data to check freshness
+                exchange_data = {
+                    'coinbase': None,
+                    'binanceus': None,
+                    'kraken': None,
+                    'okx': None,
+                    'cryptocom': None
+                }
+                time_diffs = {
+                    'coinbase': float('inf'),
+                    'binanceus': float('inf'),
+                    'kraken': float('inf'),
+                    'okx': float('inf'),
+                    'cryptocom': float('inf')
+                }
+
+                selected_exchange = None
+                selected_symbol = None
+
+                for exchange in exchange_pairs:
+                    if exchange_pairs[exchange]:
+                        data_1m = self.fetch_data(exchange_pairs[exchange], '1m', exchange)
+                        if data_1m is not None and not data_1m.empty:
+                            exchange_data[exchange] = data_1m
+                            latest_time = data_1m.index[-1]
+                            time_diff = (datetime.now(EST) - latest_time).total_seconds() / 60
+                            time_diffs[exchange] = time_diff
+                            
+                            # If data is less than 1 minute old, select this exchange and stop checking others
+                            if time_diff < 1.0:
+                                selected_exchange = exchange
+                                selected_symbol = exchange_pairs[exchange]
+                                print(f"✅ Selected {exchange.capitalize()} for {symbol} ({coin['id']}) as data is less than 1 minute old ({time_diff:.2f} min)") # Debugging line
+                                break
+
+                # If an exchange was selected due to fresh data (< 1 min), use it
+                if selected_exchange:
+                    coin_copy['exchange'] = selected_exchange
+                    coin_copy['selected_symbol'] = selected_symbol
+                    cg_sorted_coins.append(coin_copy)
+                else:
+                    # Fallback to selecting the freshest data if no exchange has data < 1 min
+                    valid_exchanges = [ex for ex in exchange_data if exchange_data[ex] is not None]
+                    if valid_exchanges:
+                        freshest_exchange = min(valid_exchanges, key=lambda ex: time_diffs[ex])
+                        if time_diffs[freshest_exchange] <= FRESHNESS_THRESHOLD_1M:
+                            coin_copy['exchange'] = freshest_exchange
+                            coin_copy['selected_symbol'] = exchange_pairs[freshest_exchange]
+                            print(f"✅ Selected {freshest_exchange.capitalize()} for {symbol} ({coin['id']}) as fresher data ({time_diffs[freshest_exchange]:.2f} min)") # Debugging line
+                            cg_sorted_coins.append(coin_copy)
+                        else:
+                            print(f"⚠️ No fresh data for {symbol} ({coin['id']}) on any exchange, skipping")
+                    else:
+                        print(f"⚠️ No valid data for {symbol} ({coin['id']}) on any exchange, skipping")
+
+            return cg_sorted_coins
+        
+        except Exception as e:
+            print(f"⚠️ Error mapping CoinGecko to exchanges: {str(e)}")
+            return []
+        
+    def get_exchange_pairs(self):
         """Fetch available trading pairs from Coinbase."""
         if self.coinbase_pairs is None:
             try:
-                url = "https://api.exchange.coinbase.com/products"
-                response = requests.get(url)
-                response.raise_for_status()
-                products = response.json()
-                self.coinbase_pairs = {p['id']: p['base_currency'] for p in products if p['quote_currency'] in ['USD', 'USDT']}
-                print(f"✅ Loaded {len(self.coinbase_pairs)} Coinbase USD/USDT pairs")
+                markets = coinbase.load_markets()
+                self.coinbase_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
+                print(f"✅ Loaded {len(self.coinbase_pairs)} Coinbase pairs") # Debugging line
             except Exception as e:
                 print(f"⚠️ Error fetching Coinbase pairs: {str(e)}")
                 self.coinbase_pairs = {}
-        return self.coinbase_pairs
 
-    def get_binanceus_pairs(self):
         """Fetch available trading pairs from Binance US."""
         if self.binanceus_pairs is None:
             try:
                 markets = binanceus.load_markets()
-                self.binanceus_pairs = {symbol: market['base'] for symbol, market in markets.items() if market['quote'] in ['USD', 'USDT'] and market['active']}
-                print(f"✅ Loaded {len(self.binanceus_pairs)} Binance US USD/USDT pairs")
+                self.binanceus_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
+                print(f"✅ Loaded {len(self.binanceus_pairs)} Binance US pairs")  # Debugging line
             except Exception as e:
                 print(f"⚠️ Error fetching Binance US pairs: {str(e)}")
                 self.binanceus_pairs = {}
-        return self.binanceus_pairs
+
+        """Fetch available trading pairs from Kraken."""
+        if self.kraken_pairs is None:
+            try:
+                markets = kraken.load_markets()
+                self.kraken_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
+                print(f"✅ Loaded {len(self.kraken_pairs)} Kraken pairs")  # Debugging line
+            except Exception as e:
+                print(f"⚠️ Error fetching Kraken pairs: {str(e)}")
+                self.kraken_pairs = {}
+
+        """Fetch available trading pairs from OKX."""
+        if self.okx_pairs is None:
+            try:
+                markets = okx.load_markets()
+                self.okx_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
+                print(f"✅ Loaded {len(self.okx_pairs)} OKX pairs")  # Debugging line
+            except Exception as e:
+                print(f"⚠️ Error fetching OKX pairs: {str(e)}")
+                self.okx_pairs = {}
+
+        """Fetch available trading pairs from Crypto.com."""
+        if self.cryptocom_pairs is None:
+            try:
+                markets = cryptocom.load_markets()
+                self.cryptocom_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
+                print(f"✅ Loaded {len(self.cryptocom_pairs)} Crypto.com pairs")  # Debugging line
+            except Exception as e:
+                print(f"⚠️ Error fetching Crypto.com pairs: {str(e)}")
+                self.cryptocom_pairs = {}
 
     def fetch_news_sentiment(self, coin_symbol, coin_id=None, max_retries=3):
         """Fetch up to 100 recent news articles for the given coin and compute sentiment score."""
@@ -591,7 +813,6 @@ class CryptoTrader:
         cache_key = f"{coin_symbol}:{coin_id or ''}"
         current_time = datetime.now(pytz.UTC).timestamp()
 
-        # Check cache
         if cache_key in self.sentiment_cache:
             cached = self.sentiment_cache[cache_key]
             if current_time - cached['timestamp'] < SENTIMENT_CACHE_TTL:
@@ -624,7 +845,7 @@ class CryptoTrader:
                         print(f"⚠️ NewsAPI rate limit hit for {coin_symbol} (attempt {attempt + 1}/{max_retries})")
                         if attempt == max_retries - 1:
                             RATE_LIMIT_HIT = True
-                            print(f"⚠️ Global rate limit set, skipping further sentiment fetches")
+                            print("⚠️ Global rate limit set, skipping further sentiment fetches")
                             return 0.0
                         time.sleep(2 ** (attempt + 1))
                         continue
@@ -689,205 +910,91 @@ class CryptoTrader:
         except Exception as e:
             print(f"⚠️ Error fetching news sentiment for {coin_symbol}: {str(e)}")
             return 0.0
-
-    def map_coingecko_to_exchange(self, coins):
-        """Map CoinGecko coins to valid Coinbase and Binance trading pairs."""
-        cg_cb_sorted_coins = []
-        coinbase_pairs = self.get_coinbase_pairs()
-        binanceus_pairs = self.get_binanceus_pairs()
         
-        try:
-            for coin in coins:
-                symbol = coin['symbol'].upper()
-                coin_id = coin['id'].lower().replace('-', '')
-                cb_found_pair = None
-                bin_found_pair = None
-                coin_copy = coin.copy()
-
-                # Try Coinbase
-                for pair, base_currency in coinbase_pairs.items():
-                    base_currency_normalized = base_currency.lower().replace('-', '')
-                    if symbol.lower() == base_currency_normalized or coin_id == base_currency_normalized:
-                        cb_found_pair = pair
-                        coin_copy['coinbase_symbol'] = cb_found_pair
-                        print(f"✅ Found Coinbase pair for {symbol} ({coin['id']}): {cb_found_pair}")
-                        break
-
-                # Try Binance US
-                for pair, base_currency in binanceus_pairs.items():
-                    base_currency_normalized = base_currency.lower().replace('-', '')
-                    if symbol.lower() == base_currency_normalized or coin_id == base_currency_normalized:
-                        bin_found_pair = pair
-                        coin_copy['binance_symbol'] = bin_found_pair
-                        print(f"✅ Found Binance US pair for {symbol} ({coin['id']}): {bin_found_pair}")
-                        break
-
-                # Fetch data to check freshness
-                cb_data_1m = None
-                bin_data_1m = None
-                cb_time_diff = float('inf')
-                bin_time_diff = float('inf')
-
-                if cb_found_pair:
-                    cb_data_1m = self.fetch_data(cb_found_pair, '1m', 'coinbase', limit=1)
-                    if cb_data_1m is not None and not cb_data_1m.empty:
-                        cb_latest_time = cb_data_1m.index[-1]
-                        cb_time_diff = (datetime.now(EST) - cb_latest_time).total_seconds() / 60
-                        print(f"📅 Coinbase data for {cb_found_pair}: {cb_time_diff:.2f} minutes old")
-
-                if bin_found_pair:
-                    bin_data_1m = self.fetch_data(bin_found_pair, '1m', 'binanceus', limit=1)
-                    if bin_data_1m is not None and not bin_data_1m.empty:
-                        bin_latest_time = bin_data_1m.index[-1]
-                        bin_time_diff = (datetime.now(EST) - bin_latest_time).total_seconds() / 60
-                        print(f"📅 Binance US data for {bin_found_pair}: {bin_time_diff:.2f} minutes old")
-
-                # Select the exchange with fresher data
-                if cb_data_1m is not None or bin_data_1m is not None:
-                    if cb_time_diff <= bin_time_diff and cb_time_diff <= 60:
-                        coin_copy['exchange'] = 'coinbase'
-                        coin_copy['selected_symbol'] = cb_found_pair
-                        print(f"✅ Selected Coinbase for {symbol} ({coin['id']}) as fresher data ({cb_time_diff:.2f} min vs {bin_time_diff:.2f} min)")
-                    elif bin_time_diff <= 60:
-                        coin_copy['exchange'] = 'binanceus'
-                        coin_copy['selected_symbol'] = bin_found_pair
-                        print(f"✅ Selected Binance US for {symbol} ({coin['id']}) as fresher data ({bin_time_diff:.2f} min vs {cb_time_diff:.2f} min)")
-                    else:
-                        print(f"⚠️ No fresh data for {symbol} ({coin['id']}) on either exchange, skipping")
-                        continue
-                    cg_cb_sorted_coins.append(coin_copy)
-                else:
-                    print(f"⚠️ No valid data for {symbol} ({coin['id']}) on either exchange, skipping")
-
-            return cg_cb_sorted_coins
-        
-        except Exception as e:
-            print(f"⚠️ Error mapping CoinGecko to exchanges: {str(e)}")
-            return []
-
     # ------------- Data Fetching and Processing ------------- # 
-    def fetch_data(self, symbol, interval, exchange, limit=MAX_WINDOW_MINUTES, max_retries=3, start_time=None, end_time=None):
-        """Fetch OHLCV data from specified exchange (Coinbase or Binance US) for a given time range."""
+    def fetch_data(self, symbol, interval, exchange):
+        """Fetch OHLCV data from specified exchange for analysis."""
+        timeframe = {'1m': '1m', '1h': '1h', '1d': '1d'}.get(interval, '1m')
+        min_candles = None if interval == '1m' or interval == '1h' else 20
+        
         if exchange == 'coinbase':
-            return self.fetch_coinbase_data(symbol, interval, limit, max_retries, start_time, end_time)
+            ex = coinbase
         elif exchange == 'binanceus':
-            return self.fetch_binance_data(symbol, interval, limit, max_retries, start_time, end_time)
+            ex = binanceus
+        elif exchange == 'kraken':
+            ex = kraken
+        elif exchange == 'okx':
+            ex = okx
+        elif exchange == 'cryptocom':
+            ex = cryptocom
         else:
             print(f"⚠️ Unknown exchange: {exchange}")
             return None
-
-    def fetch_binance_data(self, symbol, interval, limit=MAX_WINDOW_MINUTES, max_retries=3, start_time=None, end_time=None):
-        """Fetch OHLCV data from Binance via ccxt for a specific time range."""
-        timeframe = {'1m': '1m', '1h': '1h'}.get(interval, '1m')
-        min_candles = 20 if interval == '1h' else 100  # Require more candles for 1h to ensure sufficient data
+        
         try:
-            all_ohlcv = []
-            current_limit = min(limit, 500)  # Binance API limit per request
-            since = None
-            if start_time:
-                # Convert start_time to milliseconds since epoch (UTC)
-                since = int(start_time.astimezone(pytz.UTC).timestamp() * 1000)
-            
-            while len(all_ohlcv) < limit:
-                for attempt in range(max_retries):
-                    try:
-                        ohlcv = binanceus.fetch_ohlcv(symbol, timeframe, since=since, limit=current_limit)
-                        if not ohlcv:
-                            print(f"⚠️ No Binance US data for {symbol} at attempt {attempt + 1}/{max_retries}")
-                            return None
-                        df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
-                        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms', utc=True).dt.tz_convert(EST)
-                        df.set_index('timestamp', inplace=True)
-
-                        # Filter by end_time if provided
-                        if end_time:
-                            df = df[df.index <= end_time.astimezone(EST)]
-
-                        all_ohlcv.extend(ohlcv)
-                        latest_time = df.index[-1]
-                        current_time = datetime.now(EST)
-                        time_diff = (current_time - latest_time).total_seconds() / 60
-                        print(f"📅 Raw Binance US timestamp for {symbol}: {ohlcv[-1][0]} (converted: {latest_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')})")
-
-                        if time_diff > 60 and not start_time:
-                            print(f"⚠️ Binance US data for {symbol} is stale (latest: {latest_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}, {time_diff:.2f} minutes old)")
-                            return None
-
-                        print(f"✅ Fetched {len(ohlcv)} Binance US candles for {symbol} (latest: {latest_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')})")
-                        all_ohlcv = all_ohlcv[-limit:]  # Keep only the most recent candles up to limit
-                        df = pd.DataFrame(all_ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
-                        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms', utc=True).dt.tz_convert(EST)
-                        df.set_index('timestamp', inplace=True)
-                        if len(df) < min_candles:
-                            print(f"⚠️ Insufficient candles ({len(df)} < {min_candles}) for {symbol} ({interval})")
-                            return None
-                        return df[['open', 'high', 'low', 'close', 'volume']].astype(float)
-                    except Exception as e:
-                        print(f"⚠️ Binance US fetch error for {symbol} (attempt {attempt + 1}/{max_retries}): {str(e)}")
-                        if attempt < max_retries - 1:
-                            time.sleep(2 ** attempt)
-                        continue
-                else:
-                    print(f"⚠️ Failed to fetch Binance US data for {symbol} after {max_retries} attempts")
-                    return None
-                # Update 'since' for pagination
-                if all_ohlcv:
-                    since = int(all_ohlcv[-1][0]) + 1  # Next timestamp in milliseconds
-                else:
-                    break
-            return None
+            ohlcv = ex.fetch_ohlcv(symbol, timeframe, limit=min_candles)
+            if not ohlcv:
+                print(f"⚠️ No {exchange} data for {symbol}")
+                return None
+            df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms', utc=True).dt.tz_convert(EST)
+            df.set_index('timestamp', inplace=True)
+            latest_time = df.index[-1]
+            current_time = datetime.now(EST)
+            time_diff = (current_time - latest_time).total_seconds() / 60
+            print(f"Raw {exchange} timestamp for {symbol}: {ohlcv[-1][0]} (converted: {latest_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')})")
+            print(f"{exchange} data for {symbol}: {time_diff:.2f} minutes old")
+            if time_diff > FRESHNESS_THRESHOLD_1M and interval == '1m':
+                print(f"⚠️ {exchange} data for {symbol} is stale ({time_diff:.2f} minutes old)")
+                return None
+            elif time_diff > FRESHNESS_THRESHOLD_1H and interval == '1h':
+                print(f"⚠️ {exchange} data for {symbol} is stale ({time_diff:.2f} minutes old)")
+                return None
+            elif time_diff > FRESHNESS_THRESHOLD_1D and interval == '1d':
+                print(f"⚠️ {exchange} data for {symbol} is stale ({time_diff:.2f} minutes old)")
+                return None
+            print(f"✅ Fetched {len(ohlcv)} {exchange} candles for {symbol} (latest: {latest_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')})")
+            return df[['open', 'high', 'low', 'close', 'volume']].astype(float)
         except Exception as e:
-            print(f"⚠️ Error fetching Binance US data for {symbol}: {str(e)}")
+            print(f"⚠️ Error fetching {exchange} data for {symbol}: {str(e)}")
             return None
 
-    def fetch_coinbase_data(self, symbol, interval, limit=MAX_WINDOW_MINUTES, max_retries=3, start_time=None, end_time=None):
-        """Fetches recent OHLCV data from Coinbase Advanced Trade API for a specific time range."""
-        url = f"https://api.exchange.coinbase.com/products/{symbol}/candles"
-        granularity_map = {'1m': 60, '5m': 300, '15m': 900, '1h': 3600, '6h': 21600, '1d': 86400}
-        granularity = granularity_map.get(interval, 60)
-        min_candles = 20 if interval == '1h' else 100
-        params = {'granularity': granularity}
-        if start_time and end_time:
-            params['start'] = start_time.astimezone(pytz.UTC).strftime('%Y-%m-%dT%H:%M:%SZ')
-            params['end'] = end_time.astimezone(pytz.UTC).strftime('%Y-%m-%dT%H:%M:%SZ')
-        else:
-            params['limit'] = min(limit, 300)  # Coinbase API limit is 300 candles
+    def fetch_trade_data(self, symbol, interval, exchange, start_time=None, end_time=None):
+        """Fetch OHLCV data within a specific time range for trade evaluation."""
+        timeframe = {'1m': '1m', '1h': '1h', '1d': '1d'}.get(interval, '1m')
+        exchange_obj = {
+            'coinbase': coinbase,
+            'binanceus': binanceus,
+            'kraken': kraken,
+            'okx': okx,
+            'cryptocom': cryptocom
+        }.get(exchange)
+        
+        if not exchange_obj:
+            print(f"⚠️ Unknown exchange: {exchange}")
+            return None
 
-        for attempt in range(max_retries):
-            try:
-                response = requests.get(url, params=params)
-                response.raise_for_status()
-                data = response.json()
-
-                if not isinstance(data, list):
-                    print(f"⚠️ Invalid Coinbase data for {symbol}: {data}")
-                    return None
-
-                df = pd.DataFrame(data, columns=['timestamp', 'low', 'high', 'open', 'close', 'volume'])
-                df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s', utc=True).dt.tz_convert(EST)
-                df.set_index('timestamp', inplace=True)
-
-                if len(df) < min_candles:
-                    print(f"⚠️ Insufficient candles ({len(df)} < {min_candles}) for {symbol} ({interval})")
-                    return None
-
-                latest_time = df.index[-1]
-                current_time = datetime.now(EST)
-                time_diff = (current_time - latest_time).total_seconds() / 60
-                print(f"📅 Raw Coinbase timestamp for {symbol}: {data[-1][0]} (converted: {latest_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')})")
-                if time_diff > 60 and not start_time:
-                    print(f"⚠️ Coinbase data for {symbol} is stale (latest: {latest_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}, {time_diff:.2f} minutes old)")
-                    return None
-                
-                print(f"✅ Fetched {len(df)} Coinbase candles for {symbol} (latest: {latest_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')})")
-                return df[['open', 'high', 'low', 'close', 'volume']].astype(float)
-
-            except Exception as e:
-                print(f"⚠️ Coinbase fetch error for {symbol} (attempt {attempt + 1}/{max_retries}): {e}")
-                if attempt < max_retries - 1:
-                    time.sleep(2 ** attempt)
-                continue
-        return None
+        since = int(start_time.timestamp() * 1000) if start_time else None
+        limit = int((end_time - start_time).total_seconds() / 60) + 1 if start_time and end_time else 500
+        
+        try:
+            ohlcv = exchange_obj.fetch_ohlcv(symbol, timeframe, since=since, limit=limit)
+            if not ohlcv:
+                print(f"⚠️ No data for {symbol} on {exchange}")
+                return None
+            df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms', utc=True).dt.tz_convert(EST)
+            df.set_index('timestamp', inplace=True)
+            if start_time and end_time:
+                df = df[(df.index >= start_time) & (df.index <= end_time)]
+            if df.empty:
+                print(f"⚠️ Empty dataframe after filtering for {symbol} on {exchange}")
+                return None
+            print(f"✅ Fetched {len(df)} candles for {symbol} on {exchange}")
+            return df[['open', 'high', 'low', 'close', 'volume']].astype(float)
+        except Exception as e:
+            print(f"⚠️ Error fetching trade data for {symbol} on {exchange}: {str(e)}")
+            return None
 
     def calculate_features(self, df, df_type):
         """Add technical indicators and sentiment score to the DataFrame."""
@@ -919,8 +1026,8 @@ class CryptoTrader:
                 df['sentiment'] = 0.0
 
             # Add time series features
-            base_features = ['open', 'high', 'low', 'volume', 'returns', 'volatility', 
-                             'rsi', 'macd', 'bollinger', 'atr', 'sma_20', 'ema_20', 
+            base_features = ['open', 'high', 'low', 'volume', 'returns', 'volatility',
+                             'rsi', 'macd', 'bollinger', 'atr', 'sma_20', 'ema_20',
                              'adx', 'obv', 'STOCHk_14_3_3', 'STOCHd_14_3_3', 'sentiment']
 
             for col in base_features:
@@ -1161,14 +1268,6 @@ class CryptoTrader:
         else:
             latest_timestamp = latest_timestamp.tz_convert(EST)
         
-        # Validate data freshness
-        current_time = datetime.now(EST)
-        time_diff = (current_time - latest_timestamp).total_seconds() / 60
-        if time_diff > 60:  # More than 1 hour old
-            print(f"⚠️ Warning: Latest data timestamp {latest_timestamp.strftime('%m-%d-%Y %H:%M:%S %Z%z')} is {time_diff:.2f} minutes old, may be stale")
-            return None, None
-        print(f"📅 Latest data timestamp: {latest_timestamp.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
-        
         # Parameters
         max_minutes = 360  # 6 hours
         threshold = expected_return  # Use the regressor's expected return as the threshold
@@ -1273,14 +1372,15 @@ class CryptoTrader:
         print('🚀 Starting trading algorithm')
         current_time = datetime.now(EST)
         print(f"📅 Analysis started at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
-        
+
         # Scan for candidates
+        self.get_exchange_pairs()
         candidates = self.scan_candidates()
 
         if not candidates:
             print(f"❌ No candidates found at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
             return
-
+        
         # Analyze each candidate
         for coin in candidates:
             print(f"\n📊 Analyzing {coin['symbol']} ({coin['selected_symbol']} on {coin['exchange']})")
@@ -1372,7 +1472,7 @@ class CryptoTrader:
                 f"📈 Expected return: {expected_return * 100:.2f}%",
                 f"💰 Position size: {position_size_pct * 100:.1f}% (${position_size_dollars:.2f})"
             ]
-
+            
             signal_time, predicted_return = self.predict_future_movement(expected_return, sentiment_score)
 
             if signal_time is None or predicted_return is None:
