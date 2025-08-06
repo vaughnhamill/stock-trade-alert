@@ -37,15 +37,13 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install -r crypto/spot/requirements.txt
 
-      - name: Set environment variables
+      - name: Run trading script
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-
-      - name: Run script
         run: python crypto/main.py
 
       - name: Commit and push model, history, and sentiment files
