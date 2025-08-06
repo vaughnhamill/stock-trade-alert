@@ -237,7 +237,7 @@ class CryptoTrader:
                         subprocess.run(['git', 'commit', '-m', commit_message], check=True)
                         repo_url = os.getenv('GITHUB_REPOSITORY')
                         if repo_url:
-                            token = os.getenv('GH_PAH', '')
+                            token = os.getenv('GITHUB_TOKEN', '')
                             if not token:
                                 raise ValueError("GITHUB_TOKEN not set for Git push")
                             auth_url = f"https://x-access-token:{token}@github.com/{repo_url}.git"
@@ -549,7 +549,6 @@ class CryptoTrader:
                             token = os.getenv('GH_PAT', '')
                             if not token:
                                 print("⚠️ GITHUB_TOKEN not set, skipping Git push")
-                                self.send_telegram_message("GITHUB_TOKEN not set, skipping Git push")
                                 return
                             auth_url = f"https://x-access-token:{token}@github.com/{repo_url}.git"
                             subprocess.run(['git', 'push', auth_url, 'HEAD'], check=True)
