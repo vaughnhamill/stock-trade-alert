@@ -223,7 +223,6 @@ class CryptoTrader:
             with open(SENTIMENT_CACHE_FILE, 'wb') as f:
                 pickle.dump(self.sentiment_cache, f)
             print("✅ Saved sentiment cache")
-            self.send_telegram_message("Saved sentiment cache")
 
             # Commit to Git in GitHub Actions
             if GITHUB_ACTIONS:
@@ -244,12 +243,10 @@ class CryptoTrader:
                             auth_url = f"https://x-access-token:{token}@github.com/{repo_url}.git"
                             subprocess.run(['git', 'push', auth_url, 'HEAD'], check=True)
                             print("✅ Pushed sentiment cache to GitHub repository")
-                            self.send_telegram_message("Pushed sentiment cache to GitHub repository")
                         else:
                             raise ValueError("GITHUB_REPOSITORY not set")
                     else:
                         print("ℹ️ No changes to commit for sentiment cache")
-                        self.send_telegram_message("No changes to commit for sentiment cache")
                 except (subprocess.CalledProcessError, ValueError) as e:
                     print(f"⚠️ Git operation failed for sentiment cache: {str(e)}")
                     self.send_telegram_message(f"Git operation failed for sentiment cache: {str(e)}")
@@ -551,7 +548,9 @@ class CryptoTrader:
                         if repo_url:
                             token = os.getenv('GITHUB_TOKEN', '')
                             if not token:
-                                raise ValueError("GITHUB_TOKEN not set for Git push")
+                                print("⚠️ GITHUB_TOKEN not set, skipping Git push")
+                                self.send_telegram_message("GITHUB_TOKEN not set, skipping Git push")
+                                return
                             auth_url = f"https://x-access-token:{token}@github.com/{repo_url}.git"
                             subprocess.run(['git', 'push', auth_url, 'HEAD'], check=True)
                             print("✅ Pushed changes to GitHub repository")
