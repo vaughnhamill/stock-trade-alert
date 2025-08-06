@@ -4,6 +4,7 @@
 # Kraken - https://docs.kraken.com/rest/
 # OKX - https://www.okx.com/help-center/
 # Crypto.com - https://exchange-docs.crypto.com/
+# CoinGecko - https://docs.coingecko.com/v3.0.1/reference/introduction
 
 # ------------- IMPORTS ------------- #
 import numpy as np
@@ -29,6 +30,7 @@ import arch
 import ccxt
 from imblearn.over_sampling import SMOTE, ADASYN
 import subprocess
+import glob
 
 # Suppress warnings
 warnings.filterwarnings('ignore')
@@ -525,7 +527,22 @@ class CryptoTrader:
                 try:
                     subprocess.run(['git', 'config', '--global', 'user.email', 'actions@github.com'], check=True)
                     subprocess.run(['git', 'config', '--global', 'user.name', 'GitHub Actions'], check=True)
-                    subprocess.run(['git', 'add', 'crypto/spot/models/*.joblib', 'crypto/spot/model_metadata.json', 'crypto/spot/trade_history.json', 'crypto/spot/sentiment_cache.pkl'], check=True)
+                    
+                    # Prepare files to add
+                    files_to_add = [MODEL_METADATA_FILE, TRADE_HISTORY_FILE, SENTIMENT_CACHE_FILE]
+                    
+                    # Check for .joblib files and add them if they exist
+                    joblib_files = glob.glob(os.path.join(MODEL_DIR, '*.joblib'))
+                    if joblib_files:
+                        files_to_add.extend(joblib_files)
+                        print(f"✅ Found {len(joblib_files)} .joblib files to add")
+                    else:
+                        print("ℹ️ No .joblib files found in crypto/spot/models/")
+
+                    # Add files to Git
+                    subprocess.run(['git', 'add'] + files_to_add, check=True)
+                    
+                    # Check if there are changes to commit
                     result = subprocess.run(['git', 'status', '--porcelain'], capture_output=True, text=True, check=True)
                     if result.stdout.strip():
                         commit_message = f"Update models and trade history {datetime.now(EST).isoformat()}"
@@ -548,6 +565,7 @@ class CryptoTrader:
 
         except Exception as e:
             print(f"⚠️ Error saving state: {str(e)}")
+            self.send_telegram_message(f"Error saving state: {str(e)}")
 
     # ------------- Candidate Scanning and Mapping ------------- #
     def scan_candidates(self):
