@@ -11,7 +11,11 @@
       "sell_time": "2025-08-07T06:22:00-04:00",
       "buy_score": 0.4722743438036844,
       "position_size_pct": 0.4722743438036844,
-      "selected_symbol": "SPX/USD"
+      "selected_symbol": "SPX/USD",
+      "sell_price": 1.756,
+      "actual_return": 0.03360998293013122,
+      "evaluation_time": "2025-08-07T07:13:28.291447-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -291,7 +295,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "2256d629d79c411fc0e8513d353a7711",
@@ -305,7 +309,11 @@
       "sell_time": "2025-08-07T06:39:00-04:00",
       "buy_score": 0.5529429836962388,
       "position_size_pct": 0.5529429836962388,
-      "selected_symbol": "JUP/USD"
+      "selected_symbol": "JUP/USD",
+      "sell_price": 0.4835,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-07T07:13:28.291447-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -585,6 +593,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
