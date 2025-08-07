@@ -1388,6 +1388,7 @@ class CryptoTrader:
         print('🚀 Starting trading algorithm')
         current_time = datetime.now(EST)
         print(f"📅 Analysis started at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
+        self.send_telegram_message(f"🚀 Starting trading algorithm \n📅 Analysis started at {current_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
 
         # Scan for candidates
         self.get_exchange_pairs()
@@ -1479,6 +1480,8 @@ class CryptoTrader:
         position_size_pct = min(max(buy_score, 0.01), 1.0)
         position_size_dollars = PORTFOLIO_SIZE * position_size_pct
 
+        self.send_telegram_message(f"Buy analysis done.")
+
         if buy:
             close_price = best_1m_df['close'].iloc[-1]
             # Final buy report
@@ -1490,6 +1493,8 @@ class CryptoTrader:
             ]
             
             signal_time, predicted_return = self.predict_future_movement(expected_return, sentiment_score)
+
+            self.send_telegram_message(f"Sell analysis done.")
 
             if signal_time is None or predicted_return is None:
                 print(f"❌ No valid future movement prediction for {best_coin['symbol']}")
