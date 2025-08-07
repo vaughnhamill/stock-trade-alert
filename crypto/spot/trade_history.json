@@ -607,7 +607,11 @@
       "sell_time": "2025-08-07T07:43:00-04:00",
       "buy_score": 0.634142724546908,
       "position_size_pct": 0.634142724546908,
-      "selected_symbol": "ALGO/USD"
+      "selected_symbol": "ALGO/USD",
+      "sell_price": 0.258,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-07T07:50:46.623944-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -887,7 +891,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "26f2ec70152cb9e693f9144ae0cb9ffa",
@@ -901,7 +905,11 @@
       "sell_time": "2025-08-07T07:43:00-04:00",
       "buy_score": 0.634142724546908,
       "position_size_pct": 0.634142724546908,
-      "selected_symbol": "ALGO/USD"
+      "selected_symbol": "ALGO/USD",
+      "sell_price": 0.258,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-07T07:50:46.623944-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -1181,6 +1189,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
