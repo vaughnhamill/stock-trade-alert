@@ -2093,7 +2093,11 @@
       "sell_time": "2025-08-07T15:55:00-04:00",
       "buy_score": 0.5485210053670664,
       "position_size_pct": 0.5485210053670664,
-      "selected_symbol": "SPX/USD"
+      "selected_symbol": "SPX/USD",
+      "sell_price": 1.7928,
+      "actual_return": 0.012881355932203352,
+      "evaluation_time": "2025-08-07T16:22:37.684767-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -2373,7 +2377,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "6aadb522971e4d6158cf908522222478",
