@@ -1799,7 +1799,11 @@
       "sell_time": "2025-08-07T16:24:00-04:00",
       "buy_score": 0.6329593833934667,
       "position_size_pct": 0.6329593833934667,
-      "selected_symbol": "MNT/USD"
+      "selected_symbol": "MNT/USD",
+      "sell_price": 1.0887,
+      "actual_return": -0.0008259911894272218,
+      "evaluation_time": "2025-08-07T16:46:21.870760-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -2079,7 +2083,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "14b5466e105c2fabf5f546b5de12236a",
@@ -2391,7 +2395,11 @@
       "sell_time": "2025-08-07T16:26:00-04:00",
       "buy_score": 0.5151955366669718,
       "position_size_pct": 0.5151955366669718,
-      "selected_symbol": "SEI/USD"
+      "selected_symbol": "SEI/USD",
+      "sell_price": 0.30567,
+      "actual_return": 0.0018682399213373155,
+      "evaluation_time": "2025-08-07T16:46:21.870760-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -2671,6 +2679,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
