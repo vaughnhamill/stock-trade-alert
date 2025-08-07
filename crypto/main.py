@@ -1512,7 +1512,7 @@ class CryptoTrader:
                     f"🎯 Predicted sell signal for {best_coin['symbol']} at {signal_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}",
                     f"📈 Predicted sell price: {(1 + predicted_return) * close_price:.4f} (predicted return: {predicted_return * 100:.2f}%)"
                 ])
-
+                print(message)
                 self.send_telegram_message("\n".join(message))
         
         else:
