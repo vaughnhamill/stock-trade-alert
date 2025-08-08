@@ -43,7 +43,6 @@ jobs:
           echo "TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}" >> $GITHUB_ENV
           echo "CHAT_ID=${{ secrets.CHAT_ID }}" >> $GITHUB_ENV
           echo "NEWS_API_KEY=${{ secrets.NEWS_API_KEY }}" >> $GITHUB_ENV
-          echo "GH_PAT=${{ secrets.GH_PAT }}" >> $GITHUB_ENV
 
       - name: Run trading script
         env:
