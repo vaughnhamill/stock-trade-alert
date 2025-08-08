@@ -3885,7 +3885,11 @@
       "sell_time": "2025-08-08T06:24:00-04:00",
       "buy_score": 0.4242893034276918,
       "position_size_pct": 0.4242893034276918,
-      "selected_symbol": "IP/USD"
+      "selected_symbol": "IP/USD",
+      "sell_price": 6.7353,
+      "actual_return": -0.011926767009946394,
+      "evaluation_time": "2025-08-08T06:45:36.745359-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -4165,6 +4169,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
