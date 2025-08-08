@@ -610,7 +610,7 @@ class CryptoTrader:
                     subprocess.run(['git', 'config', '--global', 'user.name', 'GitHub Actions'], check=True)
                     
                     # Prepare files to add
-                    files_to_add = [MODEL_METADATA_FILE, TRADE_HISTORY_FILE, SENTIMENT_CACHE_FILE]
+                    files_to_add = [MODEL_METADATA_FILE, TRADE_HISTORY_FILE, PORTFOLIO_FILE, SENTIMENT_CACHE_FILE]
                     
                     # Check for .joblib files and add them if they exist
                     joblib_files = glob.glob(os.path.join(MODEL_DIR, '*.joblib'))
