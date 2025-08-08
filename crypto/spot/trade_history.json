@@ -2693,7 +2693,11 @@
       "sell_time": "2025-08-07T21:42:00-04:00",
       "buy_score": 0.5529461170572098,
       "position_size_pct": 0.5529461170572098,
-      "selected_symbol": "APT/USD"
+      "selected_symbol": "APT/USD",
+      "sell_price": 4.48,
+      "actual_return": -0.00444444444444435,
+      "evaluation_time": "2025-08-07T22:01:48.345943-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -2973,6 +2977,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
