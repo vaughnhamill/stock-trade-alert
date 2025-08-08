@@ -5077,7 +5077,11 @@
       "sell_time": "2025-08-08T13:43:00-04:00",
       "buy_score": 0.485640758038718,
       "position_size_pct": 0.485640758038718,
-      "selected_symbol": "TIA/USD"
+      "selected_symbol": "TIA/USD",
+      "sell_price": 1.7745,
+      "actual_return": 0.0006202774331791355,
+      "evaluation_time": "2025-08-08T13:52:26.774211-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -5357,6 +5361,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
