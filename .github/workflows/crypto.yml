@@ -46,6 +46,9 @@ jobs:
           echo "GH_PAT=${{ secrets.GH_PAT }}" >> $GITHUB_ENV
 
       - name: Run trading script
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: python crypto/main.py
 
       - name: Commit and push model, history, and sentiment files
