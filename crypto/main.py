@@ -403,9 +403,9 @@ class CryptoTrader:
             reset_time = datetime.fromisoformat(current_portfolio['reset_timestamp']).astimezone(EST)
             trade_entry_time = datetime.fromisoformat(trade['trade_info']['entry_time']).astimezone(EST)
 
-            # Skip trades before the portfolio reset time
-            if trade_entry_time < reset_time:
-                return
+            # # Skip trades before the portfolio reset time
+            # if trade_entry_time < reset_time:
+            #     return
             
             # Check if trade_id already exists in current portfolio's trades
             if any(t['trade_id'] == trade['trade_id'] for t in current_portfolio['trades']):
@@ -623,7 +623,7 @@ class CryptoTrader:
                     subprocess.run(['git', 'config', '--global', 'user.name', 'GitHub Actions'], check=True)
                     
                     # Prepare files to add
-                    files_to_add = [MODEL_METADATA_FILE, TRADE_HISTORY_FILE, SENTIMENT_CACHE_FILE]
+                    files_to_add = [MODEL_METADATA_FILE, TRADE_HISTORY_FILE, PORTFOLIO_FILE, SENTIMENT_CACHE_FILE]
                     
                     # Check for .joblib files and add them if they exist
                     joblib_files = glob.glob(os.path.join(MODEL_DIR, '*.joblib'))
