@@ -2991,7 +2991,11 @@
       "sell_time": "2025-08-07T22:19:00-04:00",
       "buy_score": 0.5054212423290124,
       "position_size_pct": 0.5054212423290124,
-      "selected_symbol": "XLM/USD"
+      "selected_symbol": "XLM/USD",
+      "sell_price": 0.455164,
+      "actual_return": -0.004681776932244353,
+      "evaluation_time": "2025-08-07T23:10:12.184768-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -3271,7 +3275,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "037f3fe85aad9650c097d7816a2893d1",
