@@ -42,13 +42,14 @@ MODEL_DIR = 'crypto/spot/models'
 TRADE_HISTORY_FILE = 'crypto/spot/trade_history.json'
 MODEL_METADATA_FILE = 'crypto/spot/model_metadata.json'
 SENTIMENT_CACHE_FILE = 'crypto/spot/sentiment_cache.pkl'
+PORTFOLIO_FILE = 'crypto/spot/portfolio.json'
+PORTFOLIO_SIZE = 10000.00
 RATE_LIMIT_HIT = False
 FEEDBACK_INTERVAL_HOURS = 3  # How often to retrain models
 SENTIMENT_CACHE_TTL = 14400  # Cache sentiment for 4 hours
 W_1M = 0.75  # Weight for 1 min df in buy score
 W_1H = 0.25  # Weight for 1 hour df in buy score
 W_SENTIMENT = 0.1  # Weight for sentiment in buy score
-PORTFOLIO_SIZE = 1000  # Portfolio size for position sizing
 MIN_CANDLES_1M = 300
 MIN_CANDLES_1H = 100
 FRESHNESS_THRESHOLD_1M = 5  # Minutes  
@@ -99,6 +100,7 @@ class CryptoTrader:
     def __init__(self):
         self.models = {}  # Format: {(coin, timeframe, threshold): {'clf': model, 'reg': model, 'features': list, 'score': float}}
         self.trade_history = []
+        self.portfolio = []
         self.model_metadata = {}
         self.coinbase_pairs = None
         self.binanceus_pairs = None
@@ -132,6 +134,7 @@ class CryptoTrader:
         os.makedirs(os.path.dirname(TRADE_HISTORY_FILE), exist_ok=True)
         os.makedirs(os.path.dirname(MODEL_METADATA_FILE), exist_ok=True)
         os.makedirs(MODEL_DIR, exist_ok=True)
+        
         # Load trade history
         if os.path.exists(TRADE_HISTORY_FILE):
             try:
@@ -158,6 +161,38 @@ class CryptoTrader:
             self.trade_history = []
             with open(TRADE_HISTORY_FILE, 'w') as f:
                 json.dump(self.trade_history, f, indent=2)
+
+        # Load portfolio
+        if os.path.exists(PORTFOLIO_FILE):
+            try:
+                with open(PORTFOLIO_FILE, 'r') as f:
+                    content = f.read().strip()
+                    if content:
+                        self.portfolio = json.loads(content)
+                        if not isinstance(self.portfolio, list) or not self.portfolio:
+                            print("⚠️ Invalid portfolio format, initializing default portfolio")
+                            self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+                        print(f"✅ Loaded portfolio with {len(self.portfolio)} portfolios, latest size ${self.portfolio[-1]['portfolio_size']:.2f}")
+                    else:
+                        print("⚠️ Portfolio file is empty, initializing default portfolio")
+                        self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+                        with open(PORTFOLIO_FILE, 'w') as f:
+                            json.dump(self.portfolio, f, indent=2)
+            except json.JSONDecodeError as e:
+                print(f"⚠️ Invalid JSON in portfolio: {str(e)}, initializing default portfolio")
+                self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+                with open(PORTFOLIO_FILE, 'w') as f:
+                    json.dump(self.portfolio, f, indent=2)
+            except Exception as e:
+                print(f"⚠️ Error loading portfolio: {str(e)}, initializing default portfolio")
+                self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+                with open(PORTFOLIO_FILE, 'w') as f:
+                    json.dump(self.portfolio, f, indent=2)
+        else:
+            print("⚠️ Portfolio file not found, initializing default portfolio")
+            self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+            with open(PORTFOLIO_FILE, 'w') as f:
+                json.dump(self.portfolio, f, indent=2)
 
         # Load model metadata
         if os.path.exists(MODEL_METADATA_FILE):
@@ -292,71 +327,111 @@ class CryptoTrader:
         print("🔍 Evaluating pending trades...")
         now = datetime.now(EST)
         for trade in self.trade_history:
-            if trade['status'] != 'pending':
-                continue
+            if trade['status'] == 'completed':
+                self.paper_trade(trade)
 
-            sell_time = datetime.fromisoformat(trade['trade_info']['sell_time']).astimezone(EST)
-            if now < sell_time:
-                continue  # Too early to evaluate
+            if trade['status'] == 'pending':
+                sell_time = datetime.fromisoformat(trade['trade_info']['sell_time']).astimezone(EST)
+                if now < sell_time:
+                    continue  # Too early to evaluate
 
-            # Fetch prices at sell_time with a 10-minute window
-            symbol = trade['trade_info']['selected_symbol']
-            exchange = trade['exchange']
-            print(f"📊 Evaluating trade for {symbol} at sell time {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
-            price_data = self.fetch_trade_data(symbol, '1m', exchange, start_time=sell_time - timedelta(minutes=5), end_time=sell_time + timedelta(minutes=5))
+                # Fetch prices at sell_time with a 10-minute window
+                symbol = trade['trade_info']['selected_symbol']
+                exchange = trade['exchange']
+                print(f"📊 Evaluating trade for {symbol} at sell time {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}")
+                price_data = self.fetch_trade_data(symbol, '1m', exchange, start_time=sell_time - timedelta(minutes=5), end_time=sell_time + timedelta(minutes=5))
 
-            if price_data is None or price_data.empty:
-                print(f"⚠️ No price data available for {symbol} on {exchange} around {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}, skipping evaluation")
-                continue
-
-            price_data.index = price_data.index.tz_convert(EST)
-
-            if sell_time in price_data.index:
-                sell_price = price_data.loc[sell_time]['close']
-                print(f"✅ Found exact sell time {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')} with close price: ${sell_price:.6f}")
-            else:
-                # Find closest timestamps before and after
-                before = price_data[price_data.index <= sell_time]
-                after = price_data[price_data.index >= sell_time]
-                if before.empty or after.empty:
-                    print(f"⚠️ Insufficient data around sell time for {symbol}, skipping")
+                if price_data is None or price_data.empty:
+                    print(f"⚠️ No price data available for {symbol} on {exchange} around {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}, skipping evaluation")
                     continue
-                closest_before = before.index.max()
-                closest_after = after.index.min()
-                time_diff = (closest_after - closest_before).total_seconds() / 60
-                if time_diff > 5:
-                    print(f"⚠️ Closest candles {closest_before.strftime('%m-%d-%Y %H:%M:%S %Z%z')} and {closest_after.strftime('%m-%d-%Y %H:%M:%S %Z%z')} are {time_diff:.2f} minutes apart, skipping")
-                    continue
-                # Linear interpolation
-                price_before = price_data.loc[closest_before]['close']
-                price_after = price_data.loc[closest_after]['close']
-                time_to_before = (sell_time - closest_before).total_seconds() / 60
-                time_between = (closest_after - closest_before).total_seconds() / 60
-                weight = time_to_before / time_between
-                sell_price = price_before + (price_after - price_before) * weight
-                print(f"⚠️ Interpolated price for {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}: ${sell_price:.6f} (between {price_before:.6f} and {price_after:.6f})")
 
-            # Calculate actual return
-            entry_price = float(trade['trade_info']['entry_price'])
-            actual_return = (sell_price - entry_price) / entry_price
-            expected_return = float(trade['trade_info']['expected_return'])
-            trade['trade_info']['sell_price'] = float(sell_price)
-            trade['trade_info']['actual_return'] = float(actual_return)
-            trade['status'] = 'completed'
-            trade['trade_info']['evaluation_time'] = now.isoformat()
+                price_data.index = price_data.index.tz_convert(EST)
 
-            # Determine outcome
-            outcome = 'profitable' if actual_return >= 0 else 'loss'
-            trade['trade_info']['outcome'] = outcome
-            print(f"📈 Trade outcome: {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)")
-            self.send_telegram_message(
-                f"Trade evaluated: {trade['symbol']} {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)"
-            )
+                if sell_time in price_data.index:
+                    sell_price = price_data.loc[sell_time]['close']
+                    print(f"✅ Found exact sell time {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')} with close price: ${sell_price:.6f}")
+                else:
+                    # Find closest timestamps before and after
+                    before = price_data[price_data.index <= sell_time]
+                    after = price_data[price_data.index >= sell_time]
+                    if before.empty or after.empty:
+                        print(f"⚠️ Insufficient data around sell time for {symbol}, skipping")
+                        continue
+                    closest_before = before.index.max()
+                    closest_after = after.index.min()
+                    time_diff = (closest_after - closest_before).total_seconds() / 60
+                    if time_diff > 5:
+                        print(f"⚠️ Closest candles {closest_before.strftime('%m-%d-%Y %H:%M:%S %Z%z')} and {closest_after.strftime('%m-%d-%Y %H:%M:%S %Z%z')} are {time_diff:.2f} minutes apart, skipping")
+                        continue
+                    # Linear interpolation
+                    price_before = price_data.loc[closest_before]['close']
+                    price_after = price_data.loc[closest_after]['close']
+                    time_to_before = (sell_time - closest_before).total_seconds() / 60
+                    time_between = (closest_after - closest_before).total_seconds() / 60
+                    weight = time_to_before / time_between
+                    sell_price = price_before + (price_after - price_before) * weight
+                    print(f"⚠️ Interpolated price for {sell_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}: ${sell_price:.6f} (between {price_before:.6f} and {price_after:.6f})")
+
+                # Calculate actual return
+                entry_price = float(trade['trade_info']['entry_price'])
+                actual_return = (sell_price - entry_price) / entry_price
+                expected_return = float(trade['trade_info']['expected_return'])
+                trade['trade_info']['sell_price'] = float(sell_price)
+                trade['trade_info']['actual_return'] = float(actual_return)
+                trade['status'] = 'completed'
+                trade['trade_info']['evaluation_time'] = now.isoformat()
+
+                # Determine outcome
+                outcome = 'profitable' if actual_return >= 0 else 'loss'
+                trade['trade_info']['outcome'] = outcome
+                print(f"📈 Trade outcome: {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)")
+                self.send_telegram_message(
+                    f"Trade evaluated: {trade['symbol']} {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)"
+                )
 
         self.save_state()
 
         # Trigger retrain if enough new trades
         self.retrain_models()
+
+    def paper_trade(self, trade):
+        """Simulate a trade without real money and record in portfolio."""
+        print(f"💰 Paper trading trade id: {trade['trade_id']}")
+        try:
+            # Use the most recent portfolio dictionary
+            current_portfolio = self.portfolio[-1]
+            if current_portfolio['portfolio_size'] <= 0:
+                print("⚠️ Portfolio size is zero or negative, creating new portfolio")
+                self.portfolio.append({'portfolio_size': PORTFOLIO_SIZE, 'trades': []})
+                current_portfolio = self.portfolio[-1]
+                self.send_telegram_message(f"Portfolio reset: New portfolio created with ${PORTFOLIO_SIZE:.2f}")
+
+            position_size_pct = float(trade['trade_info']['position_size_pct'])
+            trade_size = current_portfolio['portfolio_size'] * position_size_pct
+            actual_return = float(trade['trade_info']['actual_return'])
+            profit_loss = trade_size * actual_return
+            new_trade_value = trade_size + profit_loss
+            new_portfolio_size = current_portfolio['portfolio_size'] + profit_loss
+
+            # Append trade to the current portfolio's trade history
+            trade_record = {
+                'trade_id': trade['trade_id'],
+                'entry_time': trade['trade_info']['entry_time'],
+                'p&l': new_trade_value
+            }
+            current_portfolio['trades'].append(trade_record)
+            current_portfolio['portfolio_size'] = new_portfolio_size
+
+            print(f"✅ Paper traded {trade['symbol']}: P&L ${profit_loss:.2f}, New portfolio size ${new_portfolio_size:.2f}")
+            self.send_telegram_message(
+                f"Paper trade completed: {trade['symbol']} ({trade['trade_info']['outcome']}), "
+                f"P&L: ${profit_loss:.2f}, New portfolio: ${new_portfolio_size:.2f}"
+            )
+            self.save_state()
+
+        except Exception as e:
+            print(f"⚠️ Error in paper trading {trade['symbol']}: {str(e)}")
+            self.send_telegram_message(f"Error in paper trading {trade['symbol']}: {str(e)}")  
 
     def retrain_models(self):
         """Retrain models with recent trade data, retaining them on disk."""
@@ -508,6 +583,15 @@ class CryptoTrader:
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving trade history: {str(e)}, skipping save")
                 self.send_telegram_message(f"Permission denied when saving trade history: {str(e)}")
+
+            # Save paper trading
+            try:
+                with open(PORTFOLIO_FILE, 'w') as f:
+                    json.dump(self.portfolio, f, indent=2)
+                print(f"✅ Saved paper trading history")
+            except PermissionError as e:
+                print(f"⚠️ Permission denied when saving paper trading history: {str(e)}, skipping save")
+                self.send_telegram_message(f"Permission denied when saving paper trading history: {str(e)}")
 
             # Save model metadata
             try:
@@ -1477,7 +1561,6 @@ class CryptoTrader:
 
         # Position sizing (scale by confidence)
         position_size_pct = min(max(buy_score, 0.01), 1.0)
-        position_size_dollars = PORTFOLIO_SIZE * position_size_pct
 
         if buy:
             close_price = best_1m_df['close'].iloc[-1]
@@ -1486,7 +1569,7 @@ class CryptoTrader:
                 f"✅ Action: BUY {best_coin['symbol']} ({best_coin['selected_symbol']} at {close_price:.4f} on {best_coin['exchange']})",
                 f"🤖 Buy score: {buy_score:.2f} (1m: {prob_1m:.2f}, 1h: {prob_1h:.2f}, sentiment: {sentiment_score:.2f})",
                 f"📈 Expected return: {expected_return * 100:.2f}%",
-                f"💰 Position size: {position_size_pct * 100:.1f}% (${position_size_dollars:.2f})"
+                f"💰 Position size: {position_size_pct * 100:.1f}%"
             ]
             
             signal_time, predicted_return = self.predict_future_movement(expected_return, sentiment_score)
