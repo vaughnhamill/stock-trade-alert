@@ -171,26 +171,26 @@ class CryptoTrader:
                         self.portfolio = json.loads(content)
                         if not isinstance(self.portfolio, list) or not self.portfolio:
                             print("⚠️ Invalid portfolio format, initializing default portfolio")
-                            self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+                            self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': [], 'reset_timestamp': datetime.now(EST).isoformat()}]
                         print(f"✅ Loaded portfolio with {len(self.portfolio)} portfolios, latest size ${self.portfolio[-1]['portfolio_size']:.2f}")
                     else:
                         print("⚠️ Portfolio file is empty, initializing default portfolio")
-                        self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+                        self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': [], 'reset_timestamp': datetime.now(EST).isoformat()}]
                         with open(PORTFOLIO_FILE, 'w') as f:
                             json.dump(self.portfolio, f, indent=2)
             except json.JSONDecodeError as e:
                 print(f"⚠️ Invalid JSON in portfolio: {str(e)}, initializing default portfolio")
-                self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+                self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': [], 'reset_timestamp': datetime.now(EST).isoformat()}]
                 with open(PORTFOLIO_FILE, 'w') as f:
                     json.dump(self.portfolio, f, indent=2)
             except Exception as e:
                 print(f"⚠️ Error loading portfolio: {str(e)}, initializing default portfolio")
-                self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+                self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': [], 'reset_timestamp': datetime.now(EST).isoformat()}]
                 with open(PORTFOLIO_FILE, 'w') as f:
                     json.dump(self.portfolio, f, indent=2)
         else:
             print("⚠️ Portfolio file not found, initializing default portfolio")
-            self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': []}]
+            self.portfolio = [{'portfolio_size': PORTFOLIO_SIZE, 'trades': [], 'reset_timestamp': datetime.now(EST).isoformat()}]
             with open(PORTFOLIO_FILE, 'w') as f:
                 json.dump(self.portfolio, f, indent=2)
 
@@ -400,12 +400,25 @@ class CryptoTrader:
         try:
             # Use the most recent portfolio dictionary
             current_portfolio = self.portfolio[-1]
+            reset_time = datetime.fromisoformat(current_portfolio['reset_timestamp']).astimezone(EST)
+            trade_entry_time = datetime.fromisoformat(trade['trade_info']['entry_time']).astimezone(EST)
+
+            # Skip trades before the portfolio reset time
+            if trade_entry_time < reset_time:
+                return
+            
+            # Check if trade_id already exists in current portfolio's trades
+            if any(t['trade_id'] == trade['trade_id'] for t in current_portfolio['trades']):
+                return
+
+            # Use the most recent portfolio dictionary
+            current_portfolio = self.portfolio[-1]
             if current_portfolio['portfolio_size'] <= 0:
                 print("⚠️ Portfolio size is zero or negative, creating new portfolio")
-                self.portfolio.append({'portfolio_size': PORTFOLIO_SIZE, 'trades': []})
+                self.portfolio.append({'portfolio_size': PORTFOLIO_SIZE, 'trades': [], 'reset_timestamp': datetime.now(EST).isoformat()})
                 current_portfolio = self.portfolio[-1]
                 self.send_telegram_message(f"Portfolio reset: New portfolio created with ${PORTFOLIO_SIZE:.2f}")
-
+            
             position_size_pct = float(trade['trade_info']['position_size_pct'])
             trade_size = current_portfolio['portfolio_size'] * position_size_pct
             actual_return = float(trade['trade_info']['actual_return'])
@@ -610,7 +623,7 @@ class CryptoTrader:
                     subprocess.run(['git', 'config', '--global', 'user.name', 'GitHub Actions'], check=True)
                     
                     # Prepare files to add
-                    files_to_add = [MODEL_METADATA_FILE, TRADE_HISTORY_FILE, PORTFOLIO_FILE, SENTIMENT_CACHE_FILE]
+                    files_to_add = [MODEL_METADATA_FILE, TRADE_HISTORY_FILE, SENTIMENT_CACHE_FILE]
                     
                     # Check for .joblib files and add them if they exist
                     joblib_files = glob.glob(os.path.join(MODEL_DIR, '*.joblib'))
@@ -1566,7 +1579,7 @@ class CryptoTrader:
             close_price = best_1m_df['close'].iloc[-1]
             # Final buy report
             message = [
-                f"✅ Action: BUY {best_coin['symbol']} ({best_coin['selected_symbol']} at {close_price:.4f} on {best_coin['exchange']})",
+                f"✅ Action: BUY {best_coin['symbol']} ({best_coin['selected_symbol']} at ${close_price:.4f} on {best_coin['exchange']})",
                 f"🤖 Buy score: {buy_score:.2f} (1m: {prob_1m:.2f}, 1h: {prob_1h:.2f}, sentiment: {sentiment_score:.2f})",
                 f"📈 Expected return: {expected_return * 100:.2f}%",
                 f"💰 Position size: {position_size_pct * 100:.1f}%"
@@ -1593,7 +1606,7 @@ class CryptoTrader:
                 message.extend([
                     "",
                     f"🎯 Predicted sell signal for {best_coin['symbol']} at {signal_time.strftime('%m-%d-%Y %H:%M:%S %Z%z')}",
-                    f"📈 Predicted sell price: {(1 + predicted_return) * close_price:.4f} (predicted return: {predicted_return * 100:.2f}%)"
+                    f"📈 Predicted sell price: ${(1 + predicted_return) * close_price:.4f} (predicted return: {predicted_return * 100:.2f}%)"
                 ])
                 print(message)
                 self.send_telegram_message("\n".join(message))
