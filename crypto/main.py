@@ -430,7 +430,7 @@ class CryptoTrader:
             trade_record = {
                 'trade_id': trade['trade_id'],
                 'entry_time': trade['trade_info']['entry_time'],
-                'p&l': new_trade_value
+                'p&l': profit_loss
             }
             current_portfolio['trades'].append(trade_record)
             current_portfolio['portfolio_size'] = new_portfolio_size
