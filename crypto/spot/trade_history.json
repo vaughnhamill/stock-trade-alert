@@ -7163,7 +7163,11 @@
       "sell_time": "2025-08-10T11:06:00-04:00",
       "buy_score": 0.49692132524286076,
       "position_size_pct": 0.49692132524286076,
-      "selected_symbol": "LINK/USD"
+      "selected_symbol": "LINK/USD",
+      "sell_price": 22.107,
+      "actual_return": -0.0031114718614718194,
+      "evaluation_time": "2025-08-10T11:16:09.737226-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -7443,7 +7447,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "32c26f17e58cb6b5e3776aa0baa79270",
