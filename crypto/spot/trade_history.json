@@ -10441,7 +10441,11 @@
       "sell_time": "2025-08-12T09:38:00-04:00",
       "buy_score": 0.4970953177823821,
       "position_size_pct": 0.4970953177823821,
-      "selected_symbol": "LDO/USD"
+      "selected_symbol": "LDO/USD",
+      "sell_price": 1.512,
+      "actual_return": -0.01754385964912275,
+      "evaluation_time": "2025-08-12T09:49:25.286211-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -10721,6 +10725,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
