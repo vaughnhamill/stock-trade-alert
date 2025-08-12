@@ -11633,7 +11633,11 @@
       "sell_time": "2025-08-12T13:46:00-04:00",
       "buy_score": 0.46768409206012845,
       "position_size_pct": 0.46768409206012845,
-      "selected_symbol": "PEPE/USD"
+      "selected_symbol": "PEPE/USD",
+      "sell_price": 1.214e-05,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-12T13:52:28.159438-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -11913,7 +11917,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c3a462c1daa3cbc63a399d599911db7a",
@@ -11927,7 +11931,11 @@
       "sell_time": "2025-08-12T12:18:00-04:00",
       "buy_score": 0.7721484523110396,
       "position_size_pct": 0.7721484523110396,
-      "selected_symbol": "CRV/USD"
+      "selected_symbol": "CRV/USD",
+      "sell_price": 0.9751,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-12T13:52:28.159438-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -12207,6 +12215,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
