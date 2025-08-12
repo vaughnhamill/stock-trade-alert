@@ -12229,7 +12229,11 @@
       "sell_time": "2025-08-12T17:45:00-04:00",
       "buy_score": 0.47890164466935214,
       "position_size_pct": 0.47890164466935214,
-      "selected_symbol": "KAS/USD"
+      "selected_symbol": "KAS/USD",
+      "sell_price": 0.09813,
+      "actual_return": -0.001729399796541236,
+      "evaluation_time": "2025-08-12T17:47:32.032806-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -12509,6 +12513,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
