@@ -14017,7 +14017,11 @@
       "sell_time": "2025-08-13T13:38:00-04:00",
       "buy_score": 0.46944848696967567,
       "position_size_pct": 0.46944848696967567,
-      "selected_symbol": "HYPE/USD"
+      "selected_symbol": "HYPE/USD",
+      "sell_price": 47.41,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-13T13:45:56.970694-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -14297,6 +14301,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
