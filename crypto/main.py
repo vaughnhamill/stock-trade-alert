@@ -453,7 +453,7 @@ class CryptoTrader:
         recent_trades = [
             t for t in self.trade_history
             if t['status'] == 'completed' and
-            (now - datetime.fromisoformat(t['trade_info']['entry_time']).astimezone(EST)).days < 7
+            (now - datetime.fromisoformat(t['trade_info']['entry_time']).astimezone(EST)).days < 28
         ]
         
         if len(recent_trades) < 50:
