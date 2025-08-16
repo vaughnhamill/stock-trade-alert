@@ -18185,7 +18185,11 @@
       "sell_time": "2025-08-16T09:46:00-04:00",
       "buy_score": 0.5057480445639582,
       "position_size_pct": 0.5057480445639582,
-      "selected_symbol": "MNT/USD"
+      "selected_symbol": "MNT/USD",
+      "sell_price": 1.3166,
+      "actual_return": 0.0003799103411594445,
+      "evaluation_time": "2025-08-16T09:49:06.651840-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -18465,7 +18469,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "314632691141b72312f25902cf35a4e0",
