@@ -143,7 +143,7 @@
       "sentiment_roll_mean_6",
       "sentiment_roll_std_6"
     ],
-    "last_retrain": "2025-08-16T16:16:00.724116-04:00",
+    "last_retrain": "2025-08-16T16:16:01.569632-04:00",
     "score": 0.0
   },
   "MNT_1h_0.0200": {
@@ -290,7 +290,7 @@
       "sentiment_roll_mean_6",
       "sentiment_roll_std_6"
     ],
-    "last_retrain": "2025-08-16T16:16:00.727579-04:00",
+    "last_retrain": "2025-08-16T16:16:01.572526-04:00",
     "score": 0.0
   }
 }
