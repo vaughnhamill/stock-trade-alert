@@ -19977,7 +19977,11 @@
       "sell_time": "2025-08-17T01:24:00-04:00",
       "buy_score": 0.5087928062587074,
       "position_size_pct": 0.5087928062587074,
-      "selected_symbol": "INJ/USD"
+      "selected_symbol": "INJ/USD",
+      "sell_price": 14.883,
+      "actual_return": -0.00020153164046756106,
+      "evaluation_time": "2025-08-17T01:38:41.351685-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -20257,6 +20261,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
