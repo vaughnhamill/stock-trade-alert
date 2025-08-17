@@ -21169,7 +21169,11 @@
       "sell_time": "2025-08-17T08:02:00-04:00",
       "buy_score": 0.4692139515922471,
       "position_size_pct": 0.4692139515922471,
-      "selected_symbol": "XMR/USD"
+      "selected_symbol": "XMR/USD",
+      "sell_price": 276.46,
+      "actual_return": -0.00817966563822928,
+      "evaluation_time": "2025-08-17T08:28:32.889464-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -21449,6 +21453,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
