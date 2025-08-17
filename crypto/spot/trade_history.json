@@ -21765,7 +21765,11 @@
       "sell_time": "2025-08-17T12:28:00-04:00",
       "buy_score": 0.4619611866804192,
       "position_size_pct": 0.4619611866804192,
-      "selected_symbol": "ARB/USD"
+      "selected_symbol": "ARB/USD",
+      "sell_price": 0.553,
+      "actual_return": 0.010230179028133083,
+      "evaluation_time": "2025-08-17T12:42:29.779124-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -22045,6 +22049,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
