@@ -536,9 +536,9 @@ class CryptoTrader:
             os.makedirs(MODEL_DIR, exist_ok=True)
 
             # Save specific model if provided
-            if coin and timeframe and threshold is not None:
-                model_key = (coin, timeframe, threshold)
-                model_id = f"{coin}_{timeframe}_{threshold:.4f}"
+            if timeframe and score is not None:
+                model_key = (timeframe, score)
+                model_id = f"{timeframe}_{score:.4f}"
                 clf_path = os.path.join(MODEL_DIR, f"{model_id}_clf.joblib") if clf else None
                 reg_path = os.path.join(MODEL_DIR, f"{model_id}_reg.joblib") if reg else None
                 
@@ -548,9 +548,7 @@ class CryptoTrader:
                     dump(reg, reg_path)
                 
                 self.model_metadata[model_id] = {
-                    'coin': coin,
                     'timeframe': timeframe,
-                    'threshold': threshold,
                     'clf_path': clf_path,
                     'reg_path': reg_path,
                     'features': features or [],
@@ -563,13 +561,13 @@ class CryptoTrader:
                     'features': features or [],
                     'score': score or 0.0
                 }
-                print(f"✅ Saved model for {coin} ({timeframe}, threshold: {threshold:.4f})")
+                print(f"✅ Saved model for {model_id})")
             
             # Save all models if no specific model provided
             else:
                 for model_key, data in self.models.items():
-                    coin, timeframe, threshold = model_key
-                    model_id = f"{coin}_{timeframe}_{threshold:.4f}"
+                    timeframe, score = model_key
+                    model_id = f"{timeframe}_{score:.4f}"
                     clf_path = os.path.join(MODEL_DIR, f"{model_id}_clf.joblib")
                     reg_path = os.path.join(MODEL_DIR, f"{model_id}_reg.joblib")
                     if data['clf']:
@@ -577,9 +575,7 @@ class CryptoTrader:
                     if data['reg']:
                         dump(data['reg'], reg_path)
                     self.model_metadata[model_id] = {
-                        'coin': coin,
                         'timeframe': timeframe,
-                        'threshold': threshold,
                         'clf_path': clf_path if data['clf'] else None,
                         'reg_path': reg_path if data['reg'] else None,
                         'features': data['features'],
