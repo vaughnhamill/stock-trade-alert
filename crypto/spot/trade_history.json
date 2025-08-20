@@ -24149,7 +24149,11 @@
       "sell_time": "2025-08-20T11:06:00-04:00",
       "buy_score": 0.5063151552374174,
       "position_size_pct": 0.5063151552374174,
-      "selected_symbol": "AAVE/USD"
+      "selected_symbol": "AAVE/USD",
+      "sell_price": 292.76,
+      "actual_return": 0.007606263982102838,
+      "evaluation_time": "2025-08-20T11:16:54.367083-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -24429,6 +24433,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
