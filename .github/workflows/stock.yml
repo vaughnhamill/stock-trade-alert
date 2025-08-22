@@ -1,10 +1,6 @@
 name: Run Stock Script
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
   schedule:
     - cron: '*/20 * * * *'  # Every 20 minutes, all days
   workflow_dispatch:
@@ -68,4 +64,5 @@ jobs:
       - name: List generated files (Debug)
         if: always()
         run: |
+
           ls -R stock/
