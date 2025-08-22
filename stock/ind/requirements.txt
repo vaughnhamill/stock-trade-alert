@@ -13,3 +13,4 @@ arch>=7.0.0
 imbalanced-learn==0.12.3
 setuptools<81
 yfinance
+lxml
