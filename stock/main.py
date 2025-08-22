@@ -32,11 +32,11 @@ warnings.filterwarnings('ignore')
 # --- Configuration ---
 THRESHOLDS = [0.02, 0.99]  # Min, Max
 EST = pytz.timezone('America/New_York')
-MODEL_DIR = 'stocks/ind/models'
-TRADE_HISTORY_FILE = 'stocks/ind/trade_history.json'
-MODEL_METADATA_FILE = 'stocks/ind/model_metadata.json'
-SENTIMENT_CACHE_FILE = 'stocks/ind/sentiment_cache.pkl'
-PORTFOLIO_FILE = 'stocks/ind/portfolio.json'
+MODEL_DIR = 'stock/ind/models'
+TRADE_HISTORY_FILE = 'stock/ind/trade_history.json'
+MODEL_METADATA_FILE = 'stock/ind/model_metadata.json'
+SENTIMENT_CACHE_FILE = 'stock/ind/sentiment_cache.pkl'
+PORTFOLIO_FILE = 'stock/ind/portfolio.json'
 PORTFOLIO_SIZE = 10000.00
 RATE_LIMIT_HIT = False
 FEEDBACK_INTERVAL_HOURS = 3  # How often to retrain models
@@ -609,7 +609,7 @@ class StockTrader:
                         files_to_add.extend(joblib_files)
                         print(f"✅ Found {len(joblib_files)} .joblib files to add")
                     else:
-                        print("ℹ️ No .joblib files found in stocks/ind/models/")
+                        print("ℹ️ No .joblib files found in stock/ind/models/")
 
                     # Add files to Git
                     subprocess.run(['git', 'add'] + files_to_add, check=True)
