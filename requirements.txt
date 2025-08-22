@@ -1,9 +1,0 @@
-yfinance
-pandas
-pandas-ta
-xgboost
-scikit-learn
-requests
-numpy==1.23.5
-finvizfinance
-pytz
