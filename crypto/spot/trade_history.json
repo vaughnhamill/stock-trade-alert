@@ -27725,7 +27725,11 @@
       "sell_time": "2025-08-22T14:52:00-04:00",
       "buy_score": 0.5106172902122582,
       "position_size_pct": 0.5106172902122582,
-      "selected_symbol": "ETC/USD"
+      "selected_symbol": "ETC/USD",
+      "sell_price": 24.77,
+      "actual_return": -0.00641797031688729,
+      "evaluation_time": "2025-08-22T15:12:40.540717-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -28005,7 +28009,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "38172627273167b5b778c74146e4793c",
