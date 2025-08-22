@@ -25639,7 +25639,11 @@
       "sell_time": "2025-08-21T21:14:00-04:00",
       "buy_score": 0.4539411533304623,
       "position_size_pct": 0.4539411533304623,
-      "selected_symbol": "AERO/USD"
+      "selected_symbol": "AERO/USD",
+      "sell_price": 1.40766,
+      "actual_return": -0.006058295204202701,
+      "evaluation_time": "2025-08-21T22:48:41.006025-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -25919,6 +25923,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
