@@ -29215,7 +29215,11 @@
       "sell_time": "2025-08-22T17:12:00-04:00",
       "buy_score": 0.5106028382959851,
       "position_size_pct": 0.5106028382959851,
-      "selected_symbol": "OP/USD"
+      "selected_symbol": "OP/USD",
+      "sell_price": 0.8,
+      "actual_return": 0.001251564455569463,
+      "evaluation_time": "2025-08-22T17:14:27.527933-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -29495,7 +29499,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "829e6b82ebf4e82b2275d90801e03099",
