@@ -309,7 +309,11 @@
       "sell_time": "2025-08-22T14:44:00-04:00",
       "buy_score": 0.950397959947586,
       "position_size_pct": 0.950397959947586,
-      "selected_symbol": "INTC"
+      "selected_symbol": "INTC",
+      "sell_price": 25.157499313354492,
+      "actual_return": 9.932922443969029e-05,
+      "evaluation_time": "2025-08-22T14:57:33.452386-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -589,7 +593,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "0300458e5113a5992738f3b1d5015774",
