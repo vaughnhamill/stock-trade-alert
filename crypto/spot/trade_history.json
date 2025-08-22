@@ -28023,7 +28023,11 @@
       "sell_time": "2025-08-22T15:17:00-04:00",
       "buy_score": 0.8641887433449594,
       "position_size_pct": 0.8641887433449594,
-      "selected_symbol": "SPX/USD"
+      "selected_symbol": "SPX/USD",
+      "sell_price": 1.4939,
+      "actual_return": -0.010596728260149688,
+      "evaluation_time": "2025-08-22T15:28:53.583977-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -28303,7 +28307,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "9ca4de83c4e3539a2d16979e8090e801",
@@ -28909,7 +28913,11 @@
       "sell_time": "2025-08-22T15:09:00-04:00",
       "buy_score": 0.47237598656817165,
       "position_size_pct": 0.47237598656817165,
-      "selected_symbol": "OP/USD"
+      "selected_symbol": "OP/USD",
+      "sell_price": 0.791,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-22T15:28:53.583977-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -29189,6 +29197,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
