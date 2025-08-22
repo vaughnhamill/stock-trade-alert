@@ -28313,7 +28313,11 @@
       "sell_time": "2025-08-22T14:25:00-04:00",
       "buy_score": 0.5982509959738355,
       "position_size_pct": 0.5982509959738355,
-      "selected_symbol": "SKY/USD"
+      "selected_symbol": "SKY/USD",
+      "sell_price": 0.07117,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-22T14:46:01.819338-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -28593,6 +28597,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
