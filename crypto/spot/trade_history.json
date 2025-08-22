@@ -26831,7 +26831,11 @@
       "sell_time": "2025-08-22T11:40:00-04:00",
       "buy_score": 0.601453395990899,
       "position_size_pct": 0.601453395990899,
-      "selected_symbol": "PENGU/USD"
+      "selected_symbol": "PENGU/USD",
+      "sell_price": 0.03421,
+      "actual_return": 0.01785182981255568,
+      "evaluation_time": "2025-08-22T11:47:14.021821-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -27111,6 +27115,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
