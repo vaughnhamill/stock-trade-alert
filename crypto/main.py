@@ -284,10 +284,10 @@ class CryptoTrader:
                         print("ℹ️ No changes to commit for sentiment cache")
                 except (subprocess.CalledProcessError, ValueError) as e:
                     print(f"⚠️ Git operation failed for sentiment cache: {str(e)}")
-                    self.send_telegram_message(f"Git operation failed for sentiment cache: {str(e)}")
+                    self.send_telegram_message(f"Git operation failed for crypto sentiment cache: {str(e)}")
         except (PermissionError, pickle.PickleError) as e:
             print(f"⚠️ Error saving sentiment cache: {str(e)}, skipping cache save")
-            self.send_telegram_message(f"Error saving sentiment cache: {str(e)}")
+            self.send_telegram_message(f"Error saving crypto sentiment cache: {str(e)}")
 
     # ------------- Record Trades and Retrain Models ------------- #
     def record_trade(self, coin, entry_price, expected_return, entry_time, sell_time, features_1m, features_1h, buy_score, position_size_pct, exchange):
@@ -386,7 +386,7 @@ class CryptoTrader:
                 trade['trade_info']['outcome'] = outcome
                 print(f"📈 Trade outcome: {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)")
                 self.send_telegram_message(
-                    f"Trade evaluated: {trade['symbol']} {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)"
+                    f"Crypto trade evaluated: {trade['symbol']} {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)"
                 )
 
         self.save_state()
@@ -417,7 +417,7 @@ class CryptoTrader:
                 print("⚠️ Portfolio size is zero or negative, creating new portfolio")
                 self.portfolio.append({'portfolio_size': PORTFOLIO_SIZE, 'trades': [], 'reset_timestamp': datetime.now(EST).isoformat()})
                 current_portfolio = self.portfolio[-1]
-                self.send_telegram_message(f"Portfolio reset: New portfolio created with ${PORTFOLIO_SIZE:.2f}")
+                self.send_telegram_message(f"Crypto portfolio reset: New portfolio created with ${PORTFOLIO_SIZE:.2f}")
             
             position_size_pct = float(trade['trade_info']['position_size_pct'])
             trade_size = current_portfolio['portfolio_size'] * position_size_pct
@@ -437,14 +437,14 @@ class CryptoTrader:
 
             print(f"✅ Paper traded {trade['symbol']}: P&L ${profit_loss:.2f}, New portfolio size ${new_portfolio_size:.2f}")
             self.send_telegram_message(
-                f"Paper trade completed: {trade['symbol']} ({trade['trade_info']['outcome']}), "
+                f"Crypto paper trade completed: {trade['symbol']} ({trade['trade_info']['outcome']}), "
                 f"P&L: ${profit_loss:.2f}, New portfolio: ${new_portfolio_size:.2f}"
             )
             self.save_state()
 
         except Exception as e:
             print(f"⚠️ Error in paper trading {trade['symbol']}: {str(e)}")
-            self.send_telegram_message(f"Error in paper trading {trade['symbol']}: {str(e)}")  
+            self.send_telegram_message(f"Error in crypto paper trading {trade['symbol']}: {str(e)}")  
 
     def retrain_models(self):
         """Retrain models with recent trade data, grouped by timeframe only, retaining them on disk."""
@@ -591,7 +591,7 @@ class CryptoTrader:
                 print(f"✅ Saved trade history with {len(self.trade_history)} entries")
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving trade history: {str(e)}, skipping save")
-                self.send_telegram_message(f"Permission denied when saving trade history: {str(e)}")
+                self.send_telegram_message(f"Permission denied when saving crypto trade history: {str(e)}")
 
             # Save paper trading
             try:
@@ -600,7 +600,7 @@ class CryptoTrader:
                 print(f"✅ Saved paper trading history")
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving paper trading history: {str(e)}, skipping save")
-                self.send_telegram_message(f"Permission denied when saving paper trading history: {str(e)}")
+                self.send_telegram_message(f"Permission denied when saving crypto paper trading history: {str(e)}")
 
             # Save model metadata
             try:
@@ -609,7 +609,7 @@ class CryptoTrader:
                 print("✅ Saved model metadata")
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving model metadata: {str(e)}, skipping save")
-                self.send_telegram_message(f"Permission denied when saving model metadata: {str(e)}")
+                self.send_telegram_message(f"Permission denied when saving crypto model metadata: {str(e)}")
 
             # GitHub Actions integration
             if GITHUB_ACTIONS:
@@ -652,11 +652,11 @@ class CryptoTrader:
                         print("ℹ️ No changes to commit")
                 except (subprocess.CalledProcessError, ValueError) as e:
                     print(f"⚠️ Git operation failed: {str(e)}")
-                    self.send_telegram_message(f"Git operation failed: {str(e)}")
+                    self.send_telegram_message(f"Git operation failed (crypto): {str(e)}")
 
         except Exception as e:
             print(f"⚠️ Error saving state: {str(e)}")
-            self.send_telegram_message(f"Error saving state: {str(e)}")
+            self.send_telegram_message(f"Error saving crypto state: {str(e)}")
 
     # ------------- Candidate Scanning and Mapping ------------- #
     def scan_candidates(self):
