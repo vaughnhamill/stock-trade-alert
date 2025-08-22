@@ -901,7 +901,11 @@
       "sell_time": "2025-08-22T15:45:00-04:00",
       "buy_score": 0.5011952251195908,
       "position_size_pct": 0.5011952251195908,
-      "selected_symbol": "WBD"
+      "selected_symbol": "WBD",
+      "sell_price": 11.944999694824219,
+      "actual_return": -0.0006693193168554773,
+      "evaluation_time": "2025-08-22T15:53:47.797685-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -1181,7 +1185,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a9f5ce8e8747d2bb65155e1cefcaf07a",
