@@ -58,12 +58,9 @@ best_1h_df = None
 
 # Load environment variables
 GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS', 'false').lower() == 'true'
-# TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-# CHAT_ID = os.getenv('CHAT_ID')
-# NEWS_API_KEY = os.getenv('NEWS_API_KEY')
-NEWS_API_KEY = 'ba50dfbca62e4b5eae7dceebcfcbf743'
-TELEGRAM_TOKEN = '7253798286:AAH4pd_GJpSmI0FpOa-8_R2s_jwZPfKoyF0'
-CHAT_ID = '5797820287'
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+CHAT_ID = os.getenv('CHAT_ID')
+NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 
 # ------------- File System Setup ---------------- #
 os.makedirs(os.path.dirname(SENTIMENT_CACHE_FILE), exist_ok=True)
