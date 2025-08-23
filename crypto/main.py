@@ -1401,6 +1401,7 @@ class CryptoTrader:
             latest_timestamp = latest_timestamp.tz_convert(EST)
         
         # Parameters
+        min_minutes = 5 # No transactions less than 5 min
         max_minutes = 360  # 6 hours
         threshold = expected_return  # Use the regressor's expected return as the threshold
         
@@ -1481,7 +1482,7 @@ class CryptoTrader:
         signal_time = None
         predicted_return = None
 
-        for i, (timestamp, features) in enumerate(future_data.iterrows()):
+        for i, (timestamp, features) in enumerate(future_data.iterrows()[min_minutes:]):
             if i >= max_minutes:
                 break
             features_df = pd.DataFrame([features], columns=best_analysis['feat_1m'], index=[timestamp])
