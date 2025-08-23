@@ -2,7 +2,7 @@ name: Run Stock Script
 
 on:
   schedule:
-    - cron: '*/20 * * * *'  # Every 20 minutes, all days
+    - cron: '*/20 8-15 * * 1-5'  # Every 20 minutes, 8am-4pm Mon-Fri
   workflow_dispatch:
 
 jobs:
