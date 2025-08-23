@@ -30407,7 +30407,11 @@
       "sell_time": "2025-08-23T02:27:00-04:00",
       "buy_score": 0.5094471603631974,
       "position_size_pct": 0.5094471603631974,
-      "selected_symbol": "TAO/USD"
+      "selected_symbol": "TAO/USD",
+      "sell_price": 366.1864,
+      "actual_return": -0.0053415306520741695,
+      "evaluation_time": "2025-08-23T02:44:18.884996-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -30687,7 +30691,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8f857884233455ec897ce13559bc3d8c",
