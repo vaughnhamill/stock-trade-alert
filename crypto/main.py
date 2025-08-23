@@ -1482,7 +1482,7 @@ class CryptoTrader:
         signal_time = None
         predicted_return = None
 
-        for i, (timestamp, features) in enumerate(future_data.iterrows()[min_minutes:]):
+        for i, (timestamp, features) in enumerate(future_data.iloc[min_minutes:].iterrows()):
             if i >= max_minutes:
                 break
             features_df = pd.DataFrame([features], columns=best_analysis['feat_1m'], index=[timestamp])
