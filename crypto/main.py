@@ -479,86 +479,168 @@ class CryptoTrader:
             if t['status'] == 'completed' and
             (now - datetime.fromisoformat(t['trade_info']['entry_time']).astimezone(EST)).days < 28
         ]
-        
+
         if len(recent_trades) < MIN_TRADES_FOR_RETRAIN:
             print(f"⚠️ Insufficient trades ({len(recent_trades)} < {MIN_TRADES_FOR_RETRAIN}) for retraining")
             return
 
-        # Group trades by timeframe only
         for timeframe in ['1m', '1h']:
             timeframe_trades = [t for t in recent_trades if timeframe in t['features']]
             if not timeframe_trades:
                 print(f"⚠️ No trades for {timeframe}, skipping")
                 continue
-            
-            print(f"📊 Retraining models for timeframe: {timeframe}")
+
+            print(f"\n📊 Retraining models for timeframe: {timeframe}")
 
             # Prepare data
-            X = np.array([list(t['features'][timeframe].values()) for t in timeframe_trades])
-            le = LabelEncoder()
-            y = le.fit_transform([t['trade_info']['outcome'] for t in timeframe_trades])  # Multi-class: profitable/break_even/loss
-            y_reg = np.array([t['trade_info']['actual_return'] for t in timeframe_trades])
+            X = pd.DataFrame([t['features'][timeframe] for t in timeframe_trades])
+            outcome_map = {
+                "loss": 0,
+                "break-even": 1,
+                "profitable": 2
+            }
+            y_class = pd.Series([outcome_map[t['trade_info']['outcome']] for t in timeframe_trades])            
+            y_reg = pd.Series([t['trade_info']['actual_return'] for t in timeframe_trades])
 
-            # Split for validation
             split = int(0.8 * len(X))
             if split < 2 or len(X) - split < 2:
-                print(f"⚠️ Insufficient data after split for {timeframe}")
+                print(f"⚠️ Insufficient data for {timeframe} after split")
                 continue
-            X_train, X_val = X[:split], X[split:]
-            y_train, y_val = y[:split], y[split:]
-            y_reg_train, y_reg_val = y_reg[:split], y[split:]
 
-            # Train classifier with improved imbalance handling
-            clf = None
-            if len(np.unique(y_train)) >= 2 and len(np.unique(y_val)) >= 2:
-                over = SMOTE(random_state=42)
-                under = RandomUnderSampler(random_state=42)
-                pipeline = Pipeline([('over', over), ('under', under)])
-                X_train_res, y_train_res = pipeline.fit_resample(X_train, y_train)
-                base_clf = self.models.get((timeframe,), {}).get('clf')
+            X_train, X_test = X.iloc[:split], X.iloc[split:]
+            y_class_train, y_class_test = y_class.iloc[:split], y_class.iloc[split:]
+            y_reg_train, y_reg_test = y_reg.iloc[:split], y_reg.iloc[split:]
+
+            # Load base models if available
+            base_models = self.models.get(timeframe, {})
+            base_clf = base_models.get('clf')
+            base_reg = base_models.get('reg')
+            base_score = base_models.get('score', 0.0)
+
+            best_class_result, best_reg_result = None, None
+
+            # ---- Classifier ----
+            if y_class_train.nunique() >= 2 and y_class_test.nunique() >= 2:
+                # Oversampling
+                minority_count = min([sum(y_class_train == c) for c in np.unique(y_class_train)])
+                k_neighbors = min(5, max(1, minority_count - 1))
+                try:
+                    smote = SMOTE(random_state=42, k_neighbors=k_neighbors)
+                    X_train_res, y_class_train_res = smote.fit_resample(X_train, y_class_train)
+                except ValueError as e:
+                    print(f"⚠️ SMOTE failed for {timeframe}: {str(e)}, trying ADASYN")
+                    try:
+                        adasyn = ADASYN(random_state=42, n_neighbors=k_neighbors)
+                        X_train_res, y_class_train_res = adasyn.fit_resample(X_train, y_class_train)
+                    except ValueError as e:
+                        print(f"⚠️ ADASYN also failed for {timeframe}: {str(e)}, proceeding without oversampling")
+                        X_train_res, y_class_train_res = X_train, y_class_train
+
+                # Undersampling if imbalance > 3:1
+                class_counts = np.bincount(y_class_train_res)
+                if len(class_counts) > 1 and max(class_counts) / min(class_counts) > 3:
+                    under = RandomUnderSampler(random_state=42)
+                    X_train_res, y_class_train_res = under.fit_resample(X_train_res, y_class_train_res)
+
                 clf = XGBClassifier(
                     n_estimators=100, max_depth=3, learning_rate=0.1,
-                    subsample=0.8, colsample_bytree=0.8, eval_metric='auc',
-                    early_stopping_rounds=10, random_state=42
+                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                    random_state=42, early_stopping_rounds=10
                 )
-                clf.fit(X_train_res, y_train_res, eval_set=[(X_val, y_val)], verbose=False, xgb_model=base_clf)
-                y_pred = clf.predict(X_val)
-                f1 = f1_score(y_val, y_pred, average='weighted')  # Weighted for multi-class
-                cv_f1 = cross_val_score(clf, X_train_res, y_train_res, cv=5, scoring='f1_weighted').mean()
-                print(f"✅ Classifier for {timeframe} - F1 Score: {f1:.4f}, CV F1: {cv_f1:.4f}")
-                base_score = self.models.get((timeframe,), {}).get('score', 0.0)
-                if cv_f1 > base_score + 0.05:
-                    self.models[(timeframe,)] = self.models.get((timeframe,), {})
-                    self.models[(timeframe,)]['clf'] = clf
-                    self.models[(timeframe,)]['score'] = cv_f1
-                else:
-                    print(f"ℹ️ No improvement in classifier for {timeframe}, keeping base model")
-            else:
-                print(f"⚠️ Skipping classifier for {timeframe} - insufficient classes")
+                clf.fit(
+                    X_train_res, y_class_train_res,
+                    eval_set=[(X_test, y_class_test)],
+                    verbose=False,
+                    xgb_model=base_clf if base_clf else None
+                )
+                y_pred = clf.predict(X_test)
+                f1 = f1_score(y_class_test, y_pred, average='weighted')
 
-            # Train regressor similarly
-            reg = None
-            if not np.isnan(y_reg_train).all():
-                base_reg = self.models.get((timeframe,), {}).get('reg')
+                # Cross-validation
+                cv_clf = XGBClassifier(
+                    n_estimators=100, max_depth=3, learning_rate=0.1,
+                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                    random_state=42
+                )
+                cv_f1 = cross_val_score(cv_clf, X_train_res, y_class_train_res, cv=5, scoring='f1_weighted').mean()
+                print(f"✅ Classifier for {timeframe} - F1 Score: {f1:.4f}, CV: {cv_f1:.4f}")
+
+                # Lightweight tuning if poor performance
+                if f1 < 0.5 or (base_clf and f1 < base_score * 0.9):
+                    print(f"⚠️ Classifier F1 {f1:.4f} is low, attempting lightweight tuning")
+                    best_f1, best_clf = f1, clf
+                    for lr in [0.05, 0.2]:
+                        for depth in [2, 4]:
+                            temp_clf = XGBClassifier(
+                                n_estimators=100, max_depth=depth, learning_rate=lr,
+                                subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                                random_state=42, early_stopping_rounds=10
+                            )
+                            temp_clf.fit(X_train_res, y_class_train_res, eval_set=[(X_test, y_class_test)], verbose=False)
+                            temp_f1 = f1_score(y_class_test, temp_clf.predict(X_test), average='weighted')
+                            if temp_f1 > best_f1:
+                                best_f1, best_clf = temp_f1, temp_clf
+                            print(f"🔍 Tuning: lr={lr}, depth={depth}, F1={temp_f1:.4f}")
+                    f1, clf = best_f1, best_clf
+                    print(f"✅ Best tuned classifier F1 Score: {f1:.4f}")
+
+                best_class_result = {'score': f1, 'model': clf}
+                print('\nClassifier Report:')
+                print(classification_report(y_class_test, y_pred))
+            else:
+                print(f"⚠️ Skipping classifier training for {timeframe} — only one class")
+
+            # ---- Regressor ----
+            if not y_reg.isnull().all():
                 reg = XGBRegressor(
                     n_estimators=200, max_depth=4, learning_rate=0.05,
                     subsample=0.8, colsample_bytree=0.8, random_state=42,
-                    early_stopping_rounds=20
+                    early_stopping_rounds=20, verbosity=0
                 )
-                reg.fit(X_train, y_reg_train, eval_set=[(X_val, y_reg_val)], verbose=False, xgb_model=base_reg)
-                y_reg_pred = reg.predict(X_val)
-                rmse = np.sqrt(mean_squared_error(y_reg_val, y_reg_pred))  # Fixed: y_reg_test -> y_reg_val
-                cv_rmse = -cross_val_score(reg, X_train, y_reg_train, cv=5, scoring='neg_root_mean_squared_error').mean()  # Negative for consistency
+                reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False, xgb_model=base_reg if base_reg else None)
+                y_reg_pred = reg.predict(X_test)
+                rmse = np.sqrt(mean_squared_error(y_reg_test, y_reg_pred))
+
+                # Cross-validation
+                cv_reg = XGBRegressor(
+                    n_estimators=200, max_depth=4, learning_rate=0.05,
+                    subsample=0.8, colsample_bytree=0.8, random_state=42
+                )
+                cv_rmse = -cross_val_score(cv_reg, X_train, y_reg_train, cv=5, scoring='neg_root_mean_squared_error').mean()
                 print(f"✅ Regressor for {timeframe} - RMSE: {rmse:.5f}, CV RMSE: {cv_rmse:.5f}")
-                base_score = self.models.get((timeframe,), {}).get('score', 0.0)
-                if cv_rmse < base_score * 0.95:  # Better if lower RMSE
-                    self.models[(timeframe,)] = self.models.get((timeframe,), {})
-                    self.models[(timeframe,)]['reg'] = reg
-                    self.models[(timeframe,)]['score'] = cv_rmse
-                else:
-                    print(f"ℹ️ No improvement in regressor for {timeframe}, keeping base model")
+
+                # Lightweight tuning if poor
+                if rmse > 0.1 or (base_reg and base_score and rmse > base_score * 1.1):
+                    print(f"⚠️ Regressor RMSE {rmse:.5f} is high, attempting lightweight tuning")
+                    best_rmse, best_reg = rmse, reg
+                    for lr in [0.03, 0.1]:
+                        for depth in [3, 5]:
+                            temp_reg = XGBRegressor(
+                                n_estimators=200, max_depth=depth, learning_rate=lr,
+                                subsample=0.8, colsample_bytree=0.8, random_state=42,
+                                early_stopping_rounds=20, verbosity=0
+                            )
+                            temp_reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False)
+                            temp_rmse = np.sqrt(mean_squared_error(y_reg_test, temp_reg.predict(X_test)))
+                            if temp_rmse < best_rmse:
+                                best_rmse, best_reg = temp_rmse, temp_reg
+                            print(f"🔍 Tuning: lr={lr}, depth={depth}, RMSE={temp_rmse:.5f}")
+                    rmse, reg = best_rmse, best_reg
+                    print(f"✅ Best tuned regressor RMSE: {rmse:.5f}")
+
+                best_reg_result = {'rmse': rmse, 'model': reg}
             else:
-                print(f"⚠️ Skipping regressor for {timeframe} - invalid targets")
+                print(f"❕ Skipping regressor for {timeframe} — no valid target returns")
+
+            # Save models
+            features = list(timeframe_trades[0]['features'][timeframe].keys())
+            self.save_state(
+                timeframe=timeframe,
+                clf=best_class_result['model'] if best_class_result else None,
+                reg=best_reg_result['model'] if best_reg_result else None,
+                features=features,
+                score=(best_class_result['score'] if best_class_result else best_reg_result['rmse'])
+            )
 
     def save_state(self, coin=None, timeframe=None, threshold=None, clf=None, reg=None, features=None, score=None):
         """Persist models, trade history, and metadata to disk."""
