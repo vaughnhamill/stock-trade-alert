@@ -30109,7 +30109,11 @@
       "sell_time": "2025-08-23T01:14:00-04:00",
       "buy_score": 0.45895940363407134,
       "position_size_pct": 0.45895940363407134,
-      "selected_symbol": "BONK/USD"
+      "selected_symbol": "BONK/USD",
+      "sell_price": 2.335e-05,
+      "actual_return": 0.006899525657610974,
+      "evaluation_time": "2025-08-23T01:15:04.899300-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -30389,6 +30393,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
