@@ -22,6 +22,7 @@ import pickle
 from pycoingecko import CoinGeckoAPI
 from sklearn.metrics import f1_score, classification_report, mean_squared_error
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import cross_val_score
 from joblib import dump, load
 import hashlib
 from textblob import TextBlob
@@ -29,8 +30,11 @@ from scipy.stats import t
 import arch
 import ccxt
 from imblearn.over_sampling import SMOTE, ADASYN
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.pipeline import Pipeline
 import subprocess
 import glob
+from xgboost.callback import EarlyStopping
 
 # Suppress warnings
 warnings.filterwarnings('ignore')
@@ -45,7 +49,7 @@ SENTIMENT_CACHE_FILE = 'crypto/spot/sentiment_cache.pkl'
 PORTFOLIO_FILE = 'crypto/spot/portfolio.json'
 PORTFOLIO_SIZE = 10000.00
 RATE_LIMIT_HIT = False
-FEEDBACK_INTERVAL_HOURS = 3  # How often to retrain models
+FEEDBACK_INTERVAL_HOURS = 1  # How often to retrain models
 SENTIMENT_CACHE_TTL = 14400  # Cache sentiment for 4 hours
 W_1M = 0.75  # Weight for 1 min df in buy score
 W_1H = 0.25  # Weight for 1 hour df in buy score
@@ -61,6 +65,12 @@ best_coin = None
 best_analysis = None
 best_1m_df = None
 best_1h_df = None
+MIN_PROFITABLE_RETURN = 0.005  # 0.5% min for profitable label
+FEE_RATE = 0.002  # 0.2% trading fees
+MIN_TRADES_FOR_RETRAIN = 100  # Increased for better data
+MIN_LIQUIDITY = 1000000  # 24h volume threshold
+MAX_VOLATILITY = 0.10  # Max 10% volatility filter
+NUM_MONTE_CARLO_PATHS = 100  # For simulations
 
 # Load environment variables
 GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS', 'false').lower() == 'true'
@@ -70,26 +80,6 @@ NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 
 # Initialize APIs
 cg = CoinGeckoAPI()
-binanceus = ccxt.binanceus({
-    'enableRateLimit': True,
-    'rateLimit': 100,  # 100ms delay (conservative for 1200 requests/minute)
-})
-coinbase = ccxt.coinbase({
-    'enableRateLimit': True,
-    'rateLimit': 360,  # 360ms delay (conservative for 10,000 requests/hour)
-})
-kraken = ccxt.kraken({
-    'enableRateLimit': True,
-    'rateLimit': 3100,  # 3100ms delay (Freqtrade recommendation for 15 calls/15s)
-})
-okx = ccxt.okx({
-    'enableRateLimit': True,
-    'rateLimit': 50,  # 50ms delay (conservative for 100 requests/2s)
-})
-cryptocom = ccxt.cryptocom({
-    'enableRateLimit': True,
-    'rateLimit': 500,  # 500ms delay (conservative estimate for 100-200 requests/minute)
-})
 
 # ------------- File System Setup ---------------- #
 os.makedirs(os.path.dirname(SENTIMENT_CACHE_FILE), exist_ok=True)
@@ -107,6 +97,26 @@ class CryptoTrader:
         self.kraken_pairs = None
         self.okx_pairs = None
         self.cryptocom_pairs = None
+        self.binanceus = ccxt.binanceus({
+            'enableRateLimit': True,
+            'rateLimit': 100,
+        })
+        self.coinbase = ccxt.coinbase({
+            'enableRateLimit': True,
+            'rateLimit': 360,
+        })
+        self.kraken = ccxt.kraken({
+            'enableRateLimit': True,
+            'rateLimit': 3100,
+        })
+        self.okx = ccxt.okx({
+            'enableRateLimit': True,
+            'rateLimit': 50,
+        })
+        self.cryptocom = ccxt.cryptocom({
+            'enableRateLimit': True,
+            'rateLimit': 500,
+        })
         self.sentiment_cache = {}
         self.load_sentiment_cache()
         self.load_state()
@@ -300,6 +310,12 @@ class CryptoTrader:
         processed_features_1m = {key: float(value) if isinstance(value, (np.float64, np.float32)) else int(value) if isinstance(value, (np.int64, np.int32)) else value for key, value in features_1m.items()}
         processed_features_1h = {key: float(value) if isinstance(value, (np.float64, np.float32)) else int(value) if isinstance(value, (np.int64, np.int32)) else value for key, value in features_1h.items()}
 
+        # Ensure sell_time > entry_time + min hold
+        min_hold = timedelta(minutes=5)
+        if sell_time <= entry_time + min_hold:
+            print(f"⚠️ Adjusting sell_time for {coin['symbol']} to minimum hold period.")
+            sell_time = entry_time + min_hold
+
         self.trade_history.append({
             'trade_id': trade_id,
             'id': coin['id'],
@@ -326,9 +342,12 @@ class CryptoTrader:
         """Evaluate outcome of pending trades."""
         print("🔍 Evaluating pending trades...")
         now = datetime.now(EST)
+        break_even_count = 0
+        total_recent = 0
         for trade in self.trade_history:
             if trade['status'] == 'completed':
                 self.paper_trade(trade)
+                continue  # Skip re-evaluation
 
             if trade['status'] == 'pending':
                 sell_time = datetime.fromisoformat(trade['trade_info']['sell_time']).astimezone(EST)
@@ -382,12 +401,19 @@ class CryptoTrader:
                 trade['trade_info']['evaluation_time'] = now.isoformat()
 
                 # Determine outcome
-                outcome = 'profitable' if actual_return >= 0 else 'loss'
+                outcome = 'profitable' if actual_return >= MIN_PROFITABLE_RETURN else 'break_even' if actual_return >= 0 else 'loss'
                 trade['trade_info']['outcome'] = outcome
                 print(f"📈 Trade outcome: {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)")
                 self.send_telegram_message(
                     f"Crypto trade evaluated: {trade['symbol']} {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)"
                 )
+
+                # Track break-even for alerting
+                entry_time = datetime.fromisoformat(trade['trade_info']['entry_time']).astimezone(EST)
+                if (now - entry_time).days < 7:  # Recent trades
+                    total_recent += 1
+                    if outcome == 'break_even':
+                        break_even_count += 1
 
         self.save_state()
 
@@ -403,16 +429,14 @@ class CryptoTrader:
             reset_time = datetime.fromisoformat(current_portfolio['reset_timestamp']).astimezone(EST)
             trade_entry_time = datetime.fromisoformat(trade['trade_info']['entry_time']).astimezone(EST)
 
-            # # Skip trades before the portfolio reset time
-            # if trade_entry_time < reset_time:
-            #     return
+            # Skip trades before the portfolio reset time
+            if trade_entry_time < reset_time:
+                return
             
             # Check if trade_id already exists in current portfolio's trades
             if any(t['trade_id'] == trade['trade_id'] for t in current_portfolio['trades']):
                 return
 
-            # Use the most recent portfolio dictionary
-            current_portfolio = self.portfolio[-1]
             if current_portfolio['portfolio_size'] <= 0:
                 print("⚠️ Portfolio size is zero or negative, creating new portfolio")
                 self.portfolio.append({'portfolio_size': PORTFOLIO_SIZE, 'trades': [], 'reset_timestamp': datetime.now(EST).isoformat()})
@@ -456,8 +480,8 @@ class CryptoTrader:
             (now - datetime.fromisoformat(t['trade_info']['entry_time']).astimezone(EST)).days < 28
         ]
         
-        if len(recent_trades) < 50:
-            print(f"⚠️ Insufficient trades ({len(recent_trades)} < 50) for retraining")
+        if len(recent_trades) < MIN_TRADES_FOR_RETRAIN:
+            print(f"⚠️ Insufficient trades ({len(recent_trades)} < {MIN_TRADES_FOR_RETRAIN}) for retraining")
             return
 
         # Group trades by timeframe only
@@ -472,7 +496,7 @@ class CryptoTrader:
             # Prepare data
             X = np.array([list(t['features'][timeframe].values()) for t in timeframe_trades])
             le = LabelEncoder()
-            y = le.fit_transform([t['trade_info']['outcome'] for t in timeframe_trades])  # 'profitable' -> 1, 'loss' -> 0
+            y = le.fit_transform([t['trade_info']['outcome'] for t in timeframe_trades])  # Multi-class: profitable/break_even/loss
             y_reg = np.array([t['trade_info']['actual_return'] for t in timeframe_trades])
 
             # Split for validation
@@ -484,50 +508,57 @@ class CryptoTrader:
             y_train, y_val = y[:split], y[split:]
             y_reg_train, y_reg_val = y_reg[:split], y[split:]
 
-            # Train classifier
+            # Train classifier with improved imbalance handling
             clf = None
             if len(np.unique(y_train)) >= 2 and len(np.unique(y_val)) >= 2:
-                class_ratio = len(y_train[y_train == 0]) / len(y_train[y_train == 1]) if 1 in y_train else 1.0
-                minority_count = len(y_train[y_train == 1])
-                k_neighbors = min(5, max(1, minority_count - 1))
-                try:
-                    smote = SMOTE(random_state=42, k_neighbors=k_neighbors)
-                    X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
-                except ValueError as e:
-                    print(f"⚠️ SMOTE failed for {timeframe}: {str(e)}, trying ADASYN")
-                    try:
-                        adasyn = ADASYN(random_state=42, n_neighbors=k_neighbors)
-                        X_train_res, y_train_res = adasyn.fit_resample(X_train, y_train)
-                    except ValueError as e:
-                        print(f"⚠️ ADASYN also failed for {timeframe}: {str(e)}, proceeding without oversampling")
-                        X_train_res, y_train_res = X_train, y_train
+                over = SMOTE(random_state=42)
+                under = RandomUnderSampler(random_state=42)
+                pipeline = Pipeline([('over', over), ('under', under)])
+                X_train_res, y_train_res = pipeline.fit_resample(X_train, y_train)
+                base_clf = self.models.get((timeframe,), {}).get('clf')
                 clf = XGBClassifier(
                     n_estimators=100, max_depth=3, learning_rate=0.1,
                     subsample=0.8, colsample_bytree=0.8, eval_metric='auc',
-                    early_stopping_rounds=10, random_state=42,
-                    scale_pos_weight=class_ratio
+                    early_stopping_rounds=10, random_state=42
                 )
-                clf.fit(X_train_res, y_train_res, eval_set=[(X_val, y_val)], verbose=False)
+                clf.fit(X_train_res, y_train_res, eval_set=[(X_val, y_val)], verbose=False, xgb_model=base_clf)
                 y_pred = clf.predict(X_val)
-                f1 = f1_score(y_val, y_pred)
-                print(f"✅ Classifier for {timeframe} - F1 Score: {f1:.4f}")
+                f1 = f1_score(y_val, y_pred, average='weighted')  # Weighted for multi-class
+                cv_f1 = cross_val_score(clf, X_train_res, y_train_res, cv=5, scoring='f1_weighted').mean()
+                print(f"✅ Classifier for {timeframe} - F1 Score: {f1:.4f}, CV F1: {cv_f1:.4f}")
+                base_score = self.models.get((timeframe,), {}).get('score', 0.0)
+                if cv_f1 > base_score + 0.05:
+                    self.models[(timeframe,)] = self.models.get((timeframe,), {})
+                    self.models[(timeframe,)]['clf'] = clf
+                    self.models[(timeframe,)]['score'] = cv_f1
+                else:
+                    print(f"ℹ️ No improvement in classifier for {timeframe}, keeping base model")
             else:
-                print(f"⚠️ Skipping classifier for {timeframe} - only one class")
+                print(f"⚠️ Skipping classifier for {timeframe} - insufficient classes")
 
-            # Train regressor
-            reg = XGBRegressor(
-                n_estimators=200, max_depth=4, learning_rate=0.05,
-                subsample=0.8, colsample_bytree=0.8, random_state=42,
-                early_stopping_rounds=20, verbosity=0
-            )
-            reg.fit(X_train, y_reg_train, eval_set=[(X_val, y_reg_val)], verbose=False)
-            y_reg_pred = reg.predict(X_val)
-            rmse = np.sqrt(mean_squared_error(y_reg_val, y_reg_pred))
-            print(f"✅ Regressor for {timeframe} - RMSE: {rmse:.5f}")
-
-            # Save models
-            features = list(timeframe_trades[0]['features'][timeframe].keys())
-            self.save_state(timeframe=timeframe, clf=clf, reg=reg, features=features, score=f1 if clf else rmse)
+            # Train regressor similarly
+            reg = None
+            if not np.isnan(y_reg_train).all():
+                base_reg = self.models.get((timeframe,), {}).get('reg')
+                reg = XGBRegressor(
+                    n_estimators=200, max_depth=4, learning_rate=0.05,
+                    subsample=0.8, colsample_bytree=0.8, random_state=42,
+                    early_stopping_rounds=20
+                )
+                reg.fit(X_train, y_reg_train, eval_set=[(X_val, y_reg_val)], verbose=False, xgb_model=base_reg)
+                y_reg_pred = reg.predict(X_val)
+                rmse = np.sqrt(mean_squared_error(y_reg_val, y_reg_pred))  # Fixed: y_reg_test -> y_reg_val
+                cv_rmse = -cross_val_score(reg, X_train, y_reg_train, cv=5, scoring='neg_root_mean_squared_error').mean()  # Negative for consistency
+                print(f"✅ Regressor for {timeframe} - RMSE: {rmse:.5f}, CV RMSE: {cv_rmse:.5f}")
+                base_score = self.models.get((timeframe,), {}).get('score', 0.0)
+                if cv_rmse < base_score * 0.95:  # Better if lower RMSE
+                    self.models[(timeframe,)] = self.models.get((timeframe,), {})
+                    self.models[(timeframe,)]['reg'] = reg
+                    self.models[(timeframe,)]['score'] = cv_rmse
+                else:
+                    print(f"ℹ️ No improvement in regressor for {timeframe}, keeping base model")
+            else:
+                print(f"⚠️ Skipping regressor for {timeframe} - invalid targets")
 
     def save_state(self, coin=None, timeframe=None, threshold=None, clf=None, reg=None, features=None, score=None):
         """Persist models, trade history, and metadata to disk."""
@@ -660,111 +691,55 @@ class CryptoTrader:
 
     # ------------- Candidate Scanning and Mapping ------------- #
     def scan_candidates(self):
-        """Find potential trading candidates using CoinGecko API and include sentiment scores."""
+        """Scan top 20 coins and filter by liquidity/volatility."""
         print('🔍 Scanning for candidates...')
-        try:
-            coins = cg.get_coins_markets(
-                vs_currency='usd',
-                order='market_cap_desc',
-                per_page=1000,
-                price_change_percentage='1h'
-            )
-
-            top_coins = coins[:20]
-            thresh_1h, thresh_24h = self.calculate_dynamic_thresholds(top_coins)
-
-            sorted_coins = []
-            for c in coins:
-                symbol = c['symbol'].upper()
-                price_change_1h = c.get('price_change_percentage_1h_in_currency', 0.0)
-                price_change_24h = c.get('price_change_percentage_24h', 0.0)
-                
-                if price_change_1h > thresh_1h and price_change_24h > thresh_24h:
-                    coin = {
-                        'id': c['id'],
-                        'symbol': symbol,
-                        'price_change_percentage_1h': price_change_1h,
-                        'price_change_percentage_24h': price_change_24h,
-                    }
-                    sorted_coins.append(coin)
-            sorted_coins = sorted(
-                sorted_coins,
-                key=lambda x: (x['price_change_percentage_1h'], x['price_change_percentage_24h']),
-                reverse=True
-            )
-            sorted_coins = sorted_coins[:10]  # Limit to top 10 candidates
-            sorted_coins = self.map_coingecko_to_exchange(sorted_coins)
-
-            for c in sorted_coins:
-                c['sentiment'] = self.fetch_news_sentiment(c['symbol'], c['id'])
-                time.sleep(0.5)
-            sorted_coins = sorted(
-                sorted_coins,
-                key=lambda x: (x['price_change_percentage_1h'] + x['sentiment'], x['price_change_percentage_24h']),
-                reverse=True
-            )
-            
-            return sorted_coins
-
-        except Exception as e:
-            print(f"⚠️ Error scanning candidates: {str(e)}")
-            return []
-        
-    def calculate_dynamic_thresholds(self, top_coins):
-        """Calculate dynamic thresholds based on 7-day market-wide volatility."""
-        try:
-            if not top_coins:
-                print("⚠️ No top coins retrieved, using default thresholds")
-                return 1.5, 3.0
-            
-            mapped_coins = self.map_coingecko_to_exchange(top_coins)
-            if not mapped_coins:
-                print("⚠️ No mapped coins available, using default thresholds")
-                return 1.5, 3.0
-                        
-            vol_1h_list = []
-            vol_1d_list = []
-            min_valid_coins = 5
-
-            for coin in mapped_coins:
-                symbol = coin.get('selected_symbol')
-                exchange = coin.get('exchange')
-                if not symbol or not exchange:
-                    print(f"⚠️ Skipping {coin.get('symbol', 'unknown')} due to missing symbol or exchange")
+        top_coins = cg.get_coins_markets(vs_currency='usd', order='market_cap_desc', per_page=1, price_change_percentage='1h')
+        candidates = []
+        for coin in top_coins:
+            # Filter by liquidity (24h volume) and volatility
+            if coin['total_volume'] < MIN_LIQUIDITY or abs(coin.get('price_change_percentage_24h', 0) / 100) > MAX_VOLATILITY:
+                print(f"⚠️ Skipping {coin['symbol']} (Volume: ${coin['total_volume']:,.2f}, Volatility: {coin.get('price_change_percentage_24h', 0):.2f}%)")
+                continue
+            sentiment = self.fetch_news_sentiment(coin['id'])  # Assume get_sentiment is defined
+            coin['sentiment'] = sentiment
+            # Select exchange with most recent data
+            exchanges = ['binanceus', 'coinbase', 'kraken', 'okx', 'cryptocom']
+            selected_exchange = None
+            selected_symbol = None
+            latest_timestamp = None
+            for exchange_name in exchanges:
+                try:
+                    exchange = getattr(self, exchange_name)
+                    pairs = getattr(self, f"{exchange_name}_pairs", [])
+                    symbol = next((s for s in pairs if s.endswith('/USD') and coin['symbol'].upper() in s), None)
+                    if not symbol:
+                        continue
+                    # Fetch 1m data to check recency
+                    df = self.fetch_data(symbol, '1m', exchange_name)
+                    if df is not None and not df.empty:
+                        last_time = df.index[-1].tz_convert(EST)
+                        if latest_timestamp is None or last_time > latest_timestamp:
+                            latest_timestamp = last_time
+                            selected_exchange = exchange_name
+                            selected_symbol = symbol
+                except Exception as e:
+                    print(f"⚠️ Error checking {exchange_name} for {coin['symbol']}: {str(e)}")
                     continue
-
-                # Fetch 1-hour and 1-day data
-                df_1h = self.fetch_data(symbol, '1h', exchange)
-                df_1d = self.fetch_data(symbol, '1d', exchange)
-
-                if df_1h is not None and not df_1h.empty and df_1d is not None and not df_1d.empty:
-                    returns_1h = df_1h['close'].pct_change().dropna()
-                    returns_1d = df_1d['close'].pct_change().dropna()
-                    if not returns_1h.empty and not returns_1d.empty:
-                        vol_1h = returns_1h.std() * 1.5
-                        vol_1d = returns_1d.std() * 1.5
-                        vol_1h_list.append(vol_1h)
-                        vol_1d_list.append(vol_1d)
-                        print(f"✅ Calculated volatility for {coin['symbol']} on {exchange}: 1h={vol_1h:.4f}, 1d={vol_1d:.4f}")
-
-            if len(vol_1h_list) < min_valid_coins or len(vol_1d_list) < min_valid_coins:
-                print(f"⚠️ Insufficient valid coins ({len(vol_1h_list)} < {min_valid_coins}), using default thresholds")
-                return 1.5, 3.0
-            
-            # Compute market-wide thresholds as the median of individual coin volatilities
-            market_vol_1h = np.median(vol_1h_list)
-            market_vol_1d = np.median(vol_1d_list)
-            
-            # Ensure minimum thresholds
-            final_vol_1h = max(market_vol_1h, 1.5)
-            final_vol_1d = max(market_vol_1d, 3.0)
-            
-            print(f"✅ Market-wide thresholds: 1h={final_vol_1h:.4f}, 1d={final_vol_1d:.4f} (based on {len(vol_1h_list)} coins)")
-            return final_vol_1h, final_vol_1d
-
-        except Exception as e:
-            print(f"⚠️ Error calculating market-wide thresholds: {str(e)}")
-            return 1.5, 3.0
+            if selected_exchange and selected_symbol:
+                coin['exchange'] = selected_exchange
+                coin['selected_symbol'] = selected_symbol
+                candidates.append(coin)
+                print(f"✅ Added {coin['symbol']} ({selected_symbol} on {selected_exchange}, Sentiment: {sentiment:.2f})")
+            else:
+                print(f"⚠️ No valid exchange data for {coin['symbol']}")
+        # Sort by combined score: market cap * (1 - volatility) + sentiment
+        sorted_candidates = sorted(
+            candidates,
+            key=lambda c: c['market_cap'] * (1 - abs(c.get('price_change_percentage_24h', 0)/100)) + c['sentiment'],
+            reverse=True
+        )[:10]
+        print(f"🏆 Top {len(sorted_candidates)} candidates selected")
+        return sorted_candidates
         
     def map_coingecko_to_exchange(self, coins):
         """Map CoinGecko coins to valid trading pairs across multiple exchanges."""
@@ -866,55 +841,23 @@ class CryptoTrader:
             return []
         
     def get_exchange_pairs(self):
-        """Fetch available trading pairs from Coinbase."""
-        if self.coinbase_pairs is None:
+        """Fetch available trading pairs for each exchange."""
+        exchanges = {
+            'binanceus': self.binanceus,
+            'coinbase': self.coinbase,
+            'kraken': self.kraken,
+            'okx': self.okx,
+            'cryptocom': self.cryptocom
+        }
+        for exchange_name, exchange in exchanges.items():
             try:
-                markets = coinbase.load_markets()
-                self.coinbase_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
-                print(f"✅ Loaded {len(self.coinbase_pairs)} Coinbase pairs") # Debugging line
+                markets = exchange.load_markets()
+                pairs = [symbol for symbol in markets.keys() if symbol.endswith('/USD')]
+                setattr(self, f"{exchange_name}_pairs", pairs)
+                print(f"✅ Loaded {len(pairs)} USD pairs for {exchange_name}")
             except Exception as e:
-                print(f"⚠️ Error fetching Coinbase pairs: {str(e)}")
-                self.coinbase_pairs = {}
-
-        """Fetch available trading pairs from Binance US."""
-        if self.binanceus_pairs is None:
-            try:
-                markets = binanceus.load_markets()
-                self.binanceus_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
-                print(f"✅ Loaded {len(self.binanceus_pairs)} Binance US pairs")  # Debugging line
-            except Exception as e:
-                print(f"⚠️ Error fetching Binance US pairs: {str(e)}")
-                self.binanceus_pairs = {}
-
-        """Fetch available trading pairs from Kraken."""
-        if self.kraken_pairs is None:
-            try:
-                markets = kraken.load_markets()
-                self.kraken_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
-                print(f"✅ Loaded {len(self.kraken_pairs)} Kraken pairs")  # Debugging line
-            except Exception as e:
-                print(f"⚠️ Error fetching Kraken pairs: {str(e)}")
-                self.kraken_pairs = {}
-
-        """Fetch available trading pairs from OKX."""
-        if self.okx_pairs is None:
-            try:
-                markets = okx.load_markets()
-                self.okx_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
-                print(f"✅ Loaded {len(self.okx_pairs)} OKX pairs")  # Debugging line
-            except Exception as e:
-                print(f"⚠️ Error fetching OKX pairs: {str(e)}")
-                self.okx_pairs = {}
-
-        """Fetch available trading pairs from Crypto.com."""
-        if self.cryptocom_pairs is None:
-            try:
-                markets = cryptocom.load_markets()
-                self.cryptocom_pairs = {pair: base for pair, base in [(m, markets[m]['base']) for m in markets] if markets[pair]['spot'] and markets[pair]['active'] and pair.endswith('/USD')}
-                print(f"✅ Loaded {len(self.cryptocom_pairs)} Crypto.com pairs")  # Debugging line
-            except Exception as e:
-                print(f"⚠️ Error fetching Crypto.com pairs: {str(e)}")
-                self.cryptocom_pairs = {}
+                print(f"⚠️ Error loading pairs for {exchange_name}: {str(e)}")
+                setattr(self, f"{exchange_name}_pairs", [])
 
     def fetch_news_sentiment(self, coin_symbol, coin_id=None, max_retries=3):
         """Fetch up to 100 recent news articles for the given coin and compute sentiment score."""
@@ -1027,15 +970,15 @@ class CryptoTrader:
         min_candles = None if interval == '1m' or interval == '1h' else 20
         
         if exchange == 'coinbase':
-            ex = coinbase
+            ex = self.coinbase
         elif exchange == 'binanceus':
-            ex = binanceus
+            ex = self.binanceus
         elif exchange == 'kraken':
-            ex = kraken
+            ex = self.kraken
         elif exchange == 'okx':
-            ex = okx
+            ex = self.okx
         elif exchange == 'cryptocom':
-            ex = cryptocom
+            ex = self.cryptocom
         else:
             print(f"⚠️ Unknown exchange: {exchange}")
             return None
@@ -1070,13 +1013,15 @@ class CryptoTrader:
 
     def fetch_trade_data(self, symbol, interval, exchange, start_time=None, end_time=None):
         """Fetch OHLCV data within a specific time range for trade evaluation."""
+        start_time = start_time.astimezone(EST)
+        end_time = end_time.astimezone(EST)
         timeframe = {'1m': '1m', '1h': '1h', '1d': '1d'}.get(interval, '1m')
         exchange_obj = {
-            'coinbase': coinbase,
-            'binanceus': binanceus,
-            'kraken': kraken,
-            'okx': okx,
-            'cryptocom': cryptocom
+            'coinbase': self.coinbase,
+            'binanceus': self.binanceus,
+            'kraken': self.kraken,
+            'okx': self.okx,
+            'cryptocom': self.cryptocom
         }.get(exchange)
         
         if not exchange_obj:
@@ -1105,23 +1050,18 @@ class CryptoTrader:
             print(f"⚠️ Error fetching trade data for {symbol} on {exchange}: {str(e)}")
             return None
 
-    def calculate_features(self, df, df_type):
-        """Add technical indicators and sentiment score to the DataFrame."""
+    def calculate_features(self, df, df_type, lags=[1,3,5], rolling_windows=[3,6]):
+        """Calculate technical features with additions."""
         if df is None or df.empty:
-            print(f"⚠️ Invalid or empty DataFrame for {df_type}, cannot calculate features")
+            print(f"⚠️ Empty DataFrame for {df_type}, skipping features")
             return None
-
-        lags = [1, 3, 5]
-        rolling_windows = [3, 6]
-
         try:
-            # Basic features
+            df = df.copy()
             df['returns'] = df['close'].pct_change()
-            df['volatility'] = df['returns'].rolling(20).std()
-
-            # Technical indicators
+            df['volatility'] = df['returns'].rolling(window=20).std()
             df['rsi'] = ta.rsi(df['close'], length=14)
-            df['macd'] = ta.macd(df['close'])['MACD_12_26_9']
+            macd = ta.macd(df['close'], fast=12, slow=26, signal=9)
+            df['macd'] = macd['MACD_12_26_9']
             df['bollinger'] = ta.bbands(df['close'], length=20, std=2)['BBM_20_2.0']
             df['atr'] = ta.atr(df['high'], df['low'], df['close'], length=14)
             df['sma_20'] = ta.sma(df['close'], length=20)
@@ -1130,6 +1070,7 @@ class CryptoTrader:
             df['obv'] = ta.obv(df['close'], df['volume'])
             stoch = ta.stoch(df['high'], df['low'], df['close'], k=14, d=3, smooth_k=3)
             df = pd.concat([df, stoch], axis=1)
+            df['mom'] = ta.mom(df['close'], length=10)
 
             if 'sentiment' not in df.columns:
                 df['sentiment'] = 0.0
@@ -1137,7 +1078,7 @@ class CryptoTrader:
             # Add time series features
             base_features = ['open', 'high', 'low', 'volume', 'returns', 'volatility',
                              'rsi', 'macd', 'bollinger', 'atr', 'sma_20', 'ema_20',
-                             'adx', 'obv', 'STOCHk_14_3_3', 'STOCHd_14_3_3', 'sentiment']
+                             'adx', 'obv', 'STOCHk_14_3_3', 'STOCHd_14_3_3', 'sentiment', 'mom']
 
             for col in base_features:
                 # Lag features
@@ -1172,37 +1113,54 @@ class CryptoTrader:
             return None
     
     def label_1m_model(self, coin, df, window=360, min_return=THRESHOLDS[0], max_return=THRESHOLDS[1]):
-        """Prepare labeled data for 1-minute model with dynamic threshold."""
+        """Prepare labeled data for 1-minute model with dynamic threshold from history."""
         if df is None or df.empty:
             print(f"⚠️ Invalid or empty DataFrame for {coin['symbol']} (1m), cannot label")
             return None
         try:
             print(f"📊 Attempting to label 1m model for {coin['symbol']}")
-
             df = df.copy()
             df['future_max'] = df['close'].shift(-1).rolling(window=window, min_periods=1).max()
             df['target_return'] = df['future_max'] / df['close'] - 1
             df['target_return'] = df['target_return'].clip(lower=0, upper=max_return)
-            
-            # Dynamic threshold: Use 25th percentile, fallback to mean, then min_return
-            valid_returns = df['target_return'].dropna()
-            if len(valid_returns) > 0:
-                dynamic_threshold = np.percentile(valid_returns, 10)  # Lower percentile for more balance
-                if dynamic_threshold < min_return:
-                    dynamic_threshold = valid_returns.mean() + valid_returns.std() if valid_returns.mean() > 0 else min_return
+
+            # Log return statistics
+            print(f"📊 Target return stats for {coin['symbol']}: min={df['target_return'].min():.4f}, max={df['target_return'].max():.4f}, mean={df['target_return'].mean():.4f}")
+
+            # Dynamic threshold with history
+            coin_trades = [t for t in self.trade_history if t['id'] == coin['id'] and 'actual_return' in t['trade_info']]
+            if coin_trades:
+                hist_returns = [t['trade_info']['actual_return'] for t in coin_trades]
+                dynamic_threshold = np.mean(hist_returns) + np.std(hist_returns) if np.mean(hist_returns) > 0 else min_return
                 dynamic_threshold = max(dynamic_threshold, min_return)
-                print(f"📈 Dynamic threshold for {coin['symbol']}: {dynamic_threshold:.4f}")
+                print(f"📈 History-adjusted threshold for {coin['symbol']}: {dynamic_threshold:.4f}")
             else:
-                dynamic_threshold = min_return
-                print(f"⚠️ No valid returns for {coin['symbol']}, using default threshold: {min_return}")
-            
-            df['label'] = (df['target_return'] >= dynamic_threshold).astype(int)
+                valid_returns = df['target_return'].dropna()
+                dynamic_threshold = np.percentile(valid_returns, 10) if len(valid_returns) > 0 else min_return
+                dynamic_threshold = max(dynamic_threshold, min_return)
+
+            # Create multi-class labels
+            df['label'] = 0  # Default: break-even
+            df.loc[df['target_return'] >= dynamic_threshold, 'label'] = 1  # Profitable
+            df.loc[df['target_return'] < 0, 'label'] = 0  # Loss (map to 0 for now, will adjust later)
             labeled_df = df.dropna()
-            
+
             # Check class distribution
+            class_counts = labeled_df['label'].value_counts()
+            print(f"📊 Label distribution for {coin['symbol']} (1m): {class_counts.to_dict()}")
             if labeled_df['label'].nunique() < 2:
-                print(f"⚠️ Only one class in 1m labels for {coin['symbol']}, will rely on regressor")
-            
+                print(f"⚠️ Only one class in 1m labels for {coin['symbol']} ({class_counts.to_dict()}), adjusting threshold")
+                if len(valid_returns) > 0:
+                    dynamic_threshold = np.percentile(valid_returns, 5)  # Lower percentile
+                    df['label'] = 0
+                    df.loc[df['target_return'] >= dynamic_threshold, 'label'] = 1
+                    df.loc[df['target_return'] < 0, 'label'] = 0
+                    labeled_df = df.dropna()
+                    print(f"📊 Retried with lower threshold {dynamic_threshold:.4f}, new label distribution: {labeled_df['label'].value_counts().to_dict()}")
+                    if labeled_df['label'].nunique() < 2:
+                        print(f"⚠️ Still only one class, skipping classifier for {coin['symbol']} (1m)")
+                        return labeled_df  # Return for regressor use
+
             return labeled_df
 
         except Exception as e:
@@ -1210,7 +1168,7 @@ class CryptoTrader:
             return None
 
     def label_1h_model(self, coin, df, forward_hours=6, min_return=THRESHOLDS[0], max_return=THRESHOLDS[1]):
-        """Prepare labeled data for 1-hour model with dynamic threshold and target_return."""
+        """Prepare labeled data for 1-hour model with dynamic threshold and target_return from history."""
         if df is None or df.empty:
             print(f"⚠️ Invalid or empty DataFrame for {coin['symbol']} (1h), cannot label")
             return None
@@ -1222,30 +1180,48 @@ class CryptoTrader:
             df['target_return'] = df['future_max'] / df['close'] - 1
             df['target_return'] = df['target_return'].clip(lower=0, upper=max_return)
             df['fwd_return'] = df['fwd_return'].clip(lower=-max_return, upper=max_return)
- 
-            # Dynamic threshold: Use 25th percentile, fallback to mean, then min_return
-            valid_returns = df['fwd_return'].dropna()
-            if len(valid_returns) > 0:
-                dynamic_threshold = np.percentile(valid_returns, 10)  # Lower percentile for more balance
-                if dynamic_threshold < min_return:
-                    dynamic_threshold = valid_returns.mean() + valid_returns.std() if valid_returns.mean() > 0 else min_return
+
+            # Log return statistics
+            print(f"📊 Forward return stats for {coin['symbol']}: min={df['fwd_return'].min():.4f}, max={df['fwd_return'].max():.4f}, mean={df['fwd_return'].mean():.4f}")
+
+            # Dynamic threshold with history
+            coin_trades = [t for t in self.trade_history if t['id'] == coin['id'] and 'actual_return' in t['trade_info']]
+            if coin_trades:
+                hist_returns = [t['trade_info']['actual_return'] for t in coin_trades]
+                dynamic_threshold = np.mean(hist_returns) + np.std(hist_returns) if np.mean(hist_returns) > 0 else min_return
                 dynamic_threshold = max(dynamic_threshold, min_return)
-                print(f"📈 Dynamic threshold for {coin['symbol']}: {dynamic_threshold:.4f}")
+                print(f"📈 History-adjusted threshold for {coin['symbol']}: {dynamic_threshold:.4f}")
             else:
-                dynamic_threshold = min_return
-                print(f"⚠️ No valid returns for {coin['symbol']}, using default threshold: {min_return}")
-            
-            df['label'] = (df['fwd_return'] >= dynamic_threshold).astype(int)
+                valid_returns = df['fwd_return'].dropna()
+                dynamic_threshold = np.percentile(valid_returns, 10) if len(valid_returns) > 0 else min_return
+                dynamic_threshold = max(dynamic_threshold, min_return)
+
+            # Create multi-class labels and map to [0, 1, 2]
+            df['label'] = 1  # Default: break-even
+            df.loc[df['fwd_return'] >= dynamic_threshold, 'label'] = 2  # Profitable
+            df.loc[df['fwd_return'] < 0, 'label'] = 0  # Loss
             labeled_df = df.dropna()
-            
+
             # Check class distribution
+            class_counts = labeled_df['label'].value_counts()
+            print(f"📊 Label distribution for {coin['symbol']} (1h): {class_counts.to_dict()}")
             if labeled_df['label'].nunique() < 2:
-                print(f"⚠️ Only one class in 1h labels for {coin['symbol']}, will rely on regressor")
-            
+                print(f"⚠️ Only one class in 1h labels for {coin['symbol']} ({class_counts.to_dict()}), adjusting threshold")
+                if len(valid_returns) > 0:
+                    dynamic_threshold = np.percentile(valid_returns, 5)  # Lower percentile
+                    df['label'] = 1
+                    df.loc[df['fwd_return'] >= dynamic_threshold, 'label'] = 2
+                    df.loc[df['fwd_return'] < 0, 'label'] = 0
+                    labeled_df = df.dropna()
+                    print(f"📊 Retried with lower threshold {dynamic_threshold:.4f}, new label distribution: {labeled_df['label'].value_counts().to_dict()}")
+                    if labeled_df['label'].nunique() < 2:
+                        print(f"⚠️ Still only one class, skipping classifier for {coin['symbol']} (1h)")
+                        return labeled_df  # Return for regressor use
+
             return labeled_df
-        
+
         except Exception as e:
-            print(f" Error preparing 1h data: {str(e)}")
+            print(f"⚠️ Error preparing 1h data: {str(e)}")
             return None
 
     def train_hybrid_model(self, df, coin, df_type):
@@ -1272,14 +1248,15 @@ class CryptoTrader:
             y_class_train, y_class_test = y_class.iloc[:split], y_class.iloc[split:]
 
             # Load base models if available
-            base_clf = self.models.get(df_type, {}).get('clf')
-            base_reg = self.models.get(df_type, {}).get('reg')
-            base_score = self.models.get(df_type, {}).get('score', 0.0)
+            model_key = (df_type,)
+            base_clf = self.models.get(model_key, {}).get('clf')
+            base_reg = self.models.get(model_key, {}).get('reg')
+            base_score = self.models.get(model_key, {}).get('score', 0.0)
 
             # Train classifier
             best_class_result = None
             if y_class_train.nunique() >= 2 and y_class_test.nunique() >= 2:
-                minority_count = len(y_class_train[y_class_train == 1])
+                minority_count = min([sum(y_class_train == c) for c in np.unique(y_class_train)])
                 k_neighbors = min(5, max(1, minority_count - 1))
                 try:
                     smote = SMOTE(random_state=42, k_neighbors=k_neighbors)
@@ -1292,17 +1269,35 @@ class CryptoTrader:
                     except ValueError as e:
                         print(f"⚠️ ADASYN also failed for {df_type}: {str(e)}, proceeding without oversampling")
                         X_train_res, y_class_train_res = X_train, y_class_train
-                class_ratio = len(y_class_train_res[y_class_train_res == 0]) / len(y_class_train_res[y_class_train_res == 1]) if 1 in y_class_train_res else 1.0
+                # Add undersampling if imbalance > 3:1
+                class_counts = np.bincount(y_class_train_res - y_class_train_res.min()) if y_class_train_res.min() < 0 else np.bincount(y_class_train_res)
+                if len(class_counts) > 1 and max(class_counts) / min(class_counts) > 3:
+                    under = RandomUnderSampler(random_state=42)
+                    X_train_res, y_class_train_res = under.fit_resample(X_train_res, y_class_train_res)
+
+                # Train classifier with early stopping
                 clf = XGBClassifier(
                     n_estimators=100, max_depth=3, learning_rate=0.1,
-                    subsample=0.8, colsample_bytree=0.8,
-                    eval_metric='auc', early_stopping_rounds=10,
-                    random_state=42, scale_pos_weight=class_ratio
+                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                    random_state=42, early_stopping_rounds=10
                 )
-                clf.fit(X_train_res, y_class_train_res, eval_set=[(X_test, y_class_test)], verbose=False, xgb_model=base_clf if base_clf else None)
+                clf.fit(
+                    X_train_res, y_class_train_res,
+                    eval_set=[(X_test, y_class_test)],
+                    verbose=False,
+                    xgb_model=base_clf if base_clf else None
+                )
                 y_pred = clf.predict(X_test)
-                f1 = f1_score(y_class_test, y_pred)
-                print(f"✅ Classifier for {coin['symbol']} ({df_type}) - F1 Score: {f1:.4f}")
+                f1 = f1_score(y_class_test, y_pred, average='weighted')
+
+                # Cross-validation without early stopping
+                cv_clf = XGBClassifier(
+                    n_estimators=100, max_depth=3, learning_rate=0.1,
+                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                    random_state=42
+                )
+                cv_f1 = cross_val_score(cv_clf, X_train_res, y_class_train_res, cv=5, scoring='f1_weighted').mean()
+                print(f"✅ Classifier for {coin['symbol']} ({df_type}) - F1 Score: {f1:.4f}, CV: {cv_f1:.4f}")
 
                 # Lightweight tuning if performance is poor
                 if f1 < 0.5 or (base_clf and f1 < base_score * 0.9):
@@ -1313,13 +1308,17 @@ class CryptoTrader:
                         for depth in [2, 4]:
                             temp_clf = XGBClassifier(
                                 n_estimators=100, max_depth=depth, learning_rate=lr,
-                                subsample=0.8, colsample_bytree=0.8,
-                                eval_metric='auc', early_stopping_rounds=10,
-                                random_state=42, scale_pos_weight=class_ratio
+                                subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                                random_state=42, early_stopping_rounds=10
                             )
-                            temp_clf.fit(X_train_res, y_class_train_res, eval_set=[(X_test, y_class_test)], verbose=False, xgb_model=base_clf if base_clf else None)
+                            temp_clf.fit(
+                                X_train_res, y_class_train_res,
+                                eval_set=[(X_test, y_class_test)],
+                                verbose=False,
+                                xgb_model=base_clf if base_clf else None
+                            )
                             temp_pred = temp_clf.predict(X_test)
-                            temp_f1 = f1_score(y_class_test, temp_pred)
+                            temp_f1 = f1_score(y_class_test, temp_pred, average='weighted')
                             if temp_f1 > best_f1:
                                 best_f1 = temp_f1
                                 best_clf = temp_clf
@@ -1351,7 +1350,14 @@ class CryptoTrader:
                 reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False, xgb_model=base_reg if base_reg else None)
                 y_reg_pred = reg.predict(X_test)
                 rmse = np.sqrt(mean_squared_error(y_reg_test, y_reg_pred))
-                print(f"✅ Regressor for {coin['symbol']} ({df_type}) - RMSE: {rmse:.5f}")
+
+                # Cross-validation without early stopping
+                cv_reg = XGBRegressor(
+                    n_estimators=200, max_depth=4, learning_rate=0.05,
+                    subsample=0.8, colsample_bytree=0.8, random_state=42
+                )
+                cv_rmse = -cross_val_score(cv_reg, X_train, y_reg_train, cv=5, scoring='neg_root_mean_squared_error').mean()
+                print(f"✅ Regressor for {coin['symbol']} ({df_type}) - RMSE: {rmse:.5f}, CV RMSE: {cv_rmse:.5f}")
 
                 # Lightweight tuning if performance is poor
                 if rmse > 0.1 or (base_reg and base_score and rmse > base_score * 1.1):
@@ -1390,7 +1396,7 @@ class CryptoTrader:
             return None, None, None
 
     def predict_future_movement(self, expected_return, sentiment):
-        """Predict the future movement of the best coin by simulating realistic data points."""
+        """Predict the future movement of the best coin by simulating realistic data points with Monte Carlo."""
         print(f"\n🔮 Predicting future movement for {best_coin['symbol']}")
 
         # Ensure latest timestamp is in EST
@@ -1411,6 +1417,13 @@ class CryptoTrader:
         avg_volume = recent_data['volume'].mean()
         vol_volatility = recent_data['volume'].std() / avg_volume if avg_volume > 0 else 0.1
 
+        # Adjust based on history
+        recent_trades = [t for t in self.trade_history if t['status'] == 'completed' and t['actual_return'] < t['trade_info']['expected_return']]
+        if recent_trades:
+            adjustment_factor = 0.8  # 20% reduction if over-optimistic
+            avg_return *= adjustment_factor
+            print(f"📉 Adjusted avg_return to {avg_return:.4f} based on history")
+
         # Fit GARCH(1,1) model for volatility simulation
         try:
             garch_model = arch.arch_model(recent_data['returns'].dropna() * 100, vol='GARCH', p=1, q=1)
@@ -1420,81 +1433,98 @@ class CryptoTrader:
         except Exception as e:
             print(f"⚠️ GARCH fitting failed: {str(e)}, using historical volatility")
             init_vol = recent_data['volatility'].mean()
+
+        # Monte Carlo simulations
+        signal_times = []
+        predicted_returns = []
+        for path in range(NUM_MONTE_CARLO_PATHS):
+            sim_data = best_1m_df[['open', 'high', 'low', 'close', 'volume']].copy()
+            last_row = sim_data.iloc[-1]
+            current_vol = init_vol
+
+            for minute in range(1, max_minutes + 1):
+                next_time = latest_timestamp + timedelta(minutes=minute)
+                
+                # Update volatility with GARCH
+                try:
+                    garch_forecast = garch_model.fit(disp='off', first_obs=sim_data['returns'].dropna()[-20:]).forecast(horizon=1)
+                    current_vol = np.sqrt(garch_forecast.variance.values[-1, 0]) / 100
+                except:
+                    pass  # Keep current_vol if GARCH fails
+
+                # Simulate price movement with t-distribution (fat-tailed)
+                df_freedom = 5  # Degrees of freedom for t-distribution (lower = fatter tails)
+                price_change = t.rvs(df_freedom, loc=avg_return + sentiment * 0.001, scale=current_vol)
+                
+                # Introduce extreme events (e.g., 5-10% price jump/drop)
+                if np.random.random() < 0.02:  # 2% chance per minute
+                    extreme_move = np.random.choice([-0.10, -0.05, 0.05, 0.10])  # Random ±5% or ±10% move
+                    price_change += extreme_move
+
+                new_close = last_row['close'] * (1 + price_change)
+                new_open = last_row['close']
+                new_high = max(new_open, new_close) * (1 + np.random.uniform(0, current_vol / 2))
+                new_low = min(new_open, new_close) * (1 - np.random.uniform(0, current_vol / 2))
+                
+                # Volume spike during extreme events
+                volume_factor = 1.5 if abs(price_change) > 0.05 else 1.0
+                new_volume = max(avg_volume * volume_factor * (1 + np.random.normal(0, vol_volatility)), 0)
+                
+                # Append new candle with sentiment
+                new_row = pd.DataFrame({
+                    'open': [new_open],
+                    'high': [new_high],
+                    'low': [new_low],
+                    'close': [new_close],
+                    'volume': [new_volume],
+                    'sentiment': [sentiment]
+                }, index=[next_time])
+                
+                sim_data = pd.concat([sim_data, new_row])
+                last_row = new_row.iloc[0]
+            
+            # Recalculate features for the entire simulated dataset
+            sim_data = self.calculate_features(sim_data, '1m')
+            if sim_data is None:
+                continue
+            
+            # Extract future data
+            future_data = sim_data.loc[sim_data.index > latest_timestamp][best_analysis['feat_1m']]
+            
+            # Predict returns for each future minute
+            found_signal = False
+            signal_time = None
+            predicted_return = None
+
+            for i, (timestamp, features) in enumerate(future_data.iloc[min_minutes:].iterrows()):
+                if i >= max_minutes:
+                    break
+                features_df = pd.DataFrame([features], columns=best_analysis['feat_1m'], index=[timestamp])
+                predicted_return = best_analysis['reg_1m']['model'].predict(features_df)[0] if best_analysis['reg_1m'] is not None else 0.0
+                slippage = current_vol * 0.5
+                adjusted_return = predicted_return - FEE_RATE - slippage
+                if adjusted_return >= threshold:
+                    signal_time = timestamp
+                    found_signal = True
+                    break
+            
+            if found_signal:
+                signal_times.append(signal_time)
+                predicted_returns.append(adjusted_return)
+            else:
+                signal_times.append(latest_timestamp + timedelta(minutes=max_minutes))
+                predicted_returns.append(0.0)
         
-        # Initialize DataFrame for simulation
-        sim_data = best_1m_df[['open', 'high', 'low', 'close', 'volume']].copy()
-        last_row = sim_data.iloc[-1]
-        current_vol = init_vol
-
-        # Simulate future candles
-        for minute in range(1, max_minutes + 1):
-            next_time = latest_timestamp + timedelta(minutes=minute)
-            
-            # Update volatility with GARCH
-            try:
-                garch_forecast = garch_model.fit(disp='off', first_obs=sim_data['returns'].dropna()[-20:]).forecast(horizon=1)
-                current_vol = np.sqrt(garch_forecast.variance.values[-1, 0]) / 100
-            except:
-                pass  # Keep current_vol if GARCH fails
-
-            # Simulate price movement with t-distribution (fat-tailed)
-            df = 5  # Degrees of freedom for t-distribution (lower = fatter tails)
-            price_change = t.rvs(df, loc=avg_return + sentiment * 0.001, scale=current_vol)
-            
-            # Introduce extreme events (e.g., 5-10% price jump/drop)
-            if np.random.random() < 0.02:  # 2% chance per minute
-                extreme_move = np.random.choice([-0.10, -0.05, 0.05, 0.10])  # Random ±5% or ±10% move
-                price_change += extreme_move
-
-            new_close = last_row['close'] * (1 + price_change)
-            new_open = last_row['close']
-            new_high = max(new_open, new_close) * (1 + np.random.uniform(0, current_vol / 2))
-            new_low = min(new_open, new_close) * (1 - np.random.uniform(0, current_vol / 2))
-            
-            # Volume spike during extreme events
-            volume_factor = 1.5 if abs(price_change) > 0.05 else 1.0
-            new_volume = max(avg_volume * volume_factor * (1 + np.random.normal(0, vol_volatility)), 0)
-            
-            # Append new candle with sentiment
-            new_row = pd.DataFrame({
-                'open': [new_open],
-                'high': [new_high],
-                'low': [new_low],
-                'close': [new_close],
-                'volume': [new_volume],
-                'sentiment': [sentiment]
-            }, index=[next_time])
-            
-            sim_data = pd.concat([sim_data, new_row])
-            last_row = new_row.iloc[0]
-        
-        # Recalculate features for the entire simulated dataset
-        sim_data = self.calculate_features(sim_data, '1m')
-        if sim_data is None:
-            print('⚠️ Error recalculating features for simulated data')
+        if not signal_times:
+            print(f"❌ No sell signal found for {best_coin['symbol']} within 6 hours")
             return None, None
         
-        # Extract future data
-        future_data = sim_data.loc[sim_data.index > latest_timestamp][best_analysis['feat_1m']]
-        
-        # Predict returns for each future minute
-        found_signal = False
-        signal_time = None
-        predicted_return = None
-
-        for i, (timestamp, features) in enumerate(future_data.iloc[min_minutes:].iterrows()):
-            if i >= max_minutes:
-                break
-            features_df = pd.DataFrame([features], columns=best_analysis['feat_1m'], index=[timestamp])
-            predicted_return = best_analysis['reg_1m']['model'].predict(features_df)[0] if best_analysis['reg_1m'] is not None else 0.0
-            
-            if predicted_return >= threshold:
-                signal_time = timestamp
-                found_signal = True
-                break
-        
-        if not found_signal:
-            print(f"❌ No sell signal found for {best_coin['symbol']} within 6 hours")
+        signal_time = pd.Series(signal_times).median()
+        predicted_return = np.mean(predicted_returns)
+        return_var = np.std(predicted_returns)
+        if return_var > 0.05:
+            print(f"⚠️ High variance {return_var:.4f} in predictions, skipping trade")
+            return None, None
 
         return signal_time, predicted_return
 
@@ -1576,24 +1606,36 @@ class CryptoTrader:
         latest_1m = best_1m_df.iloc[[-1]][best_analysis['feat_1m']]
         latest_1h = best_1h_df.iloc[[-1]][best_analysis['feat_1h']]
 
-        # Make predictions - Probability of class 1
-        prob_1m = best_analysis['clf_1m']['model'].predict_proba(latest_1m)[0][1] if best_analysis['clf_1m'] is not None else 0.5
-        prob_1h = best_analysis['clf_1h']['model'].predict_proba(latest_1h)[0][1] if best_analysis['clf_1h'] is not None else 0.5
+        # Predict probabilities and returns
+        prob_1m = 0.5
+        prob_1h = 0.5
+        expected_return_1m = 0.0
+        expected_return_1h = 0.0
+
+        # 1m predictions
+        if best_analysis['clf_1m'] is not None:
+            prob_1m = best_analysis['clf_1m']['model'].predict_proba(latest_1m)[0][1]  # Probability of positive class
+        elif best_analysis['reg_1m'] is not None:
+            expected_return_1m = best_analysis['reg_1m']['model'].predict(latest_1m)[0]
+            prob_1m = min(expected_return_1m / THRESHOLDS[0], 1.0) if expected_return_1m > 0 else 0.5
+
+        # 1h predictions
+        if best_analysis['clf_1h'] is not None:
+            prob_1h = best_analysis['clf_1h']['model'].predict_proba(latest_1h)[0][2]  # Probability of profitable class (label 2)
+        elif best_analysis['reg_1h'] is not None:
+            expected_return_1h = best_analysis['reg_1h']['model'].predict(latest_1h)[0]
+            prob_1h = min(expected_return_1h / THRESHOLDS[0], 1.0) if expected_return_1h > 0 else 0.5
 
         # Combine predictions with sentiment
         sentiment_score = best_coin['sentiment']
-        expected_return = (best_analysis['reg_1m']['model'].predict(latest_1m)[0] if best_analysis['reg_1m'] is not None else 0.0) or \
-                          (best_analysis['reg_1h']['model'].predict(latest_1h)[0] if best_analysis['reg_1h'] is not None else 0.0)
+        expected_return = expected_return_1m * 0.6 + expected_return_1h * 0.4
         
-        if best_analysis['clf_1m'] is None and best_analysis['reg_1m'] is not None:
-            prob_1m = min(expected_return / THRESHOLDS[0], 1.0)  # Normalize regressor output
-        if best_analysis['clf_1h'] is None and best_analysis['reg_1h'] is not None:
-            prob_1h = min(expected_return / THRESHOLDS[0], 1.0)  # Normalize regressor output
         buy_score = W_1M * prob_1m + W_1H * prob_1h + W_SENTIMENT * (sentiment_score + 1) / 2
         buy = buy_score >= 0.45 or (expected_return >= THRESHOLDS[0])  # Relaxed thresholds
 
-        # Position sizing (scale by confidence)
-        position_size_pct = min(max(buy_score, 0.01), 1.0)
+       # Dynamic position sizing with risk
+        recent_vol = best_1m_df['volatility'].iloc[-1]
+        position_size_pct = min(buy_score * (1 / recent_vol) if recent_vol > 0 else buy_score, 0.05)  # Max 5%
 
         if buy:
             close_price = best_1m_df['close'].iloc[-1]
