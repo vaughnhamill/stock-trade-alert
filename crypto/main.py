@@ -775,7 +775,7 @@ class CryptoTrader:
     def scan_candidates(self):
         """Scan top 20 coins and filter by liquidity/volatility."""
         print('🔍 Scanning for candidates...')
-        top_coins = cg.get_coins_markets(vs_currency='usd', order='market_cap_desc', per_page=1, price_change_percentage='1h')
+        top_coins = cg.get_coins_markets(vs_currency='usd', order='market_cap_desc', per_page=20, price_change_percentage='1h')
         candidates = []
         for coin in top_coins:
             # Filter by liquidity (24h volume) and volatility
