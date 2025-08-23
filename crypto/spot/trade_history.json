@@ -313,7 +313,7 @@
       "sell_price": 0.4835,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-07T07:13:28.291447-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -611,7 +611,7 @@
       "sell_price": 0.258,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-07T07:50:46.623944-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -909,7 +909,7 @@
       "sell_price": 0.258,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-07T07:50:46.623944-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -11637,7 +11637,7 @@
       "sell_price": 1.214e-05,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-12T13:52:28.159438-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -11935,7 +11935,7 @@
       "sell_price": 0.9751,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-12T13:52:28.159438-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -13127,7 +13127,7 @@
       "sell_price": 1.1185,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-13T05:56:22.850911-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -14021,7 +14021,7 @@
       "sell_price": 47.41,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-13T13:45:56.970694-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -15213,7 +15213,7 @@
       "sell_price": 46.93,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-15T12:46:13.259263-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -18789,7 +18789,7 @@
       "sell_price": 0.02486,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-16T11:16:29.246122-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -20577,7 +20577,7 @@
       "sell_price": 0.766,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-17T05:34:48.966382-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -25047,7 +25047,7 @@
       "sell_price": 0.03156,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-20T16:36:09.996880-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -27133,7 +27133,7 @@
       "sell_price": 5055.8,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-22T12:18:55.539249-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -28325,7 +28325,7 @@
       "sell_price": 0.07117,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-22T14:46:01.819338-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -28921,7 +28921,7 @@
       "sell_price": 0.791,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-22T15:28:53.583977-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -30709,7 +30709,7 @@
       "sell_price": 1.141e-05,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-23T01:46:14.693482-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
@@ -31603,7 +31603,7 @@
       "sell_price": 6.0717,
       "actual_return": 0.0,
       "evaluation_time": "2025-08-23T11:13:26.621937-04:00",
-      "outcome": "profitable"
+      "outcome": "break-even"
     },
     "features": {
       "1m": {
