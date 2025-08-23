@@ -31301,7 +31301,11 @@
       "sell_time": "2025-08-23T10:46:00-04:00",
       "buy_score": 0.5315896525979042,
       "position_size_pct": 0.5315896525979042,
-      "selected_symbol": "LDO/USD"
+      "selected_symbol": "LDO/USD",
+      "sell_price": 1.512,
+      "actual_return": -0.006570302233902765,
+      "evaluation_time": "2025-08-23T11:13:26.621937-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -31581,7 +31585,7 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "10259241cbff57ef5bea5ff66418403e",
@@ -31595,7 +31599,11 @@
       "sell_time": "2025-08-23T10:48:00-04:00",
       "buy_score": 0.4972522802159557,
       "position_size_pct": 0.4972522802159557,
-      "selected_symbol": "IP/USD"
+      "selected_symbol": "IP/USD",
+      "sell_price": 6.0717,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-23T11:13:26.621937-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -31875,6 +31883,6 @@
         "sentiment_roll_std_6": 0.0
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
