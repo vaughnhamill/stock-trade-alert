@@ -493,7 +493,7 @@ class CryptoTrader:
             X = pd.DataFrame([t['features'][timeframe] for t in timeframe_trades])
             outcome_map = {
                 "loss": 0,
-                "break-even": 1,
+                "break_even": 1,
                 "profitable": 2
             }
             y_class = pd.Series([outcome_map[t['trade_info']['outcome']] for t in timeframe_trades])            
