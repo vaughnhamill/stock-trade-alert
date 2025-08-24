@@ -15,13 +15,14 @@ import time
 import json
 import pickle
 from sklearn.metrics import f1_score, classification_report, mean_squared_error
-from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import cross_val_score
 from joblib import dump, load
 import hashlib
 from textblob import TextBlob
 from scipy.stats import t
 import arch
 from imblearn.over_sampling import SMOTE, ADASYN
+from imblearn.under_sampling import RandomUnderSampler
 import subprocess
 import glob
 import yfinance as yf
@@ -32,14 +33,14 @@ warnings.filterwarnings('ignore')
 # --- Configuration ---
 THRESHOLDS = [0.02, 0.99]  # Min, Max
 EST = pytz.timezone('America/New_York')
-MODEL_DIR = 'stock/ind/models'
-TRADE_HISTORY_FILE = 'stock/ind/trade_history.json'
-MODEL_METADATA_FILE = 'stock/ind/model_metadata.json'
-SENTIMENT_CACHE_FILE = 'stock/ind/sentiment_cache.pkl'
-PORTFOLIO_FILE = 'stock/ind/portfolio.json'
+MODEL_DIR = 'stocks/ind/models'
+TRADE_HISTORY_FILE = 'stocks/ind/trade_history.json'
+MODEL_METADATA_FILE = 'stocks/ind/model_metadata.json'
+SENTIMENT_CACHE_FILE = 'stocks/ind/sentiment_cache.pkl'
+PORTFOLIO_FILE = 'stocks/ind/portfolio.json'
 PORTFOLIO_SIZE = 10000.00
 RATE_LIMIT_HIT = False
-FEEDBACK_INTERVAL_HOURS = 3  # How often to retrain models
+FEEDBACK_INTERVAL_HOURS = 1  # How often to retrain models
 SENTIMENT_CACHE_TTL = 14400  # Cache sentiment for 4 hours
 W_1M = 0.75  # Weight for 1 min df in buy score
 W_1H = 0.25  # Weight for 1 hour df in buy score
@@ -55,12 +56,19 @@ best_stock = None
 best_analysis = None
 best_1m_df = None
 best_1h_df = None
+MIN_PROFITABLE_RETURN = 0.005  # 0.5% min for profitable label
+FEE_RATE = 0.002  # 0.2% trading fees
+MIN_TRADES_FOR_RETRAIN = 100  # Increased for better data
+MIN_LIQUIDITY = 1000000  # 24h volume threshold
+MAX_VOLATILITY = 0.10  # Max 10% volatility filter
+NUM_MONTE_CARLO_PATHS = 100  # For simulations
 
 # Load environment variables
 GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS', 'false').lower() == 'true'
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
+
 
 # ------------- File System Setup ---------------- #
 os.makedirs(os.path.dirname(SENTIMENT_CACHE_FILE), exist_ok=True)
@@ -251,10 +259,10 @@ class StockTrader:
                         print("ℹ️ No changes to commit for sentiment cache")
                 except (subprocess.CalledProcessError, ValueError) as e:
                     print(f"⚠️ Git operation failed for sentiment cache: {str(e)}")
-                    self.send_telegram_message(f"Git operation failed for stock sentiment cache: {str(e)}")
+                    self.send_telegram_message(f"Git operation failed for sentiment cache: {str(e)}")
         except (PermissionError, pickle.PickleError) as e:
             print(f"⚠️ Error saving sentiment cache: {str(e)}, skipping cache save")
-            self.send_telegram_message(f"Error saving stock sentiment cache: {str(e)}")
+            self.send_telegram_message(f"Error saving sentiment cache: {str(e)}")
 
     # ------------- Record Trades and Retrain Models ------------- #
     def record_trade(self, stock, entry_price, expected_return, entry_time, sell_time, features_1m, features_1h, buy_score, position_size_pct, exchange):
@@ -266,6 +274,12 @@ class StockTrader:
         # Convert NumPy types in features dictionary to standard Python types
         processed_features_1m = {key: float(value) if isinstance(value, (np.float64, np.float32)) else int(value) if isinstance(value, (np.int64, np.int32)) else value for key, value in features_1m.items()}
         processed_features_1h = {key: float(value) if isinstance(value, (np.float64, np.float32)) else int(value) if isinstance(value, (np.int64, np.int32)) else value for key, value in features_1h.items()}
+
+        # Ensure sell_time > entry_time + min hold
+        min_hold = timedelta(minutes=5)
+        if sell_time <= entry_time + min_hold:
+            print(f"⚠️ Adjusting sell_time for {stock['symbol']} to minimum hold period.")
+            sell_time = entry_time + min_hold
 
         self.trade_history.append({
             'trade_id': trade_id,
@@ -293,9 +307,12 @@ class StockTrader:
         """Evaluate outcome of pending trades."""
         print("🔍 Evaluating pending trades...")
         now = datetime.now(EST)
+        break_even_count = 0
+        total_recent = 0
         for trade in self.trade_history:
             if trade['status'] == 'completed':
                 self.paper_trade(trade)
+                continue  # Skip re-evaluation
 
             if trade['status'] == 'pending':
                 sell_time = datetime.fromisoformat(trade['trade_info']['sell_time']).astimezone(EST)
@@ -364,12 +381,19 @@ class StockTrader:
                 trade['trade_info']['evaluation_time'] = now.isoformat()
 
                 # Determine outcome
-                outcome = 'profitable' if actual_return >= 0 else 'loss'
+                outcome = 'profitable' if actual_return >= MIN_PROFITABLE_RETURN else 'break_even' if actual_return >= 0 else 'loss'
                 trade['trade_info']['outcome'] = outcome
                 print(f"📈 Trade outcome: {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)")
                 self.send_telegram_message(
                     f"Stock trade evaluated: {trade['symbol']} {outcome}, Actual return: {actual_return * 100:.2f}% (Expected: {expected_return * 100:.2f}%)"
                 )
+
+                # Track break-even for alerting
+                entry_time = datetime.fromisoformat(trade['trade_info']['entry_time']).astimezone(EST)
+                if (now - entry_time).days < 7:  # Recent trades
+                    total_recent += 1
+                    if outcome == 'break_even':
+                        break_even_count += 1
 
         self.save_state()
 
@@ -385,16 +409,14 @@ class StockTrader:
             reset_time = datetime.fromisoformat(current_portfolio['reset_timestamp']).astimezone(EST)
             trade_entry_time = datetime.fromisoformat(trade['trade_info']['entry_time']).astimezone(EST)
 
-            # # Skip trades before the portfolio reset time
-            # if trade_entry_time < reset_time:
-            #     return
+            # Skip trades before the portfolio reset time
+            if trade_entry_time < reset_time:
+                return
             
             # Check if trade_id already exists in current portfolio's trades
             if any(t['trade_id'] == trade['trade_id'] for t in current_portfolio['trades']):
                 return
 
-            # Use the most recent portfolio dictionary
-            current_portfolio = self.portfolio[-1]
             if current_portfolio['portfolio_size'] <= 0:
                 print("⚠️ Portfolio size is zero or negative, creating new portfolio")
                 self.portfolio.append({'portfolio_size': PORTFOLIO_SIZE, 'trades': [], 'reset_timestamp': datetime.now(EST).isoformat()})
@@ -419,14 +441,14 @@ class StockTrader:
 
             print(f"✅ Paper traded {trade['symbol']}: P&L ${profit_loss:.2f}, New portfolio size ${new_portfolio_size:.2f}")
             self.send_telegram_message(
-                f"Stock paper trade completed: {trade['symbol']} ({trade['trade_info']['outcome']}), "
+                f"Paper trade completed: {trade['symbol']} ({trade['trade_info']['outcome']}), "
                 f"P&L: ${profit_loss:.2f}, New portfolio: ${new_portfolio_size:.2f}"
             )
             self.save_state()
 
         except Exception as e:
             print(f"⚠️ Error in paper trading {trade['symbol']}: {str(e)}")
-            self.send_telegram_message(f"Error in stock paper trading {trade['symbol']}: {str(e)}")  
+            self.send_telegram_message(f"Error in paper trading {trade['symbol']}: {str(e)}")  
 
     def retrain_models(self):
         """Retrain models with recent trade data, grouped by timeframe only, retaining them on disk."""
@@ -437,79 +459,173 @@ class StockTrader:
             if t['status'] == 'completed' and
             (now - datetime.fromisoformat(t['trade_info']['entry_time']).astimezone(EST)).days < 28
         ]
-        
-        if len(recent_trades) < 50:
-            print(f"⚠️ Insufficient trades ({len(recent_trades)} < 50) for retraining")
+
+        if len(recent_trades) < MIN_TRADES_FOR_RETRAIN:
+            print(f"⚠️ Insufficient trades ({len(recent_trades)} < {MIN_TRADES_FOR_RETRAIN}) for retraining")
             return
 
-        # Group trades by timeframe only
         for timeframe in ['1m', '1h']:
             timeframe_trades = [t for t in recent_trades if timeframe in t['features']]
             if not timeframe_trades:
                 print(f"⚠️ No trades for {timeframe}, skipping")
                 continue
-            
-            print(f"📊 Retraining models for timeframe: {timeframe}")
+
+            print(f"\n📊 Retraining models for timeframe: {timeframe}")
 
             # Prepare data
-            X = np.array([list(t['features'][timeframe].values()) for t in timeframe_trades])
-            le = LabelEncoder()
-            y = le.fit_transform([t['trade_info']['outcome'] for t in timeframe_trades])  # 'profitable' -> 1, 'loss' -> 0
-            y_reg = np.array([t['trade_info']['actual_return'] for t in timeframe_trades])
+            X = pd.DataFrame([t['features'][timeframe] for t in timeframe_trades])
+            outcome_map = {
+                "loss": 0,
+                "break_even": 1,
+                "profitable": 2
+            }
+            y_class = pd.Series([outcome_map[t['trade_info']['outcome']] for t in timeframe_trades])            
+            y_reg = pd.Series([t['trade_info']['actual_return'] for t in timeframe_trades])
 
-            # Split for validation
             split = int(0.8 * len(X))
             if split < 2 or len(X) - split < 2:
-                print(f"⚠️ Insufficient data after split for {timeframe}")
+                print(f"⚠️ Insufficient data for {timeframe} after split")
                 continue
-            X_train, X_val = X[:split], X[split:]
-            y_train, y_val = y[:split], y[split:]
-            y_reg_train, y_reg_val = y_reg[:split], y[split:]
 
-            # Train classifier
-            clf = None
-            if len(np.unique(y_train)) >= 2 and len(np.unique(y_val)) >= 2:
-                class_ratio = len(y_train[y_train == 0]) / len(y_train[y_train == 1]) if 1 in y_train else 1.0
-                minority_count = len(y_train[y_train == 1])
+            X_train, X_test = X.iloc[:split], X.iloc[split:]
+            y_class_train, y_class_test = y_class.iloc[:split], y_class.iloc[split:]
+            y_reg_train, y_reg_test = y_reg.iloc[:split], y_reg.iloc[split:]
+
+            # Load base models if available
+            base_models = self.models.get(timeframe, {})
+            base_clf = base_models.get('clf')
+            base_reg = base_models.get('reg')
+            base_score = base_models.get('score', 0.0)
+
+            best_class_result, best_reg_result = None, None
+
+            # ---- Classifier ----
+            if y_class_train.nunique() >= 2 and y_class_test.nunique() >= 2:
+                # Oversampling
+                minority_count = min([sum(y_class_train == c) for c in np.unique(y_class_train)])
                 k_neighbors = min(5, max(1, minority_count - 1))
                 try:
                     smote = SMOTE(random_state=42, k_neighbors=k_neighbors)
-                    X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
+                    X_train_res, y_class_train_res = smote.fit_resample(X_train, y_class_train)
                 except ValueError as e:
                     print(f"⚠️ SMOTE failed for {timeframe}: {str(e)}, trying ADASYN")
                     try:
                         adasyn = ADASYN(random_state=42, n_neighbors=k_neighbors)
-                        X_train_res, y_train_res = adasyn.fit_resample(X_train, y_train)
+                        X_train_res, y_class_train_res = adasyn.fit_resample(X_train, y_class_train)
                     except ValueError as e:
                         print(f"⚠️ ADASYN also failed for {timeframe}: {str(e)}, proceeding without oversampling")
-                        X_train_res, y_train_res = X_train, y_train
+                        X_train_res, y_class_train_res = X_train, y_class_train
+
+                # Undersampling if imbalance > 3:1
+                class_counts = np.bincount(y_class_train_res)
+                if len(class_counts) > 1 and max(class_counts) / min(class_counts) > 3:
+                    under = RandomUnderSampler(random_state=42)
+                    X_train_res, y_class_train_res = under.fit_resample(X_train_res, y_class_train_res)
+
                 clf = XGBClassifier(
                     n_estimators=100, max_depth=3, learning_rate=0.1,
-                    subsample=0.8, colsample_bytree=0.8, eval_metric='auc',
-                    early_stopping_rounds=10, random_state=42,
-                    scale_pos_weight=class_ratio
+                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                    random_state=42, early_stopping_rounds=10
                 )
-                clf.fit(X_train_res, y_train_res, eval_set=[(X_val, y_val)], verbose=False)
-                y_pred = clf.predict(X_val)
-                f1 = f1_score(y_val, y_pred)
-                print(f"✅ Classifier for {timeframe} - F1 Score: {f1:.4f}")
-            else:
-                print(f"⚠️ Skipping classifier for {timeframe} - only one class")
+                clf.fit(
+                    X_train_res, y_class_train_res,
+                    eval_set=[(X_test, y_class_test)],
+                    verbose=False,
+                    xgb_model=base_clf if base_clf else None
+                )
+                y_pred = clf.predict(X_test)
+                f1 = f1_score(y_class_test, y_pred, average='weighted')
 
-            # Train regressor
-            reg = XGBRegressor(
-                n_estimators=200, max_depth=4, learning_rate=0.05,
-                subsample=0.8, colsample_bytree=0.8, random_state=42,
-                early_stopping_rounds=20, verbosity=0
-            )
-            reg.fit(X_train, y_reg_train, eval_set=[(X_val, y_reg_val)], verbose=False)
-            y_reg_pred = reg.predict(X_val)
-            rmse = np.sqrt(mean_squared_error(y_reg_val, y_reg_pred))
-            print(f"✅ Regressor for {timeframe} - RMSE: {rmse:.5f}")
+                # Cross-validation
+                cv_clf = XGBClassifier(
+                    n_estimators=100, max_depth=3, learning_rate=0.1,
+                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                    random_state=42
+                )
+                cv_f1 = cross_val_score(cv_clf, X_train_res, y_class_train_res, cv=5, scoring='f1_weighted').mean()
+                print(f"✅ Classifier for {timeframe} - F1 Score: {f1:.4f}, CV: {cv_f1:.4f}")
+
+                # Lightweight tuning if poor performance
+                if f1 < 0.5 or (base_clf and f1 < base_score * 0.9):
+                    print(f"⚠️ Classifier F1 {f1:.4f} is low, attempting lightweight tuning")
+                    best_f1, best_clf = f1, clf
+                    for lr in [0.05, 0.2]:
+                        for depth in [2, 4]:
+                            temp_clf = XGBClassifier(
+                                n_estimators=100, max_depth=depth, learning_rate=lr,
+                                subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                                random_state=42, early_stopping_rounds=10
+                            )
+                            temp_clf.fit(X_train_res, y_class_train_res, eval_set=[(X_test, y_class_test)], verbose=False)
+                            temp_f1 = f1_score(y_class_test, temp_clf.predict(X_test), average='weighted')
+                            if temp_f1 > best_f1:
+                                best_f1, best_clf = temp_f1, temp_clf
+                            print(f"🔍 Tuning: lr={lr}, depth={depth}, F1={temp_f1:.4f}")
+                    f1, clf = best_f1, best_clf
+                    print(f"✅ Best tuned classifier F1 Score: {f1:.4f}")
+
+                best_class_result = {'score': f1, 'model': clf}
+                print('\nClassifier Report:')
+                print(classification_report(y_class_test, y_pred))
+            else:
+                print(f"⚠️ Skipping classifier training for {timeframe} — only one class")
+
+            # ---- Regressor ----
+            if not y_reg.isnull().all():
+                reg = XGBRegressor(
+                    n_estimators=200, max_depth=4, learning_rate=0.05,
+                    subsample=0.8, colsample_bytree=0.8, random_state=42,
+                    early_stopping_rounds=20, verbosity=0
+                )
+                reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False, xgb_model=base_reg if base_reg else None)
+                y_reg_pred = reg.predict(X_test)
+                rmse = np.sqrt(mean_squared_error(y_reg_test, y_reg_pred))
+
+                # Cross-validation
+                cv_reg = XGBRegressor(
+                    n_estimators=200, max_depth=4, learning_rate=0.05,
+                    subsample=0.8, colsample_bytree=0.8, random_state=42
+                )
+                cv_rmse = -cross_val_score(cv_reg, X_train, y_reg_train, cv=5, scoring='neg_root_mean_squared_error').mean()
+                print(f"✅ Regressor for {timeframe} - RMSE: {rmse:.5f}, CV RMSE: {cv_rmse:.5f}")
+
+                # Lightweight tuning if poor
+                if rmse > 0.1 or (base_reg and base_score and rmse > base_score * 1.1):
+                    print(f"⚠️ Regressor RMSE {rmse:.5f} is high, attempting lightweight tuning")
+                    best_rmse, best_reg = rmse, reg
+                    for lr in [0.03, 0.1]:
+                        for depth in [3, 5]:
+                            temp_reg = XGBRegressor(
+                                n_estimators=200, max_depth=depth, learning_rate=lr,
+                                subsample=0.8, colsample_bytree=0.8, random_state=42,
+                                early_stopping_rounds=20, verbosity=0
+                            )
+                            temp_reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False)
+                            temp_rmse = np.sqrt(mean_squared_error(y_reg_test, temp_reg.predict(X_test)))
+                            if temp_rmse < best_rmse:
+                                best_rmse, best_reg = temp_rmse, temp_reg
+                            print(f"🔍 Tuning: lr={lr}, depth={depth}, RMSE={temp_rmse:.5f}")
+                    rmse, reg = best_rmse, best_reg
+                    print(f"✅ Best tuned regressor RMSE: {rmse:.5f}")
+
+                best_reg_result = {'rmse': rmse, 'model': reg}
+            else:
+                print(f"❕ Skipping regressor for {timeframe} — no valid target returns")
 
             # Save models
-            features = list(timeframe_trades[0]['features'][timeframe].keys())
-            self.save_state(timeframe=timeframe, clf=clf, reg=reg, features=features, score=f1 if clf else rmse)
+            if timeframe_trades:
+                features = list(timeframe_trades[0]['features'][timeframe].keys())
+                # Use a fixed threshold for consistency (e.g., MIN_PROFITABLE_RETURN or dynamic from history)
+                threshold = MIN_PROFITABLE_RETURN 
+                self.save_state(
+                    stock='global',  # Use 'global' since models are timeframe-based
+                    timeframe=timeframe,
+                    threshold=threshold,
+                    clf=best_class_result['model'] if best_class_result else None,
+                    reg=best_reg_result['model'] if best_reg_result else None,
+                    features=features,
+                    score=best_class_result['score'] if best_class_result else best_reg_result['rmse']
+                )
 
     def save_state(self, stock=None, timeframe=None, threshold=None, clf=None, reg=None, features=None, score=None):
         """Persist models, trade history, and metadata to disk."""
@@ -518,9 +634,9 @@ class StockTrader:
             os.makedirs(MODEL_DIR, exist_ok=True)
 
             # Save specific model if provided
-            if timeframe and score is not None:
-                model_key = (timeframe, score)
-                model_id = f"{timeframe}_{score:.4f}"
+            if stock and timeframe and threshold is not None and score is not None:
+                model_key = (stock, timeframe, threshold)
+                model_id = f"{stock}_{timeframe}_{threshold:.4f}"
                 clf_path = os.path.join(MODEL_DIR, f"{model_id}_clf.joblib") if clf else None
                 reg_path = os.path.join(MODEL_DIR, f"{model_id}_reg.joblib") if reg else None
                 
@@ -530,7 +646,9 @@ class StockTrader:
                     dump(reg, reg_path)
                 
                 self.model_metadata[model_id] = {
+                    'stock': stock,
                     'timeframe': timeframe,
+                    'threshold': threshold,
                     'clf_path': clf_path,
                     'reg_path': reg_path,
                     'features': features or [],
@@ -543,28 +661,7 @@ class StockTrader:
                     'features': features or [],
                     'score': score or 0.0
                 }
-                print(f"✅ Saved model for {model_id})")
-            
-            # Save all models if no specific model provided
-            else:
-                for model_key, data in self.models.items():
-                    timeframe, score = model_key
-                    model_id = f"{timeframe}_{score:.4f}"
-                    clf_path = os.path.join(MODEL_DIR, f"{model_id}_clf.joblib")
-                    reg_path = os.path.join(MODEL_DIR, f"{model_id}_reg.joblib")
-                    if data['clf']:
-                        dump(data['clf'], clf_path)
-                    if data['reg']:
-                        dump(data['reg'], reg_path)
-                    self.model_metadata[model_id] = {
-                        'timeframe': timeframe,
-                        'clf_path': clf_path if data['clf'] else None,
-                        'reg_path': reg_path if data['reg'] else None,
-                        'features': data['features'],
-                        'last_retrain': datetime.now(EST).isoformat(),
-                        'score': data.get('score', 0.0)
-                    }
-                print(f"✅ Saved {len(self.models)} models to disk")
+                print(f"✅ Saved model for {model_id}")
 
             # Save trade history
             try:
@@ -573,7 +670,7 @@ class StockTrader:
                 print(f"✅ Saved trade history with {len(self.trade_history)} entries")
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving trade history: {str(e)}, skipping save")
-                self.send_telegram_message(f"Permission denied when saving stock trade history: {str(e)}")
+                self.send_telegram_message(f"Permission denied when saving crypto trade history: {str(e)}")
 
             # Save paper trading
             try:
@@ -582,7 +679,7 @@ class StockTrader:
                 print(f"✅ Saved paper trading history")
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving paper trading history: {str(e)}, skipping save")
-                self.send_telegram_message(f"Permission denied when saving stock paper trading history: {str(e)}")
+                self.send_telegram_message(f"Permission denied when saving crypto paper trading history: {str(e)}")
 
             # Save model metadata
             try:
@@ -591,7 +688,7 @@ class StockTrader:
                 print("✅ Saved model metadata")
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving model metadata: {str(e)}, skipping save")
-                self.send_telegram_message(f"Permission denied when saving stock model metadata: {str(e)}")
+                self.send_telegram_message(f"Permission denied when saving crypto model metadata: {str(e)}")
 
             # GitHub Actions integration
             if GITHUB_ACTIONS:
@@ -609,7 +706,7 @@ class StockTrader:
                         files_to_add.extend(joblib_files)
                         print(f"✅ Found {len(joblib_files)} .joblib files to add")
                     else:
-                        print("ℹ️ No .joblib files found in stock/ind/models/")
+                        print("ℹ️ No .joblib files found in crypto/spot/models/")
 
                     # Add files to Git
                     subprocess.run(['git', 'add'] + files_to_add, check=True)
@@ -674,7 +771,8 @@ class StockTrader:
                     'symbol': symbol,
                     'price_change_percentage_1h': price_change_1h,
                     'price_change_percentage_24h': price_change_24h,
-                }
+                    'market_cap': ticker.info.get('marketCap', 0) or 0,
+                    'total_volume': ticker.info.get('volume', 0) or 0,}
                 stocks.append(stock)
                 time.sleep(0.1)  # Rate limit for yfinance
 
@@ -687,8 +785,13 @@ class StockTrader:
 
             sorted_stocks = []
             for s in stocks:
-                if s['price_change_percentage_1h'] > thresh_1h and s['price_change_percentage_24h'] > thresh_24h:
-                    sorted_stocks.append(s)
+                if price_change_1h > thresh_1h and price_change_24h > thresh_24h:
+                    if s['total_volume'] < MIN_LIQUIDITY or abs(s.get('price_change_percentage_24h', 0) / 100) > MAX_VOLATILITY:
+                        print(f"⚠️ Skipping {s['symbol']} (Volume: ${s['total_volume']:,.2f}, Volatility: {s.get('price_change_percentage_24h', 0):.2f}%)")
+                        continue
+                    else:                    
+                        sorted_stocks.append(s)
+            
             sorted_stocks = sorted(
                 sorted_stocks,
                 key=lambda x: (x['price_change_percentage_1h'], x['price_change_percentage_24h']),
@@ -711,17 +814,14 @@ class StockTrader:
                 time.sleep(0.5)
             sorted_stocks = sorted(
                 sorted_stocks,
-                key=lambda x: (x['price_change_percentage_1h'] + x['sentiment'], x['price_change_percentage_24h']),
+                key=lambda s: s['market_cap'] * (1 - abs(s.get('price_change_percentage_24h', 0)/100)) + s['sentiment'],
                 reverse=True
             )
             
-            print(f"✅ Found {len(sorted_stocks)} candidates")
             return sorted_stocks
 
         except Exception as e:
             print(f"⚠️ Error scanning candidates: {str(e)}")
-            import traceback
-            traceback.print_exc()  # Print full stack trace for debugging
             return []
         
     def calculate_dynamic_thresholds(self, top_stocks):
@@ -782,8 +882,6 @@ class StockTrader:
 
         except Exception as e:
             print(f"⚠️ Error calculating market-wide thresholds: {str(e)}")
-            import traceback
-            traceback.print_exc()
             return 0.5, 1.0
         
     def map_to_exchange(self, stocks):
@@ -795,7 +893,7 @@ class StockTrader:
                 stock_id = stock['id'].lower()
                 stock_copy = stock.copy()
                 stock_copy['yahoo_symbol'] = symbol
-                print(f"✅ Found Yahoo pair for {symbol} ({stock['id']}): {symbol}")
+                print(f"✅ Found Yahoo pair for {symbol} ({stock_id}): {symbol}")
 
                 # Fetch data to check freshness
                 data_1m = self.fetch_data(symbol, '1m', 'yahoo')
@@ -1040,14 +1138,15 @@ class StockTrader:
             df['obv'] = ta.obv(df['close'], df['volume'], talib=False)
             stoch = ta.stoch(df['high'], df['low'], df['close'], k=14, d=3, smooth_k=3, talib=False)
             df = pd.concat([df, stoch], axis=1)
+            df['mom'] = ta.mom(df['close'], length=10)
 
             if 'sentiment' not in df.columns:
                 df['sentiment'] = 0.0
 
             # Add time series features
             base_features = ['open', 'high', 'low', 'volume', 'returns', 'volatility',
-                                'rsi', 'macd', 'bollinger', 'atr', 'sma_20', 'ema_20',
-                                'adx', 'obv', 'STOCHk_14_3_3', 'STOCHd_14_3_3', 'sentiment']
+                             'rsi', 'macd', 'bollinger', 'atr', 'sma_20', 'ema_20',
+                             'adx', 'obv', 'STOCHk_14_3_3', 'STOCHd_14_3_3', 'sentiment', 'mom']
 
             for col in base_features:
                 # Lag features
@@ -1093,26 +1192,44 @@ class StockTrader:
             df['future_max'] = df['close'].shift(-1).rolling(window=window, min_periods=1).max()
             df['target_return'] = df['future_max'] / df['close'] - 1
             df['target_return'] = df['target_return'].clip(lower=0, upper=max_return)
-            
-            # Dynamic threshold: Use 25th percentile, fallback to mean, then min_return
+
+            # Log return statistics
+            print(f"📊 Target return stats for {stock['symbol']}: min={df['target_return'].min():.4f}, max={df['target_return'].max():.4f}, mean={df['target_return'].mean():.4f}")
+
+            # Dynamic threshold with history
+            stock_trades = [t for t in self.trade_history if t['id'] == stock['id'] and 'actual_return' in t['trade_info']]
             valid_returns = df['target_return'].dropna()
-            if len(valid_returns) > 0:
-                dynamic_threshold = np.percentile(valid_returns, 10)  # Lower percentile for more balance
-                if dynamic_threshold < min_return:
-                    dynamic_threshold = valid_returns.mean() + valid_returns.std() if valid_returns.mean() > 0 else min_return
+            if stock_trades:
+                hist_returns = [t['trade_info']['actual_return'] for t in stock_trades]
+                dynamic_threshold = np.mean(hist_returns) + np.std(hist_returns) if np.mean(hist_returns) > 0 else min_return
                 dynamic_threshold = max(dynamic_threshold, min_return)
-                print(f"📈 Dynamic threshold for {stock['symbol']}: {dynamic_threshold:.4f}")
+                print(f"📈 History-adjusted threshold for {stock_trades['symbol']}: {dynamic_threshold:.4f}")
             else:
-                dynamic_threshold = min_return
-                print(f"⚠️ No valid returns for {stock['symbol']}, using default threshold: {min_return}")
-            
-            df['label'] = (df['target_return'] >= dynamic_threshold).astype(int)
+                dynamic_threshold = np.percentile(valid_returns, 10) if len(valid_returns) > 0 else min_return
+                dynamic_threshold = max(dynamic_threshold, min_return)
+
+            # Create multi-class labels
+            df['label'] = 0  # Default: break-even
+            df.loc[df['target_return'] >= dynamic_threshold, 'label'] = 1  # Profitable
+            df.loc[df['target_return'] < 0, 'label'] = 0  # Loss (map to 0 for now, will adjust later)
             labeled_df = df.dropna()
-            
+
             # Check class distribution
+            class_counts = labeled_df['label'].value_counts()
+            print(f"📊 Label distribution for {stock['symbol']} (1m): {class_counts.to_dict()}")
             if labeled_df['label'].nunique() < 2:
-                print(f"⚠️ Only one class in 1m labels for {stock['symbol']}, will rely on regressor")
-            
+                print(f"⚠️ Only one class in 1m labels for {stock['symbol']} ({class_counts.to_dict()}), adjusting threshold")
+                if len(valid_returns) > 0:
+                    dynamic_threshold = np.percentile(valid_returns, 5)  # Lower percentile
+                    df['label'] = 0
+                    df.loc[df['target_return'] >= dynamic_threshold, 'label'] = 1
+                    df.loc[df['target_return'] < 0, 'label'] = 0
+                    labeled_df = df.dropna()
+                    print(f"📊 Retried with lower threshold {dynamic_threshold:.4f}, new label distribution: {labeled_df['label'].value_counts().to_dict()}")
+                    if labeled_df['label'].nunique() < 2:
+                        print(f"⚠️ Still only one class, skipping classifier for {stock['symbol']} (1m)")
+                        return labeled_df  # Return for regressor use
+
             return labeled_df
 
         except Exception as e:
@@ -1132,30 +1249,48 @@ class StockTrader:
             df['target_return'] = df['future_max'] / df['close'] - 1
             df['target_return'] = df['target_return'].clip(lower=0, upper=max_return)
             df['fwd_return'] = df['fwd_return'].clip(lower=-max_return, upper=max_return)
- 
-            # Dynamic threshold: Use 25th percentile, fallback to mean, then min_return
+
+            # Log return statistics
+            print(f"📊 Forward return stats for {stock['symbol']}: min={df['fwd_return'].min():.4f}, max={df['fwd_return'].max():.4f}, mean={df['fwd_return'].mean():.4f}")
+
+            # Dynamic threshold with history
+            stock_trades = [t for t in self.trade_history if t['id'] == stock['id'] and 'actual_return' in t['trade_info']]
             valid_returns = df['fwd_return'].dropna()
-            if len(valid_returns) > 0:
-                dynamic_threshold = np.percentile(valid_returns, 10)  # Lower percentile for more balance
-                if dynamic_threshold < min_return:
-                    dynamic_threshold = valid_returns.mean() + valid_returns.std() if valid_returns.mean() > 0 else min_return
+            if stock_trades:
+                hist_returns = [t['trade_info']['actual_return'] for t in stock_trades]
+                dynamic_threshold = np.mean(hist_returns) + np.std(hist_returns) if np.mean(hist_returns) > 0 else min_return
                 dynamic_threshold = max(dynamic_threshold, min_return)
-                print(f"📈 Dynamic threshold for {stock['symbol']}: {dynamic_threshold:.4f}")
+                print(f"📈 History-adjusted threshold for {stock['symbol']}: {dynamic_threshold:.4f}")
             else:
-                dynamic_threshold = min_return
-                print(f"⚠️ No valid returns for {stock['symbol']}, using default threshold: {min_return}")
-            
-            df['label'] = (df['fwd_return'] >= dynamic_threshold).astype(int)
+                dynamic_threshold = np.percentile(valid_returns, 10) if len(valid_returns) > 0 else min_return
+                dynamic_threshold = max(dynamic_threshold, min_return)
+
+            # Create multi-class labels and map to [0, 1, 2]
+            df['label'] = 1  # Default: break-even
+            df.loc[df['fwd_return'] >= dynamic_threshold, 'label'] = 2  # Profitable
+            df.loc[df['fwd_return'] < 0, 'label'] = 0  # Loss
             labeled_df = df.dropna()
-            
+
             # Check class distribution
+            class_counts = labeled_df['label'].value_counts()
+            print(f"📊 Label distribution for {stock['symbol']} (1h): {class_counts.to_dict()}")
             if labeled_df['label'].nunique() < 2:
-                print(f"⚠️ Only one class in 1h labels for {stock['symbol']}, will rely on regressor")
-            
+                print(f"⚠️ Only one class in 1h labels for {stock['symbol']} ({class_counts.to_dict()}), adjusting threshold")
+                if len(valid_returns) > 0:
+                    dynamic_threshold = np.percentile(valid_returns, 5)  # Lower percentile
+                    df['label'] = 1
+                    df.loc[df['fwd_return'] >= dynamic_threshold, 'label'] = 2
+                    df.loc[df['fwd_return'] < 0, 'label'] = 0
+                    labeled_df = df.dropna()
+                    print(f"📊 Retried with lower threshold {dynamic_threshold:.4f}, new label distribution: {labeled_df['label'].value_counts().to_dict()}")
+                    if labeled_df['label'].nunique() < 2:
+                        print(f"⚠️ Still only one class, skipping classifier for {stock['symbol']} (1h)")
+                        return labeled_df  # Return for regressor use
+
             return labeled_df
-        
+
         except Exception as e:
-            print(f" Error preparing 1h data: {str(e)}")
+            print(f"⚠️ Error preparing 1h data: {str(e)}")
             return None
 
     def train_hybrid_model(self, df, stock, df_type):
@@ -1182,14 +1317,15 @@ class StockTrader:
             y_class_train, y_class_test = y_class.iloc[:split], y_class.iloc[split:]
 
             # Load base models if available
-            base_clf = self.models.get(df_type, {}).get('clf')
-            base_reg = self.models.get(df_type, {}).get('reg')
-            base_score = self.models.get(df_type, {}).get('score', 0.0)
+            model_key = (df_type,)
+            base_clf = self.models.get(model_key, {}).get('clf')
+            base_reg = self.models.get(model_key, {}).get('reg')
+            base_score = self.models.get(model_key, {}).get('score', 0.0)
 
             # Train classifier
             best_class_result = None
             if y_class_train.nunique() >= 2 and y_class_test.nunique() >= 2:
-                minority_count = len(y_class_train[y_class_train == 1])
+                minority_count = min([sum(y_class_train == c) for c in np.unique(y_class_train)])
                 k_neighbors = min(5, max(1, minority_count - 1))
                 try:
                     smote = SMOTE(random_state=42, k_neighbors=k_neighbors)
@@ -1202,17 +1338,35 @@ class StockTrader:
                     except ValueError as e:
                         print(f"⚠️ ADASYN also failed for {df_type}: {str(e)}, proceeding without oversampling")
                         X_train_res, y_class_train_res = X_train, y_class_train
-                class_ratio = len(y_class_train_res[y_class_train_res == 0]) / len(y_class_train_res[y_class_train_res == 1]) if 1 in y_class_train_res else 1.0
+                # Add undersampling if imbalance > 3:1
+                class_counts = np.bincount(y_class_train_res - y_class_train_res.min()) if y_class_train_res.min() < 0 else np.bincount(y_class_train_res)
+                if len(class_counts) > 1 and max(class_counts) / min(class_counts) > 3:
+                    under = RandomUnderSampler(random_state=42)
+                    X_train_res, y_class_train_res = under.fit_resample(X_train_res, y_class_train_res)
+
+                # Train classifier with early stopping
                 clf = XGBClassifier(
                     n_estimators=100, max_depth=3, learning_rate=0.1,
-                    subsample=0.8, colsample_bytree=0.8,
-                    eval_metric='auc', early_stopping_rounds=10,
-                    random_state=42, scale_pos_weight=class_ratio
+                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                    random_state=42, early_stopping_rounds=10
                 )
-                clf.fit(X_train_res, y_class_train_res, eval_set=[(X_test, y_class_test)], verbose=False, xgb_model=base_clf if base_clf else None)
+                clf.fit(
+                    X_train_res, y_class_train_res,
+                    eval_set=[(X_test, y_class_test)],
+                    verbose=False,
+                    xgb_model=base_clf if base_clf else None
+                )
                 y_pred = clf.predict(X_test)
-                f1 = f1_score(y_class_test, y_pred)
-                print(f"✅ Classifier for {stock['symbol']} ({df_type}) - F1 Score: {f1:.4f}")
+                f1 = f1_score(y_class_test, y_pred, average='weighted')
+
+                # Cross-validation without early stopping
+                cv_clf = XGBClassifier(
+                    n_estimators=100, max_depth=3, learning_rate=0.1,
+                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                    random_state=42
+                )
+                cv_f1 = cross_val_score(cv_clf, X_train_res, y_class_train_res, cv=5, scoring='f1_weighted').mean()
+                print(f"✅ Classifier for {stock['symbol']} ({df_type}) - F1 Score: {f1:.4f}, CV: {cv_f1:.4f}")
 
                 # Lightweight tuning if performance is poor
                 if f1 < 0.5 or (base_clf and f1 < base_score * 0.9):
@@ -1223,13 +1377,17 @@ class StockTrader:
                         for depth in [2, 4]:
                             temp_clf = XGBClassifier(
                                 n_estimators=100, max_depth=depth, learning_rate=lr,
-                                subsample=0.8, colsample_bytree=0.8,
-                                eval_metric='auc', early_stopping_rounds=10,
-                                random_state=42, scale_pos_weight=class_ratio
+                                subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
+                                random_state=42, early_stopping_rounds=10
                             )
-                            temp_clf.fit(X_train_res, y_class_train_res, eval_set=[(X_test, y_class_test)], verbose=False, xgb_model=base_clf if base_clf else None)
+                            temp_clf.fit(
+                                X_train_res, y_class_train_res,
+                                eval_set=[(X_test, y_class_test)],
+                                verbose=False,
+                                xgb_model=base_clf if base_clf else None
+                            )
                             temp_pred = temp_clf.predict(X_test)
-                            temp_f1 = f1_score(y_class_test, temp_pred)
+                            temp_f1 = f1_score(y_class_test, temp_pred, average='weighted')
                             if temp_f1 > best_f1:
                                 best_f1 = temp_f1
                                 best_clf = temp_clf
@@ -1261,7 +1419,14 @@ class StockTrader:
                 reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False, xgb_model=base_reg if base_reg else None)
                 y_reg_pred = reg.predict(X_test)
                 rmse = np.sqrt(mean_squared_error(y_reg_test, y_reg_pred))
-                print(f"✅ Regressor for {stock['symbol']} ({df_type}) - RMSE: {rmse:.5f}")
+
+                # Cross-validation without early stopping
+                cv_reg = XGBRegressor(
+                    n_estimators=200, max_depth=4, learning_rate=0.05,
+                    subsample=0.8, colsample_bytree=0.8, random_state=42
+                )
+                cv_rmse = -cross_val_score(cv_reg, X_train, y_reg_train, cv=5, scoring='neg_root_mean_squared_error').mean()
+                print(f"✅ Regressor for {stock['symbol']} ({df_type}) - RMSE: {rmse:.5f}, CV RMSE: {cv_rmse:.5f}")
 
                 # Lightweight tuning if performance is poor
                 if rmse > 0.1 or (base_reg and base_score and rmse > base_score * 1.1):
@@ -1311,6 +1476,7 @@ class StockTrader:
             latest_timestamp = latest_timestamp.tz_convert(EST)
         
         # Parameters
+        min_minutes = 5 # No transactions less than 5 min
         max_minutes = 360  # 6 hours
         threshold = expected_return  # Use the regressor's expected return as the threshold
         
@@ -1319,6 +1485,13 @@ class StockTrader:
         avg_return = recent_data['returns'].mean()
         avg_volume = recent_data['volume'].mean()
         vol_volatility = recent_data['volume'].std() / avg_volume if avg_volume > 0 else 0.1
+
+        # Adjust based on history
+        recent_trades = [t for t in self.trade_history if t['status'] == 'completed' and t['trade_info']['actual_return'] < t['trade_info']['expected_return']]
+        if recent_trades:
+            adjustment_factor = 0.8  # 20% reduction if over-optimistic
+            avg_return *= adjustment_factor
+            print(f"📉 Adjusted avg_return to {avg_return:.4f} based on history")
 
         # Fit GARCH(1,1) model for volatility simulation
         try:
@@ -1329,81 +1502,98 @@ class StockTrader:
         except Exception as e:
             print(f"⚠️ GARCH fitting failed: {str(e)}, using historical volatility")
             init_vol = recent_data['volatility'].mean()
+
+        # Monte Carlo simulations
+        signal_times = []
+        predicted_returns = []
+        for path in range(NUM_MONTE_CARLO_PATHS):
+            sim_data = best_1m_df[['open', 'high', 'low', 'close', 'volume']].copy()
+            last_row = sim_data.iloc[-1]
+            current_vol = init_vol
+
+            for minute in range(1, max_minutes + 1):
+                next_time = latest_timestamp + timedelta(minutes=minute)
+                
+                # Update volatility with GARCH
+                try:
+                    garch_forecast = garch_model.fit(disp='off', first_obs=sim_data['returns'].dropna()[-20:]).forecast(horizon=1)
+                    current_vol = np.sqrt(garch_forecast.variance.values[-1, 0]) / 100
+                except:
+                    pass  # Keep current_vol if GARCH fails
+
+                # Simulate price movement with t-distribution (fat-tailed)
+                df_freedom = 5  # Degrees of freedom for t-distribution (lower = fatter tails)
+                price_change = t.rvs(df_freedom, loc=avg_return + sentiment * 0.001, scale=current_vol)
+                
+                # Introduce extreme events (e.g., 5-10% price jump/drop)
+                if np.random.random() < 0.02:  # 2% chance per minute
+                    extreme_move = np.random.choice([-0.10, -0.05, 0.05, 0.10])  # Random ±5% or ±10% move
+                    price_change += extreme_move
+
+                new_close = last_row['close'] * (1 + price_change)
+                new_open = last_row['close']
+                new_high = max(new_open, new_close) * (1 + np.random.uniform(0, current_vol / 2))
+                new_low = min(new_open, new_close) * (1 - np.random.uniform(0, current_vol / 2))
+                
+                # Volume spike during extreme events
+                volume_factor = 1.5 if abs(price_change) > 0.05 else 1.0
+                new_volume = max(avg_volume * volume_factor * (1 + np.random.normal(0, vol_volatility)), 0)
+                
+                # Append new candle with sentiment
+                new_row = pd.DataFrame({
+                    'open': [new_open],
+                    'high': [new_high],
+                    'low': [new_low],
+                    'close': [new_close],
+                    'volume': [new_volume],
+                    'sentiment': [sentiment]
+                }, index=[next_time])
+                
+                sim_data = pd.concat([sim_data, new_row])
+                last_row = new_row.iloc[0]
+            
+            # Recalculate features for the entire simulated dataset
+            sim_data = self.calculate_features(sim_data, '1m')
+            if sim_data is None:
+                continue
+            
+            # Extract future data
+            future_data = sim_data.loc[sim_data.index > latest_timestamp][best_analysis['feat_1m']]
+            
+            # Predict returns for each future minute
+            found_signal = False
+            signal_time = None
+            predicted_return = None
+
+            for i, (timestamp, features) in enumerate(future_data.iloc[min_minutes:].iterrows()):
+                if i >= max_minutes:
+                    break
+                features_df = pd.DataFrame([features], columns=best_analysis['feat_1m'], index=[timestamp])
+                predicted_return = best_analysis['reg_1m']['model'].predict(features_df)[0] if best_analysis['reg_1m'] is not None else 0.0
+                slippage = current_vol * 0.5
+                adjusted_return = predicted_return - FEE_RATE - slippage
+                if adjusted_return >= threshold:
+                    signal_time = timestamp
+                    found_signal = True
+                    break
+            
+            if found_signal:
+                signal_times.append(signal_time)
+                predicted_returns.append(adjusted_return)
+            else:
+                signal_times.append(latest_timestamp + timedelta(minutes=max_minutes))
+                predicted_returns.append(0.0)
         
-        # Initialize DataFrame for simulation
-        sim_data = best_1m_df[['open', 'high', 'low', 'close', 'volume']].copy()
-        last_row = sim_data.iloc[-1]
-        current_vol = init_vol
-
-        # Simulate future candles
-        for minute in range(1, max_minutes + 1):
-            next_time = latest_timestamp + timedelta(minutes=minute)
-            
-            # Update volatility with GARCH
-            try:
-                garch_forecast = garch_model.fit(disp='off', first_obs=sim_data['returns'].dropna()[-20:]).forecast(horizon=1)
-                current_vol = np.sqrt(garch_forecast.variance.values[-1, 0]) / 100
-            except:
-                pass  # Keep current_vol if GARCH fails
-
-            # Simulate price movement with t-distribution (fat-tailed)
-            df = 5  # Degrees of freedom for t-distribution (lower = fatter tails)
-            price_change = t.rvs(df, loc=avg_return + sentiment * 0.001, scale=current_vol)
-            
-            # Introduce extreme events (e.g., 5-10% price jump/drop)
-            if np.random.random() < 0.02:  # 2% chance per minute
-                extreme_move = np.random.choice([-0.10, -0.05, 0.05, 0.10])  # Random ±5% or ±10% move
-                price_change += extreme_move
-
-            new_close = last_row['close'] * (1 + price_change)
-            new_open = last_row['close']
-            new_high = max(new_open, new_close) * (1 + np.random.uniform(0, current_vol / 2))
-            new_low = min(new_open, new_close) * (1 - np.random.uniform(0, current_vol / 2))
-            
-            # Volume spike during extreme events
-            volume_factor = 1.5 if abs(price_change) > 0.05 else 1.0
-            new_volume = max(avg_volume * volume_factor * (1 + np.random.normal(0, vol_volatility)), 0)
-            
-            # Append new candle with sentiment
-            new_row = pd.DataFrame({
-                'open': [new_open],
-                'high': [new_high],
-                'low': [new_low],
-                'close': [new_close],
-                'volume': [new_volume],
-                'sentiment': [sentiment]
-            }, index=[next_time])
-            
-            sim_data = pd.concat([sim_data, new_row])
-            last_row = new_row.iloc[0]
-        
-        # Recalculate features for the entire simulated dataset
-        sim_data = self.calculate_features(sim_data, '1m')
-        if sim_data is None:
-            print('⚠️ Error recalculating features for simulated data')
+        if not signal_times:
+            print(f"❌ No sell signal found for {best_stock['symbol']} within 6 hours")
             return None, None
         
-        # Extract future data
-        future_data = sim_data.loc[sim_data.index > latest_timestamp][best_analysis['feat_1m']]
-        
-        # Predict returns for each future minute
-        found_signal = False
-        signal_time = None
-        predicted_return = None
-
-        for i, (timestamp, features) in enumerate(future_data.iterrows()):
-            if i >= max_minutes:
-                break
-            features_df = pd.DataFrame([features], columns=best_analysis['feat_1m'], index=[timestamp])
-            predicted_return = best_analysis['reg_1m']['model'].predict(features_df)[0] if best_analysis['reg_1m'] is not None else 0.0
-            
-            if predicted_return >= threshold:
-                signal_time = timestamp
-                found_signal = True
-                break
-        
-        if not found_signal:
-            print(f"❌ No sell signal found for {best_stock['symbol']} within 6 hours")
+        signal_time = pd.Series(signal_times).median()
+        predicted_return = np.mean(predicted_returns)
+        return_var = np.std(predicted_returns)
+        if return_var > 0.05:
+            print(f"⚠️ High variance {return_var:.4f} in predictions, skipping trade")
+            return None, None
 
         return signal_time, predicted_return
 
@@ -1484,30 +1674,41 @@ class StockTrader:
         latest_1m = best_1m_df.iloc[[-1]][best_analysis['feat_1m']]
         latest_1h = best_1h_df.iloc[[-1]][best_analysis['feat_1h']]
 
-        # Make predictions - Probability of class 1
-        prob_1m = best_analysis['clf_1m']['model'].predict_proba(latest_1m)[0][1] if best_analysis['clf_1m'] is not None else 0.5
-        prob_1h = best_analysis['clf_1h']['model'].predict_proba(latest_1h)[0][1] if best_analysis['clf_1h'] is not None else 0.5
+        # Predict probabilities and returns
+        prob_1m = 0.5
+        prob_1h = 0.5
+        expected_return_1m = 0.0
+        expected_return_1h = 0.0
+
+        # 1m predictions
+        if best_analysis['clf_1m'] is not None:
+            prob_1m = best_analysis['clf_1m']['model'].predict_proba(latest_1m)[0][1]  # Probability of positive class
+        elif best_analysis['reg_1m'] is not None:
+            expected_return_1m = best_analysis['reg_1m']['model'].predict(latest_1m)[0]
+            prob_1m = min(expected_return_1m / THRESHOLDS[0], 1.0) if expected_return_1m > 0 else 0.5
+
+        # 1h predictions
+        if best_analysis['clf_1h'] is not None:
+            prob_1h = best_analysis['clf_1h']['model'].predict_proba(latest_1h)[0][2]  # Probability of profitable class (label 2)
+        elif best_analysis['reg_1h'] is not None:
+            expected_return_1h = best_analysis['reg_1h']['model'].predict(latest_1h)[0]
+            prob_1h = min(expected_return_1h / THRESHOLDS[0], 1.0) if expected_return_1h > 0 else 0.5
 
         # Combine predictions with sentiment
         sentiment_score = best_stock['sentiment']
-        expected_return = (best_analysis['reg_1m']['model'].predict(latest_1m)[0] if best_analysis['reg_1m'] is not None else 0.0) or \
-                          (best_analysis['reg_1h']['model'].predict(latest_1h)[0] if best_analysis['reg_1h'] is not None else 0.0)
+        expected_return = expected_return_1m * 0.6 + expected_return_1h * 0.4
         
-        if best_analysis['clf_1m'] is None and best_analysis['reg_1m'] is not None:
-            prob_1m = min(expected_return / THRESHOLDS[0], 1.0)  # Normalize regressor output
-        if best_analysis['clf_1h'] is None and best_analysis['reg_1h'] is not None:
-            prob_1h = min(expected_return / THRESHOLDS[0], 1.0)  # Normalize regressor output
         buy_score = W_1M * prob_1m + W_1H * prob_1h + W_SENTIMENT * (sentiment_score + 1) / 2
         buy = buy_score >= 0.45 or (expected_return >= THRESHOLDS[0])  # Relaxed thresholds
 
-        # Position sizing (scale by confidence)
-        position_size_pct = min(max(buy_score, 0.01), 1.0)
+       # Dynamic position sizing with risk
+        recent_vol = best_1m_df['volatility'].iloc[-1]
+        position_size_pct = min(buy_score * (1 / recent_vol) if recent_vol > 0 else buy_score, 0.05)  # Max 5%
 
         if buy:
             close_price = best_1m_df['close'].iloc[-1]
             # Final buy report
             message = [
-                f"Stock Trading:",
                 f"✅ Action: BUY {best_stock['symbol']} at ${close_price:.4f}",
                 f"🤖 Buy score: {buy_score:.2f} (1m: {prob_1m:.2f}, 1h: {prob_1h:.2f}, sentiment: {sentiment_score:.2f})",
                 f"📈 Expected return: {expected_return * 100:.2f}%",
