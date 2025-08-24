@@ -21,7 +21,6 @@ import json
 import pickle
 from pycoingecko import CoinGeckoAPI
 from sklearn.metrics import f1_score, classification_report, mean_squared_error
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import cross_val_score
 from joblib import dump, load
 import hashlib
@@ -31,10 +30,8 @@ import arch
 import ccxt
 from imblearn.over_sampling import SMOTE, ADASYN
 from imblearn.under_sampling import RandomUnderSampler
-from imblearn.pipeline import Pipeline
 import subprocess
 import glob
-from xgboost.callback import EarlyStopping
 
 # Suppress warnings
 warnings.filterwarnings('ignore')
@@ -633,14 +630,19 @@ class CryptoTrader:
                 print(f"❕ Skipping regressor for {timeframe} — no valid target returns")
 
             # Save models
-            features = list(timeframe_trades[0]['features'][timeframe].keys())
-            self.save_state(
-                timeframe=timeframe,
-                clf=best_class_result['model'] if best_class_result else None,
-                reg=best_reg_result['model'] if best_reg_result else None,
-                features=features,
-                score=(best_class_result['score'] if best_class_result else best_reg_result['rmse'])
-            )
+            if timeframe_trades:
+                features = list(timeframe_trades[0]['features'][timeframe].keys())
+                # Use a fixed threshold for consistency (e.g., MIN_PROFITABLE_RETURN or dynamic from history)
+                threshold = MIN_PROFITABLE_RETURN  # From final_crypto.py (0.005)
+                self.save_state(
+                    coin='global',  # Use 'global' since models are timeframe-based
+                    timeframe=timeframe,
+                    threshold=threshold,
+                    clf=best_class_result['model'] if best_class_result else None,
+                    reg=best_reg_result['model'] if best_reg_result else None,
+                    features=features,
+                    score=best_class_result['score'] if best_class_result else best_reg_result['rmse']
+                )
 
     def save_state(self, coin=None, timeframe=None, threshold=None, clf=None, reg=None, features=None, score=None):
         """Persist models, trade history, and metadata to disk."""
@@ -649,9 +651,9 @@ class CryptoTrader:
             os.makedirs(MODEL_DIR, exist_ok=True)
 
             # Save specific model if provided
-            if timeframe and score is not None:
-                model_key = (timeframe, score)
-                model_id = f"{timeframe}_{score:.4f}"
+            if coin and timeframe and threshold is not None and score is not None:
+                model_key = (coin, timeframe, threshold)
+                model_id = f"{coin}_{timeframe}_{threshold:.4f}"
                 clf_path = os.path.join(MODEL_DIR, f"{model_id}_clf.joblib") if clf else None
                 reg_path = os.path.join(MODEL_DIR, f"{model_id}_reg.joblib") if reg else None
                 
@@ -661,7 +663,9 @@ class CryptoTrader:
                     dump(reg, reg_path)
                 
                 self.model_metadata[model_id] = {
+                    'coin': coin,
                     'timeframe': timeframe,
+                    'threshold': threshold,
                     'clf_path': clf_path,
                     'reg_path': reg_path,
                     'features': features or [],
@@ -674,28 +678,7 @@ class CryptoTrader:
                     'features': features or [],
                     'score': score or 0.0
                 }
-                print(f"✅ Saved model for {model_id})")
-            
-            # Save all models if no specific model provided
-            else:
-                for model_key, data in self.models.items():
-                    timeframe, score = model_key
-                    model_id = f"{timeframe}_{score:.4f}"
-                    clf_path = os.path.join(MODEL_DIR, f"{model_id}_clf.joblib")
-                    reg_path = os.path.join(MODEL_DIR, f"{model_id}_reg.joblib")
-                    if data['clf']:
-                        dump(data['clf'], clf_path)
-                    if data['reg']:
-                        dump(data['reg'], reg_path)
-                    self.model_metadata[model_id] = {
-                        'timeframe': timeframe,
-                        'clf_path': clf_path if data['clf'] else None,
-                        'reg_path': reg_path if data['reg'] else None,
-                        'features': data['features'],
-                        'last_retrain': datetime.now(EST).isoformat(),
-                        'score': data.get('score', 0.0)
-                    }
-                print(f"✅ Saved {len(self.models)} models to disk")
+                print(f"✅ Saved model for {model_id}")
 
             # Save trade history
             try:
@@ -793,8 +776,8 @@ class CryptoTrader:
                 price_change_24h = c.get('price_change_percentage_24h', 0.0)
                 
                 if price_change_1h > thresh_1h and price_change_24h > thresh_24h:
-                    if c['total_volume'] < MIN_LIQUIDITY or abs(coin.get('price_change_percentage_24h', 0) / 100) > MAX_VOLATILITY:
-                        print(f"⚠️ Skipping {coin['symbol']} (Volume: ${coin['total_volume']:,.2f}, Volatility: {coin.get('price_change_percentage_24h', 0):.2f}%)")
+                    if c['total_volume'] < MIN_LIQUIDITY or abs(c.get('price_change_percentage_24h', 0) / 100) > MAX_VOLATILITY:
+                        print(f"⚠️ Skipping {c['symbol']} (Volume: ${c['total_volume']:,.2f}, Volatility: {c.get('price_change_percentage_24h', 0):.2f}%)")
                         continue
                     else:
                         coin = {
@@ -802,6 +785,7 @@ class CryptoTrader:
                             'symbol': symbol,
                             'price_change_percentage_1h': price_change_1h,
                             'price_change_percentage_24h': price_change_24h,
+                            'market_cap': c['market_cap'],
                         }
                         sorted_coins.append(coin)
             sorted_coins = sorted(
@@ -1303,13 +1287,13 @@ class CryptoTrader:
 
             # Dynamic threshold with history
             coin_trades = [t for t in self.trade_history if t['id'] == coin['id'] and 'actual_return' in t['trade_info']]
+            valid_returns = df['target_return'].dropna()
             if coin_trades:
                 hist_returns = [t['trade_info']['actual_return'] for t in coin_trades]
                 dynamic_threshold = np.mean(hist_returns) + np.std(hist_returns) if np.mean(hist_returns) > 0 else min_return
                 dynamic_threshold = max(dynamic_threshold, min_return)
                 print(f"📈 History-adjusted threshold for {coin['symbol']}: {dynamic_threshold:.4f}")
             else:
-                valid_returns = df['target_return'].dropna()
                 dynamic_threshold = np.percentile(valid_returns, 10) if len(valid_returns) > 0 else min_return
                 dynamic_threshold = max(dynamic_threshold, min_return)
 
@@ -1360,13 +1344,13 @@ class CryptoTrader:
 
             # Dynamic threshold with history
             coin_trades = [t for t in self.trade_history if t['id'] == coin['id'] and 'actual_return' in t['trade_info']]
+            valid_returns = df['fwd_return'].dropna()
             if coin_trades:
                 hist_returns = [t['trade_info']['actual_return'] for t in coin_trades]
                 dynamic_threshold = np.mean(hist_returns) + np.std(hist_returns) if np.mean(hist_returns) > 0 else min_return
                 dynamic_threshold = max(dynamic_threshold, min_return)
                 print(f"📈 History-adjusted threshold for {coin['symbol']}: {dynamic_threshold:.4f}")
             else:
-                valid_returns = df['fwd_return'].dropna()
                 dynamic_threshold = np.percentile(valid_returns, 10) if len(valid_returns) > 0 else min_return
                 dynamic_threshold = max(dynamic_threshold, min_return)
 
@@ -1853,4 +1837,4 @@ class CryptoTrader:
 if __name__ == '__main__':
     trader = CryptoTrader()
     trader.run_analysis()
-    # trader.evaluate_pending_trades()
+    trader.evaluate_pending_trades()
