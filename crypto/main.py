@@ -1576,7 +1576,7 @@ class CryptoTrader:
         vol_volatility = recent_data['volume'].std() / avg_volume if avg_volume > 0 else 0.1
 
         # Adjust based on history
-        recent_trades = [t for t in self.trade_history if t['status'] == 'completed' and t['actual_return'] < t['trade_info']['expected_return']]
+        recent_trades = [t for t in self.trade_history if t['status'] == 'completed' and t['trade_info']['actual_return'] < t['trade_info']['expected_return']]
         if recent_trades:
             adjustment_factor = 0.8  # 20% reduction if over-optimistic
             avg_return *= adjustment_factor
