@@ -31897,7 +31897,11 @@
       "sell_time": "2025-08-24T23:06:00-04:00",
       "buy_score": 0.8756367381337917,
       "position_size_pct": 0.05,
-      "selected_symbol": "ALGO/USD"
+      "selected_symbol": "ALGO/USD",
+      "sell_price": 0.27387,
+      "actual_return": -3.651234117135242e-05,
+      "evaluation_time": "2025-08-24T23:45:25.244761-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -32193,6 +32197,6 @@
         "mom_roll_std_6": 0.008343017239983772
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
