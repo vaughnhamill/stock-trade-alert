@@ -33,11 +33,11 @@ warnings.filterwarnings('ignore')
 # --- Configuration ---
 THRESHOLDS = [0.02, 0.99]  # Min, Max
 EST = pytz.timezone('America/New_York')
-MODEL_DIR = 'stocks/ind/models'
-TRADE_HISTORY_FILE = 'stocks/ind/trade_history.json'
-MODEL_METADATA_FILE = 'stocks/ind/model_metadata.json'
-SENTIMENT_CACHE_FILE = 'stocks/ind/sentiment_cache.pkl'
-PORTFOLIO_FILE = 'stocks/ind/portfolio.json'
+MODEL_DIR = 'stock/ind/models'
+TRADE_HISTORY_FILE = 'stock/ind/trade_history.json'
+MODEL_METADATA_FILE = 'stock/ind/model_metadata.json'
+SENTIMENT_CACHE_FILE = 'stock/ind/sentiment_cache.pkl'
+PORTFOLIO_FILE = 'stock/ind/portfolio.json'
 PORTFOLIO_SIZE = 10000.00
 RATE_LIMIT_HIT = False
 FEEDBACK_INTERVAL_HOURS = 1  # How often to retrain models
@@ -670,7 +670,7 @@ class StockTrader:
                 print(f"✅ Saved trade history with {len(self.trade_history)} entries")
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving trade history: {str(e)}, skipping save")
-                self.send_telegram_message(f"Permission denied when saving crypto trade history: {str(e)}")
+                self.send_telegram_message(f"Permission denied when saving stock trade history: {str(e)}")
 
             # Save paper trading
             try:
@@ -679,7 +679,7 @@ class StockTrader:
                 print(f"✅ Saved paper trading history")
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving paper trading history: {str(e)}, skipping save")
-                self.send_telegram_message(f"Permission denied when saving crypto paper trading history: {str(e)}")
+                self.send_telegram_message(f"Permission denied when saving stock paper trading history: {str(e)}")
 
             # Save model metadata
             try:
@@ -688,7 +688,7 @@ class StockTrader:
                 print("✅ Saved model metadata")
             except PermissionError as e:
                 print(f"⚠️ Permission denied when saving model metadata: {str(e)}, skipping save")
-                self.send_telegram_message(f"Permission denied when saving crypto model metadata: {str(e)}")
+                self.send_telegram_message(f"Permission denied when saving stock model metadata: {str(e)}")
 
             # GitHub Actions integration
             if GITHUB_ACTIONS:
@@ -706,7 +706,7 @@ class StockTrader:
                         files_to_add.extend(joblib_files)
                         print(f"✅ Found {len(joblib_files)} .joblib files to add")
                     else:
-                        print("ℹ️ No .joblib files found in crypto/spot/models/")
+                        print("ℹ️ No .joblib files found in stock/ind/models/")
 
                     # Add files to Git
                     subprocess.run(['git', 'add'] + files_to_add, check=True)
@@ -745,12 +745,16 @@ class StockTrader:
             # Scrape S&P 500 list from Wikipedia
             url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
             tables = pd.read_html(url)
+            if tables:
+                print("Wikipedia S&P 500 stocks accessed")
             sp500_table = tables[0]  # First table is the S&P 500 constituents
             self.top_stocks = sp500_table['Symbol'].tolist()
 
             stocks = []
             for symbol in self.top_stocks:
                 ticker = yf.Ticker(symbol)
+                if not ticker:
+                    print(f"{symbol} cannot be accessed on yfinance")
                 # Fetch 1-hour data
                 hist_1h = ticker.history(period='1d', interval='1h')
                 if hist_1h.empty or len(hist_1h) < 2:
