@@ -143,8 +143,8 @@
       "sentiment_roll_mean_6",
       "sentiment_roll_std_6"
     ],
-    "last_retrain": "2025-08-24T22:56:02.508761-04:00",
-    "score": 0.6608391608391609
+    "last_retrain": "2025-08-24T23:45:28.867950-04:00",
+    "score": 0.5316558441558441
   },
   "global_1h_0.0050": {
     "coin": "global",
