@@ -32525,7 +32525,11 @@
       "sell_time": "2025-08-25T10:55:46.157096-04:00",
       "buy_score": 0.5147460022520762,
       "position_size_pct": 0.05,
-      "selected_symbol": "HYPE/USD"
+      "selected_symbol": "HYPE/USD",
+      "sell_price": 46.07,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-25T11:16:34.084072-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -32821,6 +32825,6 @@
         "mom_roll_std_6": 1.1711091608670272
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
