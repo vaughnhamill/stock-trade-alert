@@ -22,6 +22,11 @@ import pickle
 from pycoingecko import CoinGeckoAPI
 from sklearn.metrics import f1_score, classification_report, mean_squared_error
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.preprocessing import LabelEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.ensemble import HistGradientBoostingRegressor
 from joblib import dump, load
 import hashlib
 from textblob import TextBlob
@@ -500,6 +505,10 @@ class CryptoTrader:
             y_class = pd.Series([outcome_map[t['trade_info']['outcome']] for t in timeframe_trades])            
             y_reg = pd.Series([t['trade_info']['actual_return'] for t in timeframe_trades])
 
+            # Handle NaNs
+            imputer = SimpleImputer(strategy='mean')
+            X = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
+
             split = int(0.8 * len(X))
             if split < 2 or len(X) - split < 2:
                 print(f"⚠️ Insufficient data for {timeframe} after split")
@@ -531,119 +540,126 @@ class CryptoTrader:
                         adasyn = ADASYN(random_state=42, n_neighbors=k_neighbors)
                         X_train_res, y_class_train_res = adasyn.fit_resample(X_train, y_class_train)
                     except ValueError as e:
-                        print(f"⚠️ ADASYN also failed for {timeframe}: {str(e)}, proceeding without oversampling")
+                        print(f"⚠️ ADASYN also failed for {timeframe}: {str(e)}, using class weights")
                         X_train_res, y_class_train_res = X_train, y_class_train
 
-                # Undersampling if imbalance > 3:1
-                class_counts = np.bincount(y_class_train_res)
-                if len(class_counts) > 1 and max(class_counts) / min(class_counts) > 3:
-                    under = RandomUnderSampler(random_state=42)
-                    X_train_res, y_class_train_res = under.fit_resample(X_train_res, y_class_train_res)
-
-                clf = XGBClassifier(
-                    n_estimators=100, max_depth=3, learning_rate=0.1,
-                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
-                    random_state=42, early_stopping_rounds=10
+                # Train classifier with HistGradientBoostingClassifier
+                clf = HistGradientBoostingClassifier(
+                    max_iter=100, max_depth=3, learning_rate=0.1, random_state=42, early_stopping=True
                 )
-                clf.fit(
-                    X_train_res, y_class_train_res,
-                    eval_set=[(X_test, y_class_test)],
-                    verbose=False,
-                    xgb_model=base_clf if base_clf else None
-                )
+                clf.fit(X_train_res, y_class_train_res)
                 y_pred = clf.predict(X_test)
                 f1 = f1_score(y_class_test, y_pred, average='weighted')
 
-                # Cross-validation
-                cv_clf = XGBClassifier(
-                    n_estimators=100, max_depth=3, learning_rate=0.1,
-                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
-                    random_state=42
+                # Cross-validation with TimeSeriesSplit
+                tscv = TimeSeriesSplit(n_splits=5)
+                cv_clf = HistGradientBoostingClassifier(
+                    max_iter=100, max_depth=3, learning_rate=0.1, random_state=42
                 )
-                cv_f1 = cross_val_score(cv_clf, X_train_res, y_class_train_res, cv=5, scoring='f1_weighted').mean()
+                cv_f1 = cross_val_score(cv_clf, X_train_res, y_class_train_res, cv=tscv, scoring='f1_weighted').mean()
                 print(f"✅ Classifier for {timeframe} - F1 Score: {f1:.4f}, CV: {cv_f1:.4f}")
 
-                # Lightweight tuning if poor performance
+                # Lightweight tuning if performance is poor
                 if f1 < 0.5 or (base_clf and f1 < base_score * 0.9):
-                    print(f"⚠️ Classifier F1 {f1:.4f} is low, attempting lightweight tuning")
-                    best_f1, best_clf = f1, clf
+                    print(f"⚠️ Classifier F1 score {f1:.4f} is low or worse than base ({base_score:.4f}), attempting tuning")
+                    best_f1 = f1
+                    best_clf = clf
                     for lr in [0.05, 0.2]:
                         for depth in [2, 4]:
-                            temp_clf = XGBClassifier(
-                                n_estimators=100, max_depth=depth, learning_rate=lr,
-                                subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
-                                random_state=42, early_stopping_rounds=10
+                            temp_clf = HistGradientBoostingClassifier(
+                                max_iter=100, max_depth=depth, learning_rate=lr, random_state=42, early_stopping=True
                             )
-                            temp_clf.fit(X_train_res, y_class_train_res, eval_set=[(X_test, y_class_test)], verbose=False)
-                            temp_f1 = f1_score(y_class_test, temp_clf.predict(X_test), average='weighted')
+                            temp_clf.fit(X_train_res, y_class_train_res)
+                            temp_pred = temp_clf.predict(X_test)
+                            temp_f1 = f1_score(y_class_test, temp_pred, average='weighted')
                             if temp_f1 > best_f1:
-                                best_f1, best_clf = temp_f1, temp_clf
+                                best_f1 = temp_f1
+                                best_clf = temp_clf
                             print(f"🔍 Tuning: lr={lr}, depth={depth}, F1={temp_f1:.4f}")
-                    f1, clf = best_f1, best_clf
+                    f1 = best_f1
+                    clf = best_clf
                     print(f"✅ Best tuned classifier F1 Score: {f1:.4f}")
 
-                best_class_result = {'score': f1, 'model': clf}
+                best_class_result = {
+                    'score': f1,
+                    'model': clf,
+                    'y_class_test': y_class_test,
+                    'y_pred': y_pred
+                }
                 print('\nClassifier Report:')
-                print(classification_report(y_class_test, y_pred))
+                print(classification_report(best_class_result['y_class_test'], best_class_result['y_pred']))
             else:
-                print(f"⚠️ Skipping classifier training for {timeframe} — only one class")
+                print(f"⚠️ Skipping classifier training for {timeframe} — only one class in training/test set")
 
             # ---- Regressor ----
-            if not y_reg.isnull().all():
-                reg = XGBRegressor(
-                    n_estimators=200, max_depth=4, learning_rate=0.05,
-                    subsample=0.8, colsample_bytree=0.8, random_state=42,
-                    early_stopping_rounds=20, verbosity=0
+            best_reg_result = None
+            if y_reg is not None and not y_reg.isnull().all():
+                reg = HistGradientBoostingRegressor(
+                    max_iter=200, max_depth=4, learning_rate=0.05, random_state=42, early_stopping=True
                 )
-                reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False, xgb_model=base_reg if base_reg else None)
+                reg.fit(X_train, y_reg_train)
                 y_reg_pred = reg.predict(X_test)
                 rmse = np.sqrt(mean_squared_error(y_reg_test, y_reg_pred))
 
-                # Cross-validation
-                cv_reg = XGBRegressor(
-                    n_estimators=200, max_depth=4, learning_rate=0.05,
-                    subsample=0.8, colsample_bytree=0.8, random_state=42
+                # Cross-validation with TimeSeriesSplit
+                tscv = TimeSeriesSplit(n_splits=5)
+                cv_reg = HistGradientBoostingRegressor(
+                    max_iter=200, max_depth=4, learning_rate=0.05, random_state=42
                 )
-                cv_rmse = -cross_val_score(cv_reg, X_train, y_reg_train, cv=5, scoring='neg_root_mean_squared_error').mean()
+                cv_rmse = -cross_val_score(cv_reg, X_train, y_reg_train, cv=tscv, scoring='neg_root_mean_squared_error').mean()
                 print(f"✅ Regressor for {timeframe} - RMSE: {rmse:.5f}, CV RMSE: {cv_rmse:.5f}")
 
-                # Lightweight tuning if poor
+                # Lightweight tuning if performance is poor
                 if rmse > 0.1 or (base_reg and base_score and rmse > base_score * 1.1):
-                    print(f"⚠️ Regressor RMSE {rmse:.5f} is high, attempting lightweight tuning")
-                    best_rmse, best_reg = rmse, reg
+                    print(f"⚠️ Regressor RMSE {rmse:.5f} is high or worse than base, attempting tuning")
+                    best_rmse = rmse
+                    best_reg = reg
                     for lr in [0.03, 0.1]:
                         for depth in [3, 5]:
-                            temp_reg = XGBRegressor(
-                                n_estimators=200, max_depth=depth, learning_rate=lr,
-                                subsample=0.8, colsample_bytree=0.8, random_state=42,
-                                early_stopping_rounds=20, verbosity=0
+                            temp_reg = HistGradientBoostingRegressor(
+                                max_iter=200, max_depth=depth, learning_rate=lr, random_state=42, early_stopping=True
                             )
-                            temp_reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False)
-                            temp_rmse = np.sqrt(mean_squared_error(y_reg_test, temp_reg.predict(X_test)))
+                            temp_reg.fit(X_train, y_reg_train)
+                            temp_pred = temp_reg.predict(X_test)
+                            temp_rmse = np.sqrt(mean_squared_error(y_reg_test, temp_pred))
                             if temp_rmse < best_rmse:
-                                best_rmse, best_reg = temp_rmse, temp_reg
+                                best_rmse = temp_rmse
+                                best_reg = temp_reg
                             print(f"🔍 Tuning: lr={lr}, depth={depth}, RMSE={temp_rmse:.5f}")
-                    rmse, reg = best_rmse, best_reg
+                    rmse = best_rmse
+                    reg = best_reg
                     print(f"✅ Best tuned regressor RMSE: {rmse:.5f}")
 
-                best_reg_result = {'rmse': rmse, 'model': reg}
+                best_reg_result = {
+                    'rmse': rmse,
+                    'model': reg
+                }
             else:
-                print(f"❕ Skipping regressor for {timeframe} — no valid target returns")
+                print(f"❕ Skipping regressor for {timeframe} — no valid 'target_return' values")
 
             # Save models
-            if timeframe_trades:
-                features = list(timeframe_trades[0]['features'][timeframe].keys())
-                # Use a fixed threshold for consistency (e.g., MIN_PROFITABLE_RETURN or dynamic from history)
-                threshold = MIN_PROFITABLE_RETURN  # From final_crypto.py (0.005)
-                self.save_state(
-                    coin='global',  # Use 'global' since models are timeframe-based
-                    timeframe=timeframe,
-                    threshold=threshold,
-                    clf=best_class_result['model'] if best_class_result else None,
-                    reg=best_reg_result['model'] if best_reg_result else None,
-                    features=features,
-                    score=best_class_result['score'] if best_class_result else best_reg_result['rmse']
-                )
+            model_key = (timeframe,)
+            self.models[model_key] = {
+                'clf': best_class_result['model'] if best_class_result else None,
+                'reg': best_reg_result['model'] if best_reg_result else None,
+                'features': X.columns.tolist(),
+                'score': best_class_result['score'] if best_class_result else (best_reg_result['rmse'] if best_reg_result else 0.0)
+            }
+            clf_path = os.path.join(MODEL_DIR, f'clf_{timeframe}_{MIN_PROFITABLE_RETURN:.4f}.joblib')
+            reg_path = os.path.join(MODEL_DIR, f'reg_{timeframe}_{MIN_PROFITABLE_RETURN:.4f}.joblib')
+            if best_class_result:
+                dump(best_class_result['model'], clf_path)
+            if best_reg_result:
+                dump(best_reg_result['model'], reg_path)
+            self.model_metadata[f'global_{timeframe}_{MIN_PROFITABLE_RETURN:.4f}'] = {
+                'clf_path': clf_path if best_class_result else None,
+                'reg_path': reg_path if best_reg_result else None,
+                'features': X.columns.tolist(),
+                'score': best_class_result['score'] if best_class_result else (best_reg_result['rmse'] if best_reg_result else 0.0)
+            }
+            print(f"✅ Saved model for global_{timeframe}_{MIN_PROFITABLE_RETURN:.4f}")
+
+        self.save_state()
 
     def save_state(self, coin=None, timeframe=None, threshold=None, clf=None, reg=None, features=None, score=None):
         """Persist models, trade history, and metadata to disk."""
@@ -1300,9 +1316,9 @@ class CryptoTrader:
                 dynamic_threshold = max(dynamic_threshold, min_return)
 
             # Create multi-class labels
-            df['label'] = 0  # Default: break-even
-            df.loc[df['target_return'] >= dynamic_threshold, 'label'] = 1  # Profitable
-            df.loc[df['target_return'] < 0, 'label'] = 0  # Loss (map to 0 for now, will adjust later)
+            df['label'] = 0  # Default: loss
+            df.loc[(df['target_return'] >= 0) & (df['target_return'] < MIN_PROFITABLE_RETURN), 'label'] = 1  # break-even
+            df.loc[df['target_return'] >= MIN_PROFITABLE_RETURN, 'label'] = 2  # profitable
             labeled_df = df.dropna()
 
             # Check class distribution
@@ -1357,9 +1373,9 @@ class CryptoTrader:
                 dynamic_threshold = max(dynamic_threshold, min_return)
 
             # Create multi-class labels and map to [0, 1, 2]
-            df['label'] = 1  # Default: break-even
-            df.loc[df['fwd_return'] >= dynamic_threshold, 'label'] = 2  # Profitable
-            df.loc[df['fwd_return'] < 0, 'label'] = 0  # Loss
+            df['label'] = 0  # Loss
+            df.loc[(df['fwd_return'] >= 0) & (df['fwd_return'] < 0.005), 'label'] = 1  # Break-even
+            df.loc[df['fwd_return'] >= 0.005, 'label'] = 2  # Profitable
             labeled_df = df.dropna()
 
             # Check class distribution
@@ -1407,6 +1423,13 @@ class CryptoTrader:
             X_train, X_test = X.iloc[:split], X.iloc[split:]
             y_class_train, y_class_test = y_class.iloc[:split], y_class.iloc[split:]
 
+            # Relabel classes to consecutive integers starting from 0
+            label_encoder = LabelEncoder()
+            y_class_train_encoded = label_encoder.fit_transform(y_class_train)
+            y_class_test_encoded = label_encoder.transform(y_class_test)
+            num_classes = len(label_encoder.classes_)
+            print(f"📊 {df_type} class distribution after relabeling: {pd.Series(y_class_train_encoded).value_counts().to_dict()}")
+
             # Load base models if available
             model_key = (df_type,)
             base_clf = self.models.get(model_key, {}).get('clf')
@@ -1415,137 +1438,160 @@ class CryptoTrader:
 
             # Train classifier
             best_class_result = None
-            if y_class_train.nunique() >= 2 and y_class_test.nunique() >= 2:
-                minority_count = min([sum(y_class_train == c) for c in np.unique(y_class_train)])
+            if num_classes >= 2 and pd.Series(y_class_test_encoded).nunique() >= 2:
+                # Set objective and eval_metric dynamically
+                objective = 'multi:softprob' if num_classes > 2 else 'binary:logistic'
+                eval_metric = 'mlogloss' if num_classes > 2 else 'auc'
+                extra_params = {'num_class': num_classes} if num_classes > 2 else {}
+
+                # Oversampling
+                minority_count = min([sum(y_class_train_encoded == c) for c in np.unique(y_class_train_encoded)])
                 k_neighbors = min(5, max(1, minority_count - 1))
                 try:
                     smote = SMOTE(random_state=42, k_neighbors=k_neighbors)
-                    X_train_res, y_class_train_res = smote.fit_resample(X_train, y_class_train)
+                    X_train_res, y_class_train_res = smote.fit_resample(X_train, y_class_train_encoded)
                 except ValueError as e:
                     print(f"⚠️ SMOTE failed for {df_type}: {str(e)}, trying ADASYN")
                     try:
                         adasyn = ADASYN(random_state=42, n_neighbors=k_neighbors)
-                        X_train_res, y_class_train_res = adasyn.fit_resample(X_train, y_class_train)
+                        X_train_res, y_class_train_res = adasyn.fit_resample(X_train, y_class_train_encoded)
                     except ValueError as e:
                         print(f"⚠️ ADASYN also failed for {df_type}: {str(e)}, proceeding without oversampling")
-                        X_train_res, y_class_train_res = X_train, y_class_train
+                        X_train_res, y_class_train_res = X_train, y_class_train_encoded
                 # Add undersampling if imbalance > 3:1
-                class_counts = np.bincount(y_class_train_res - y_class_train_res.min()) if y_class_train_res.min() < 0 else np.bincount(y_class_train_res)
+                class_counts = np.bincount(y_class_train_res)
                 if len(class_counts) > 1 and max(class_counts) / min(class_counts) > 3:
                     under = RandomUnderSampler(random_state=42)
                     X_train_res, y_class_train_res = under.fit_resample(X_train_res, y_class_train_res)
 
-                # Train classifier with early stopping
-                clf = XGBClassifier(
-                    n_estimators=100, max_depth=3, learning_rate=0.1,
-                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
-                    random_state=42, early_stopping_rounds=10
-                )
-                clf.fit(
-                    X_train_res, y_class_train_res,
-                    eval_set=[(X_test, y_class_test)],
-                    verbose=False,
-                    xgb_model=base_clf if base_clf else None
-                )
-                y_pred = clf.predict(X_test)
-                f1 = f1_score(y_class_test, y_pred, average='weighted')
+                # Post-resampling safeguard
+                if pd.Series(y_class_train_res).nunique() < num_classes:
+                    print(f"⚠️ Resampled training data has fewer classes than expected ({pd.Series(y_class_train_res).nunique()} < {num_classes}) for {df_type}, skipping classifier")
+                else:
+                    # Train classifier with early stopping
+                    clf = XGBClassifier(
+                        n_estimators=100, max_depth=3, learning_rate=0.1,
+                        subsample=0.8, colsample_bytree=0.8, random_state=42,
+                        early_stopping_rounds=10, objective=objective, eval_metric=eval_metric,
+                        **extra_params
+                    )
+                    clf.fit(
+                        X_train_res, y_class_train_res,
+                        eval_set=[(X_test, y_class_test)],
+                        verbose=False,
+                        xgb_model=base_clf if base_clf else None
+                    )
+                    y_pred_encoded = clf.predict(X_test)
+                    y_pred = label_encoder.inverse_transform(y_pred_encoded)
+                    y_class_test = label_encoder.inverse_transform(y_class_test_encoded)
+                    f1 = f1_score(y_class_test, y_pred, average='weighted')
 
-                # Cross-validation without early stopping
-                cv_clf = XGBClassifier(
-                    n_estimators=100, max_depth=3, learning_rate=0.1,
-                    subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
-                    random_state=42
-                )
-                cv_f1 = cross_val_score(cv_clf, X_train_res, y_class_train_res, cv=5, scoring='f1_weighted').mean()
-                print(f"✅ Classifier for {coin['symbol']} ({df_type}) - F1 Score: {f1:.4f}, CV: {cv_f1:.4f}")
+                    # Cross-validation with TimeSeriesSplit
+                    tscv = TimeSeriesSplit(n_splits=5)
+                    cv_clf = XGBClassifier(
+                        n_estimators=100, max_depth=3, learning_rate=0.1,
+                        subsample=0.8, colsample_bytree=0.8, random_state=42,
+                        objective=objective, eval_metric=eval_metric, **extra_params
+                    )
+                    cv_f1 = cross_val_score(cv_clf, X_train_res, y_class_train_res, cv=tscv, scoring='f1_weighted').mean()
+                    print(f"✅ Classifier for {coin['symbol']} ({df_type}) - F1 Score: {f1:.4f}, CV: {cv_f1:.4f}")
 
-                # Lightweight tuning if performance is poor
-                if f1 < 0.5 or (base_clf and f1 < base_score * 0.9):
-                    print(f"⚠️ Classifier F1 score {f1:.4f} is low or worse than base ({base_score:.4f}), attempting lightweight tuning")
-                    best_f1 = f1
-                    best_clf = clf
-                    for lr in [0.05, 0.2]:
-                        for depth in [2, 4]:
-                            temp_clf = XGBClassifier(
-                                n_estimators=100, max_depth=depth, learning_rate=lr,
-                                subsample=0.8, colsample_bytree=0.8, eval_metric='mlogloss',
-                                random_state=42, early_stopping_rounds=10
-                            )
-                            temp_clf.fit(
-                                X_train_res, y_class_train_res,
-                                eval_set=[(X_test, y_class_test)],
-                                verbose=False,
-                                xgb_model=base_clf if base_clf else None
-                            )
-                            temp_pred = temp_clf.predict(X_test)
-                            temp_f1 = f1_score(y_class_test, temp_pred, average='weighted')
-                            if temp_f1 > best_f1:
-                                best_f1 = temp_f1
-                                best_clf = temp_clf
-                            print(f"🔍 Tuning: lr={lr}, depth={depth}, F1={temp_f1:.4f}")
-                    f1 = best_f1
-                    clf = best_clf
-                    print(f"✅ Best tuned classifier F1 Score: {f1:.4f}")
+                    # Lightweight tuning if performance is poor
+                    if f1 < 0.5 or f1 < 0.9:  # Simplified condition, no base_score comparison
+                        print(f"⚠️ Classifier F1 score {f1:.4f} is low or worse than base ({base_score:.4f}), attempting lightweight tuning")
+                        best_f1 = f1
+                        best_clf = clf
+                        for lr in [0.05, 0.2]:
+                            for depth in [2, 4]:
+                                temp_clf = XGBClassifier(
+                                    n_estimators=100, max_depth=depth, learning_rate=lr,
+                                    subsample=0.8, colsample_bytree=0.8, random_state=42,
+                                    early_stopping_rounds=10, objective=objective, eval_metric=eval_metric,
+                                    **extra_params
+                                )
+                                temp_clf.fit(
+                                    X_train_res, y_class_train_res,
+                                    eval_set=[(X_test, y_class_test_encoded)],
+                                    verbose=False
+                                )
+                                temp_pred_encoded = temp_clf.predict(X_test)
+                                temp_pred = label_encoder.inverse_transform(temp_pred_encoded)
+                                temp_f1 = f1_score(y_class_test, temp_pred, average='weighted')
+                                if temp_f1 > best_f1:
+                                    best_f1 = temp_f1
+                                    best_clf = temp_clf
+                                print(f"🔍 Tuning: lr={lr}, depth={depth}, F1={temp_f1:.4f}")
+                        f1 = best_f1
+                        clf = best_clf
+                        y_pred_encoded = clf.predict(X_test)
+                        y_pred = label_encoder.inverse_transform(y_pred_encoded)
+                        print(f"✅ Best tuned classifier F1 Score: {f1:.4f}")
 
-                best_class_result = {
-                    'score': f1,
-                    'model': clf,
-                    'y_class_test': y_class_test,
-                    'y_pred': y_pred
-                }
-                print('\nClassifier Report:')
-                print(classification_report(best_class_result['y_class_test'], best_class_result['y_pred']))
+                    best_class_result = {
+                        'score': f1,
+                        'model': clf,
+                        'y_class_test': y_class_test,
+                        'y_pred': y_pred,
+                        'label_encoder': label_encoder
+                    }
+                    print('\nClassifier Report:')
+                    print(classification_report(best_class_result['y_class_test'], best_class_result['y_pred']))
             else:
-                print(f"⚠️ Skipping classifier training for {df_type} — only one class in training/test set")
+                print(f"⚠️ Skipping classifier training for {df_type} — insufficient classes after relabeling")
 
             # Train regressor
             best_reg_result = None
             if y_reg is not None and not y_reg.isnull().all():
                 y_reg_train, y_reg_test = y_reg.iloc[:split], y_reg.iloc[split:]
-                reg = XGBRegressor(
-                    n_estimators=200, max_depth=4, learning_rate=0.05,
-                    subsample=0.8, colsample_bytree=0.8, random_state=42,
-                    early_stopping_rounds=20, verbosity=0
-                )
-                reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False, xgb_model=base_reg if base_reg else None)
-                y_reg_pred = reg.predict(X_test)
-                rmse = np.sqrt(mean_squared_error(y_reg_test, y_reg_pred))
+                # Check for NaNs in y_reg_train/test
+                if y_reg_train.isnull().any() or y_reg_test.isnull().any():
+                    print(f"⚠️ NaNs detected in target_return for {df_type}, skipping regressor")
+                else:
+                    reg = XGBRegressor(
+                        n_estimators=200, max_depth=4, learning_rate=0.05,
+                        subsample=0.8, colsample_bytree=0.8, random_state=42,
+                        early_stopping_rounds=20, verbosity=0
+                    )
+                    reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False, xgb_model=base_reg if base_reg else None)
+                    y_reg_pred = reg.predict(X_test)
+                    rmse = np.sqrt(mean_squared_error(y_reg_test, y_reg_pred))
 
-                # Cross-validation without early stopping
-                cv_reg = XGBRegressor(
-                    n_estimators=200, max_depth=4, learning_rate=0.05,
-                    subsample=0.8, colsample_bytree=0.8, random_state=42
-                )
-                cv_rmse = -cross_val_score(cv_reg, X_train, y_reg_train, cv=5, scoring='neg_root_mean_squared_error').mean()
-                print(f"✅ Regressor for {coin['symbol']} ({df_type}) - RMSE: {rmse:.5f}, CV RMSE: {cv_rmse:.5f}")
+                    # Cross-validation with TimeSeriesSplit
+                    tscv = TimeSeriesSplit(n_splits=5)
+                    cv_reg = XGBRegressor(
+                        n_estimators=200, max_depth=4, learning_rate=0.05,
+                        subsample=0.8, colsample_bytree=0.8, random_state=42
+                    )
+                    cv_rmse = -cross_val_score(cv_reg, X_train, y_reg_train, cv=tscv, scoring='neg_root_mean_squared_error').mean()
+                    print(f"✅ Regressor for {coin['symbol']} ({df_type}) - RMSE: {rmse:.5f}, CV RMSE: {cv_rmse:.5f}")
 
-                # Lightweight tuning if performance is poor
-                if rmse > 0.1 or (base_reg and base_score and rmse > base_score * 1.1):
-                    print(f"⚠️ Regressor RMSE {rmse:.5f} is high or worse than base, attempting lightweight tuning")
-                    best_rmse = rmse
-                    best_reg = reg
-                    for lr in [0.03, 0.1]:
-                        for depth in [3, 5]:
-                            temp_reg = XGBRegressor(
-                                n_estimators=200, max_depth=depth, learning_rate=lr,
-                                subsample=0.8, colsample_bytree=0.8, random_state=42,
-                                early_stopping_rounds=20, verbosity=0
-                            )
-                            temp_reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False, xgb_model=base_reg if base_reg else None)
-                            temp_pred = temp_reg.predict(X_test)
-                            temp_rmse = np.sqrt(mean_squared_error(y_reg_test, temp_pred))
-                            if temp_rmse < best_rmse:
-                                best_rmse = temp_rmse
-                                best_reg = temp_reg
-                            print(f"🔍 Tuning: lr={lr}, depth={depth}, RMSE={temp_rmse:.5f}")
-                    rmse = best_rmse
-                    reg = best_reg
-                    print(f"✅ Best tuned regressor RMSE: {rmse:.5f}")
+                    # Lightweight tuning if performance is poor
+                    if rmse > 0.1:
+                        print(f"⚠️ Regressor RMSE {rmse:.5f} is high, attempting lightweight tuning")
+                        best_rmse = rmse
+                        best_reg = reg
+                        for lr in [0.03, 0.1]:
+                            for depth in [3, 5]:
+                                temp_reg = XGBRegressor(
+                                    n_estimators=200, max_depth=depth, learning_rate=lr,
+                                    subsample=0.8, colsample_bytree=0.8, random_state=42,
+                                    early_stopping_rounds=20, verbosity=0
+                                )
+                                temp_reg.fit(X_train, y_reg_train, eval_set=[(X_test, y_reg_test)], verbose=False, xgb_model=base_reg if base_reg else None)
+                                temp_pred = temp_reg.predict(X_test)
+                                temp_rmse = np.sqrt(mean_squared_error(y_reg_test, temp_pred))
+                                if temp_rmse < best_rmse:
+                                    best_rmse = temp_rmse
+                                    best_reg = temp_reg
+                                print(f"🔍 Tuning: lr={lr}, depth={depth}, RMSE={temp_rmse:.5f}")
+                        rmse = best_rmse
+                        reg = best_reg
+                        print(f"✅ Best tuned regressor RMSE: {rmse:.5f}")
 
-                best_reg_result = {
-                    'rmse': rmse,
-                    'model': reg
-                }
+                    best_reg_result = {
+                        'rmse': rmse,
+                        'model': reg
+                    }
             else:
                 print(f"❕ Skipping regressor for {df_type} — no valid 'target_return' values")
 
@@ -1553,7 +1599,7 @@ class CryptoTrader:
 
         except Exception as e:
             print(f"⚠️ Error training hybrid model: {str(e)}")
-            return None, None, None
+            return None, None, features  # Return features even on failure
 
     def predict_future_movement(self, expected_return, sentiment):
         """Predict the future movement of the best coin by simulating realistic data points with Monte Carlo."""
@@ -1766,25 +1812,24 @@ class CryptoTrader:
         latest_1m = best_1m_df.iloc[[-1]][best_analysis['feat_1m']]
         latest_1h = best_1h_df.iloc[[-1]][best_analysis['feat_1h']]
 
-        # Predict probabilities and returns
-        prob_1m = 0.5
-        prob_1h = 0.5
+        # Calculate probabilities and expected returns
+        prob_1m = 0.5  # Default
         expected_return_1m = 0.0
-        expected_return_1h = 0.0
-
-        # 1m predictions
         if best_analysis['clf_1m'] is not None:
-            prob_1m = best_analysis['clf_1m']['model'].predict_proba(latest_1m)[0][1]  # Probability of positive class
-        elif best_analysis['reg_1m'] is not None:
+            prob_1m = best_analysis['clf_1m']['model'].predict_proba(latest_1m)[0]
+            profitable_idx = best_analysis['clf_1m']['label_encoder'].transform([2])[0]
+            prob_1m = prob_1m[profitable_idx]
+        if best_analysis['reg_1m'] is not None:
             expected_return_1m = best_analysis['reg_1m']['model'].predict(latest_1m)[0]
-            prob_1m = min(expected_return_1m / THRESHOLDS[0], 1.0) if expected_return_1m > 0 else 0.5
-
-        # 1h predictions
+        
+        prob_1h = 0.5
+        expected_return_1h = 0.0
         if best_analysis['clf_1h'] is not None:
-            prob_1h = best_analysis['clf_1h']['model'].predict_proba(latest_1h)[0][2]  # Probability of profitable class (label 2)
-        elif best_analysis['reg_1h'] is not None:
+            prob_1h = best_analysis['clf_1h']['model'].predict_proba(latest_1h)[0]
+            profitable_idx = best_analysis['clf_1h']['label_encoder'].transform([2])[0]
+            prob_1h = prob_1h[profitable_idx]
+        if best_analysis['reg_1h'] is not None:
             expected_return_1h = best_analysis['reg_1h']['model'].predict(latest_1h)[0]
-            prob_1h = min(expected_return_1h / THRESHOLDS[0], 1.0) if expected_return_1h > 0 else 0.5
 
         # Combine predictions with sentiment
         sentiment_score = best_coin['sentiment']
