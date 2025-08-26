@@ -72,8 +72,7 @@ GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS', 'false').lower() == 'true'
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
-ALPHA_KEY = "MLKBUOFK284AKV00"
-# ALPHA_KEY = os.getenv('ALPHA_KEY')
+ALPHA_KEY = os.getenv('ALPHA_KEY')
 
 # ------------- File System Setup ---------------- #
 os.makedirs(os.path.dirname(SENTIMENT_CACHE_FILE), exist_ok=True)
