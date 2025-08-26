@@ -1497,7 +1497,11 @@
       "sell_time": "2025-08-26T10:14:00-04:00",
       "buy_score": 0.8764137879014016,
       "position_size_pct": 0.05,
-      "selected_symbol": "HCWB"
+      "selected_symbol": "HCWB",
+      "sell_price": 5.100100040435791,
+      "actual_return": -0.046710255822694294,
+      "evaluation_time": "2025-08-26T10:34:47.655999-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -1793,6 +1797,6 @@
         "mom_roll_std_6": 1.1896560332587847
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
