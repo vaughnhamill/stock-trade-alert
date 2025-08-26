@@ -1,10 +1,7 @@
 {
   "global_1m_0.0050": {
-    "coin": "global",
-    "timeframe": "1m",
-    "threshold": 0.005,
-    "clf_path": "crypto/spot/models/global_1m_0.0050_clf.joblib",
-    "reg_path": "crypto/spot/models/global_1m_0.0050_reg.joblib",
+    "clf_path": "crypto/spot/models/clf_1m_0.0050.joblib",
+    "reg_path": "crypto/spot/models/reg_1m_0.0050.joblib",
     "features": [
       "open",
       "high",
@@ -141,17 +138,21 @@
       "sentiment_roll_mean_3",
       "sentiment_roll_std_3",
       "sentiment_roll_mean_6",
-      "sentiment_roll_std_6"
+      "sentiment_roll_std_6",
+      "mom",
+      "mom_lag_1",
+      "mom_lag_3",
+      "mom_lag_5",
+      "mom_roll_mean_3",
+      "mom_roll_std_3",
+      "mom_roll_mean_6",
+      "mom_roll_std_6"
     ],
-    "last_retrain": "2025-08-26T15:44:32.741918-04:00",
-    "score": 0.5755880483153212
+    "score": 0.49408773045136684
   },
   "global_1h_0.0050": {
-    "coin": "global",
-    "timeframe": "1h",
-    "threshold": 0.005,
-    "clf_path": "crypto/spot/models/global_1h_0.0050_clf.joblib",
-    "reg_path": "crypto/spot/models/global_1h_0.0050_reg.joblib",
+    "clf_path": "crypto/spot/models/clf_1h_0.0050.joblib",
+    "reg_path": "crypto/spot/models/reg_1h_0.0050.joblib",
     "features": [
       "open",
       "high",
@@ -288,9 +289,16 @@
       "sentiment_roll_mean_3",
       "sentiment_roll_std_3",
       "sentiment_roll_mean_6",
-      "sentiment_roll_std_6"
+      "sentiment_roll_std_6",
+      "mom",
+      "mom_lag_1",
+      "mom_lag_3",
+      "mom_lag_5",
+      "mom_roll_mean_3",
+      "mom_roll_std_3",
+      "mom_roll_mean_6",
+      "mom_roll_std_6"
     ],
-    "last_retrain": "2025-08-26T15:44:35.551594-04:00",
-    "score": 0.45234765234765234
+    "score": 0.3374443738080102
   }
 }
