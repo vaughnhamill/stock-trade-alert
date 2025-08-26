@@ -1811,7 +1811,11 @@
       "sell_time": "2025-08-26T12:21:00-04:00",
       "buy_score": 0.6715126514434815,
       "position_size_pct": 0.05,
-      "selected_symbol": "DSS"
+      "selected_symbol": "DSS",
+      "sell_price": 1.4074999690055847,
+      "actual_return": -0.016834315488772667,
+      "evaluation_time": "2025-08-26T12:54:16.920809-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -2107,7 +2111,7 @@
         "mom_roll_std_6": 0.03395206797575297
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e5763211c094f2f187920d9857c17355",
