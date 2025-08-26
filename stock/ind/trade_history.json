@@ -2753,7 +2753,11 @@
       "sell_time": "2025-08-26T13:45:00-04:00",
       "buy_score": 0.9207099556922913,
       "position_size_pct": 0.05,
-      "selected_symbol": "WGRX"
+      "selected_symbol": "WGRX",
+      "sell_price": 1.7799999713897705,
+      "actual_return": -0.005030778518606377,
+      "evaluation_time": "2025-08-26T13:46:33.097456-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -3049,6 +3053,6 @@
         "mom_roll_std_6": 0.22549983001103846
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
