@@ -2125,7 +2125,11 @@
       "sell_time": "2025-08-26T12:57:00-04:00",
       "buy_score": 0.4994335800409317,
       "position_size_pct": 0.05,
-      "selected_symbol": "MLM"
+      "selected_symbol": "MLM",
+      "sell_price": 612.0700073242188,
+      "actual_return": -0.0020055119733105287,
+      "evaluation_time": "2025-08-26T13:12:28.279226-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -2421,7 +2425,7 @@
         "mom_roll_std_6": 3.8443455298246447
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "2e33baa827e19291921192fc1cc0f811",
