@@ -1,5 +1,6 @@
 # ------------- API DOCUMENTATION ------------- #
 # yfinance - https://pypi.org/project/yfinance/ (for stock data)
+# ALPHA VANTAGE - https://www.alphavantage.co/documentation/
 
 # ------------- IMPORTS ------------- #
 import numpy as np
@@ -26,6 +27,9 @@ from imblearn.under_sampling import RandomUnderSampler
 import subprocess
 import glob
 import yfinance as yf
+from time import sleep
+from requests.exceptions import HTTPError, RequestException 
+import random
 
 # Suppress warnings
 warnings.filterwarnings('ignore')
@@ -68,7 +72,8 @@ GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS', 'false').lower() == 'true'
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
-
+ALPHA_KEY = "MLKBUOFK284AKV00"
+# ALPHA_KEY = os.getenv('ALPHA_KEY')
 
 # ------------- File System Setup ---------------- #
 os.makedirs(os.path.dirname(SENTIMENT_CACHE_FILE), exist_ok=True)
@@ -743,24 +748,100 @@ class StockTrader:
         print('🔍 Scanning for candidates...')
         try:
             # Scrape S&P 500 list from Wikipedia
-            url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-            tables = pd.read_html(url)
-            if tables:
-                print("Wikipedia S&P 500 stocks accessed")
-            sp500_table = tables[0]  # First table is the S&P 500 constituents
-            self.top_stocks = sp500_table['Symbol'].tolist()
+            headers = {
+                    "User-Agent": "MyStockBot/1.0 (contact: your.email@example.com)",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                    "Accept-Language": "en-US,en;q=0.5",
+                    "Connection": "keep-alive"
+                }
+            html_url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+            
+            max_retries = 3
+            retry_delay = 10  # Respect Wikipedia's implied crawl-delay
+                    
+            for attempt in range(max_retries):
+                try:
+                    response = requests.get(html_url, headers=headers, timeout=10)
+                    response.raise_for_status()
+                    tables = pd.read_html(response.text)
+                    if not tables:
+                        print("No tables found on Wikipedia page")
+                        return []
+                    print("✅ S&P 500 stocks accessed via HTML scraping")
+                    sp500_table = tables[0]  # First table contains S&P 500 components
+                    sp500_stocks = sp500_table['Symbol'].tolist()
+                    break
+                except HTTPError as e:
+                    if response.status_code == 403:
+                        print("Access forbidden (403). Trying alternative headers...")
+                        headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                        sleep(retry_delay)
+                        continue
+                    elif response.status_code == 429:
+                        print(f"Rate limit hit (429). Retrying in {retry_delay} seconds...")
+                        sleep(retry_delay)
+                        continue
+                    else:
+                        print(f"HTTP error on HTML: {e}")
+                        return []
+                except RequestException as e:
+                    print(f"Request failed on HTML: {e}. Retrying in {retry_delay} seconds...")
+                    sleep(retry_delay)
+                except ValueError as e:
+                    print(f"Error parsing tables: {e}")
+                    return []
+                except Exception as e:
+                    print(f"Unexpected error on HTML: {e}")
+                    return []
+
+            if not sp500_stocks:
+                print(f"Failed to retrieve S&P 500 data after {max_retries} attempts")
+                return []
+
+            # Clean symbols (replace dots with hyphens for yfinance compatibility)
+            sp500_stocks = [str(symbol).replace(".", "-") for symbol in sp500_stocks]
+            top_stocks = []
+
+            try:
+                url = f"https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey={ALPHA_KEY}"
+                r = requests.get(url)
+                data = r.json()
+                top_gainers = [item['ticker'] for item in data.get('top_gainers', [])]
+                if top_gainers:
+                    print("✅ Top gainers accessed from Alpha Vantage")
+                    for gainer in top_gainers:
+                        gainer = gainer.replace(".", "-")
+                        if gainer not in top_stocks:
+                            top_stocks.append(gainer)
+                else:
+                    print(f"⚠️ No top gainers data from Alpha Vantage or API rate exceeded: {top_gainers}")
+            except Exception as e:
+                print(f"⚠️ Error fetching top gainers/losers from Alpha Vantage: {str(e)}")
+            
+            sp500_50_stocks = random.sample(sp500_stocks, 50)
+            top_stocks.extend(sp500_50_stocks)
+            top_stocks = list(set(top_stocks))  # Remove duplicates
+            self.top_stocks = top_stocks
 
             stocks = []
             for symbol in self.top_stocks:
                 ticker = yf.Ticker(symbol)
                 if not ticker:
                     print(f"{symbol} cannot be accessed on yfinance")
-                # Fetch 1-hour data
-                hist_1h = ticker.history(period='1d', interval='1h')
-                if hist_1h.empty or len(hist_1h) < 2:
-                    print(f"⚠️ No 1h data for {symbol}, skipping")
+                # Fetch 1-minute data for recent change (approximating 1h)
+                hist_1m = ticker.history(period='1d', interval='1m')
+                if hist_1m.empty:
+                    print(f"⚠️ No 1m data for {symbol}, skipping")
                     continue
-                price_change_1h = (hist_1h['Close'][-1] - hist_1h['Close'][-2]) / hist_1h['Close'][-2] * 100
+                
+                # Compute price change over last 60 min or since open if less
+                current_price = hist_1m['Close'].iloc[-1]
+                available_min = len(hist_1m)  # Number of 1m bars available today
+                if available_min >= 60:
+                    start_price = hist_1m['Close'].iloc[-61]  # Price 60 min ago
+                else:
+                    start_price = hist_1m['Open'].iloc[0]  # Use open price if <60 min
+                price_change_1h = (current_price - start_price) / start_price * 100 if start_price > 0 else 0
 
                 # Fetch 1-day data with extended period to ensure data availability
                 hist_1d = ticker.history(period='5d', interval='1d')  # Extended to 5 days
