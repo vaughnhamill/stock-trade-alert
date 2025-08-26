@@ -3067,7 +3067,11 @@
       "sell_time": "2025-08-26T15:19:00-04:00",
       "buy_score": 0.5857194244861603,
       "position_size_pct": 0.05,
-      "selected_symbol": "DKI"
+      "selected_symbol": "DKI",
+      "sell_price": 6.214000034332275,
+      "actual_return": -0.026171447505280845,
+      "evaluation_time": "2025-08-26T16:00:52.488817-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -3363,6 +3367,6 @@
         "mom_roll_std_6": 0.42825469830857665
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
