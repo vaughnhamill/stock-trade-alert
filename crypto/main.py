@@ -272,6 +272,7 @@ class CryptoTrader:
                 try:
                     subprocess.run(['git', 'config', '--global', 'user.email', 'actions@github.com'], check=True)
                     subprocess.run(['git', 'config', '--global', 'user.name', 'GitHub Actions'], check=True)
+                    subprocess.run(['git', 'pull', 'origin', 'main'], check=True)
                     subprocess.run(['git', 'add', SENTIMENT_CACHE_FILE], check=True)
                     result = subprocess.run(['git', 'status', '--porcelain'], capture_output=True, text=True, check=True)
                     if result.stdout.strip():
@@ -713,6 +714,7 @@ class CryptoTrader:
                 try:
                     subprocess.run(['git', 'config', '--global', 'user.email', 'actions@github.com'], check=True)
                     subprocess.run(['git', 'config', '--global', 'user.name', 'GitHub Actions'], check=True)
+                    subprocess.run(['git', 'pull', 'origin', 'main'], check=True)
                     
                     # Prepare files to add
                     files_to_add = [MODEL_METADATA_FILE, TRADE_HISTORY_FILE, PORTFOLIO_FILE, SENTIMENT_CACHE_FILE]
