@@ -4633,7 +4633,11 @@
       "sell_time": "2025-08-27T13:53:30-04:00",
       "buy_score": 0.8645210021734238,
       "position_size_pct": 0.05,
-      "selected_symbol": "SATS"
+      "selected_symbol": "SATS",
+      "sell_price": 58.28999900817871,
+      "actual_return": -0.009263195118121079,
+      "evaluation_time": "2025-08-27T14:31:53.377812-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -4929,6 +4933,6 @@
         "mom_roll_std_6": 9.437620889668073
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
