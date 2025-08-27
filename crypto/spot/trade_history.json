@@ -34095,7 +34095,11 @@
       "sell_time": "2025-08-27T06:08:00-04:00",
       "buy_score": 0.4960194557905197,
       "position_size_pct": 0.05,
-      "selected_symbol": "LINK/USD"
+      "selected_symbol": "LINK/USD",
+      "sell_price": 24.477,
+      "actual_return": 0.00040871377774151155,
+      "evaluation_time": "2025-08-27T06:20:28.159000-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -34391,7 +34395,7 @@
         "mom_roll_std_6": 0.456681690750425
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "52581a99b5ccd2c73e95da01fb24de86",
@@ -34405,7 +34409,11 @@
       "sell_time": "2025-08-27T06:19:30-04:00",
       "buy_score": 0.49600170850753783,
       "position_size_pct": 0.05,
-      "selected_symbol": "LINK/USD"
+      "selected_symbol": "LINK/USD",
+      "sell_price": 24.5045,
+      "actual_return": 0.001328048381824079,
+      "evaluation_time": "2025-08-27T06:20:28.159000-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -34701,7 +34709,7 @@
         "mom_roll_std_6": 0.456681690750425
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "7614b8e0d9fe61932494fb9935766e17",
