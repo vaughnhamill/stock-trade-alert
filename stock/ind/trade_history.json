@@ -3381,7 +3381,11 @@
       "sell_time": "2025-08-27T11:46:30-04:00",
       "buy_score": 0.4857506089693024,
       "position_size_pct": 0.05,
-      "selected_symbol": "EL"
+      "selected_symbol": "EL",
+      "sell_price": 91.73249816894531,
+      "actual_return": 0.0050662231864953096,
+      "evaluation_time": "2025-08-27T11:54:33.382297-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -3677,7 +3681,7 @@
         "mom_roll_std_6": 0.5007079558344658
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "99294f865e6a1576f193f65ce7603047",
