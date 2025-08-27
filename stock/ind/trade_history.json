@@ -5261,7 +5261,11 @@
       "sell_time": "2025-08-27T15:59:00-04:00",
       "buy_score": 0.5320605386048556,
       "position_size_pct": 0.05,
-      "selected_symbol": "ODFL"
+      "selected_symbol": "ODFL",
+      "sell_price": 153.75,
+      "actual_return": -0.00029258538626777427,
+      "evaluation_time": "2025-08-27T16:24:58.873435-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -5557,6 +5561,6 @@
         "mom_roll_std_6": 1.328686236278541
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
