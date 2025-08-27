@@ -4005,7 +4005,11 @@
       "sell_time": "2025-08-27T12:39:00-04:00",
       "buy_score": 0.4840696930885315,
       "position_size_pct": 0.05,
-      "selected_symbol": "BIIB"
+      "selected_symbol": "BIIB",
+      "sell_price": 136.92499542236328,
+      "actual_return": 0.0014627120857192918,
+      "evaluation_time": "2025-08-27T12:55:24.691727-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -4301,7 +4305,7 @@
         "mom_roll_std_6": 0.40351674558883033
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "db86c89dcf80edcfdddf8ae455f5103b",
