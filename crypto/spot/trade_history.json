@@ -33781,7 +33781,11 @@
       "sell_time": "2025-08-27T02:06:30-04:00",
       "buy_score": 0.5034654840826989,
       "position_size_pct": 0.05,
-      "selected_symbol": "NEAR/USD"
+      "selected_symbol": "NEAR/USD",
+      "sell_price": 2.5324999999999998,
+      "actual_return": -0.009194053208137832,
+      "evaluation_time": "2025-08-27T02:28:56.025259-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -34077,6 +34081,6 @@
         "mom_roll_std_6": 0.014895189380020348
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
