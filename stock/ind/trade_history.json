@@ -4319,7 +4319,11 @@
       "sell_time": "2025-08-27T13:05:00-04:00",
       "buy_score": 0.7589557897547881,
       "position_size_pct": 0.05,
-      "selected_symbol": "IVVD"
+      "selected_symbol": "IVVD",
+      "sell_price": 0.7871999740600586,
+      "actual_return": -0.18895531960702938,
+      "evaluation_time": "2025-08-27T13:21:17.043558-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -4615,6 +4619,6 @@
         "mom_roll_std_6": 0.22287471650311588
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
