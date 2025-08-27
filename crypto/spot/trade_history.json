@@ -35037,7 +35037,11 @@
       "sell_time": "2025-08-27T17:20:00-04:00",
       "buy_score": 0.4548169956657434,
       "position_size_pct": 0.05,
-      "selected_symbol": "SOL/USD"
+      "selected_symbol": "SOL/USD",
+      "sell_price": 206.9,
+      "actual_return": -0.010805125262956544,
+      "evaluation_time": "2025-08-27T17:23:52.359431-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -35333,7 +35337,7 @@
         "mom_roll_std_6": 1.453368501103696
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "1a8c74074cd972d82f242916fcbe3f65",
