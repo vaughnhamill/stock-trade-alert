@@ -4947,7 +4947,11 @@
       "sell_time": "2025-08-27T15:30:00-04:00",
       "buy_score": 0.8421218164265156,
       "position_size_pct": 0.05,
-      "selected_symbol": "EQT"
+      "selected_symbol": "EQT",
+      "sell_price": 51.567501068115234,
+      "actual_return": 0.0026735516648561134,
+      "evaluation_time": "2025-08-27T15:31:23.870120-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -5243,6 +5247,6 @@
         "mom_roll_std_6": 0.5964959498736375
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
