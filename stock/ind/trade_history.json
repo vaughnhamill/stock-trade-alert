@@ -5889,7 +5889,11 @@
       "sell_time": "2025-08-28T11:03:00-04:00",
       "buy_score": 0.7758369848132134,
       "position_size_pct": 0.05,
-      "selected_symbol": "PTNM"
+      "selected_symbol": "PTNM",
+      "sell_price": 2.130000114440918,
+      "actual_return": -0.027397233430072485,
+      "evaluation_time": "2025-08-28T11:29:26.576121-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -6185,7 +6189,7 @@
         "mom_roll_std_6": 0.2001939784408425
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4e0f3d3c17c46ec065d99b26667de7b0",
