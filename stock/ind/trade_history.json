@@ -7137,7 +7137,11 @@
       "sell_time": "2025-08-28T15:48:30-04:00",
       "buy_score": 0.506017403403918,
       "position_size_pct": 0.05,
-      "selected_symbol": "EA"
+      "selected_symbol": "EA",
+      "sell_price": 170.8949966430664,
+      "actual_return": 0.0009077611861067273,
+      "evaluation_time": "2025-08-28T15:50:06.227710-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -7433,7 +7437,7 @@
         "mom_roll_std_6": 0.920103593330715
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e0430c38034d96f7103bfddfbee81b3e",
