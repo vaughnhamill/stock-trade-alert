@@ -7761,7 +7761,11 @@
       "sell_time": "2025-08-28T15:31:00-04:00",
       "buy_score": 0.7760889218682101,
       "position_size_pct": 0.05,
-      "selected_symbol": "DOW"
+      "selected_symbol": "DOW",
+      "sell_price": 24.6299991607666,
+      "actual_return": 0.0018303875521543693,
+      "evaluation_time": "2025-08-28T15:31:03.266454-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -8057,7 +8061,7 @@
         "mom_roll_std_6": 0.13562050418481958
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "029d501a94547eb7862efb1471778ad9",
