@@ -38805,7 +38805,11 @@
       "sell_time": "2025-08-28T11:00:30-04:00",
       "buy_score": 0.45810464695096015,
       "position_size_pct": 0.05,
-      "selected_symbol": "ATOM/USD"
+      "selected_symbol": "ATOM/USD",
+      "sell_price": 4.712,
+      "actual_return": 0.005763073639274309,
+      "evaluation_time": "2025-08-28T11:20:54.212450-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -39101,7 +39105,7 @@
         "mom_roll_std_6": 0.01859749087018671
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4bda404ba145e8e103527d027b9f15a1",
@@ -39115,7 +39119,11 @@
       "sell_time": "2025-08-28T11:09:00-04:00",
       "buy_score": 0.45390214323997496,
       "position_size_pct": 0.05,
-      "selected_symbol": "MNT/USD"
+      "selected_symbol": "MNT/USD",
+      "sell_price": 1.2582,
+      "actual_return": -0.010226557583385873,
+      "evaluation_time": "2025-08-28T11:20:54.212450-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -39411,7 +39419,7 @@
         "mom_roll_std_6": 0.014937469665240915
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "7aada6ad143b93f6cb8cf649b25d5bd2",
@@ -39425,7 +39433,11 @@
       "sell_time": "2025-08-28T10:56:30-04:00",
       "buy_score": 0.5565644101042609,
       "position_size_pct": 0.05,
-      "selected_symbol": "LINK/USD"
+      "selected_symbol": "LINK/USD",
+      "sell_price": 25.611,
+      "actual_return": -0.0034630350194551998,
+      "evaluation_time": "2025-08-28T11:20:54.212450-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -39721,7 +39733,7 @@
         "mom_roll_std_6": 0.35472942740441593
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "cd34970323c7054f98d01fb845a0fcd2",
