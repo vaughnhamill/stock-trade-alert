@@ -8079,7 +8079,11 @@
       "sell_time": "2025-08-28T15:43:00-04:00",
       "buy_score": 0.716910675468899,
       "position_size_pct": 0.05,
-      "selected_symbol": "NBY"
+      "selected_symbol": "NBY",
+      "sell_price": 1.6549999713897705,
+      "actual_return": -0.003252265417998922,
+      "evaluation_time": "2025-08-28T15:50:06.227710-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -8375,7 +8379,7 @@
         "mom_roll_std_6": 0.027067180642284753
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "48eb3955f0f6de086f43b90c16443f3d",
