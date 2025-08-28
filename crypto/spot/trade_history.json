@@ -36293,7 +36293,11 @@
       "sell_time": "2025-08-27T23:15:00-04:00",
       "buy_score": 0.6055151104927063,
       "position_size_pct": 0.05,
-      "selected_symbol": "JUP/USD"
+      "selected_symbol": "JUP/USD",
+      "sell_price": 0.5066,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-27T23:36:02.870526-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -36589,6 +36593,6 @@
         "mom_roll_std_6": 0.0045563142999576305
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
