@@ -36921,7 +36921,11 @@
       "sell_time": "2025-08-28T08:55:00-04:00",
       "buy_score": 0.48635060265660285,
       "position_size_pct": 0.05,
-      "selected_symbol": "MNT/USD"
+      "selected_symbol": "MNT/USD",
+      "sell_price": 1.2583,
+      "actual_return": 0.014839906444068048,
+      "evaluation_time": "2025-08-28T09:21:12.051643-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -37217,7 +37221,7 @@
         "mom_roll_std_6": 0.011013446327103367
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e7747a6417a6cc59edf39d3e81d11439",
@@ -37231,7 +37235,11 @@
       "sell_time": "2025-08-28T09:19:00-04:00",
       "buy_score": 0.5332101687788964,
       "position_size_pct": 0.05,
-      "selected_symbol": "MANTLE/USD"
+      "selected_symbol": "MANTLE/USD",
+      "sell_price": 1.2575500000000002,
+      "actual_return": 0.01105483196655423,
+      "evaluation_time": "2025-08-28T09:21:12.051643-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -37527,7 +37535,7 @@
         "mom_roll_std_6": 0.014244776820528746
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4eb904495def0da13204775e76005690",
