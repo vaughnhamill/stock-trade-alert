@@ -7447,7 +7447,11 @@
       "sell_time": "2025-08-28T15:08:00-04:00",
       "buy_score": 0.702354545891285,
       "position_size_pct": 0.05,
-      "selected_symbol": "LEN"
+      "selected_symbol": "LEN",
+      "sell_price": 132.22000122070312,
+      "actual_return": -0.0007179928122300031,
+      "evaluation_time": "2025-08-28T15:21:07.588584-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -7743,7 +7747,7 @@
         "mom_roll_std_6": 0.27162072350616623
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4a875d7d42a027b402d303fc192b173c",
