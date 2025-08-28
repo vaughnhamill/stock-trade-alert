@@ -37851,7 +37851,11 @@
       "sell_time": "2025-08-28T08:23:00-04:00",
       "buy_score": 0.4767575666308403,
       "position_size_pct": 0.05,
-      "selected_symbol": "VET/USD"
+      "selected_symbol": "VET/USD",
+      "sell_price": 0.02565,
+      "actual_return": -0.001168224299065508,
+      "evaluation_time": "2025-08-28T08:41:43.251227-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -38147,7 +38151,7 @@
         "mom_roll_std_6": 0.00016670332930088867
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c09d0077aa3cbe734ca18504cca4c231",
@@ -38161,7 +38165,11 @@
       "sell_time": "2025-08-28T08:28:00-04:00",
       "buy_score": 0.49732072204351424,
       "position_size_pct": 0.05,
-      "selected_symbol": "VET/USD"
+      "selected_symbol": "VET/USD",
+      "sell_price": 0.02566,
+      "actual_return": 0.0007800312012480182,
+      "evaluation_time": "2025-08-28T08:41:43.251227-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -38457,7 +38465,7 @@
         "mom_roll_std_6": 0.00016670332930088867
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "2a3cb5339f3c8544477a6b58cf2c6d8f",
