@@ -6823,7 +6823,11 @@
       "sell_time": "2025-08-28T12:57:50.560558-04:00",
       "buy_score": 0.8927630662918091,
       "position_size_pct": 0.05,
-      "selected_symbol": "MDBX"
+      "selected_symbol": "MDBX",
+      "sell_price": 44.607640845874535,
+      "actual_return": 0.023111064381149696,
+      "evaluation_time": "2025-08-28T13:21:02.971140-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -7119,6 +7123,6 @@
         "mom_roll_std_6": 7.950063855957546
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
