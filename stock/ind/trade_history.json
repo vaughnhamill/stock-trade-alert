@@ -10579,7 +10579,11 @@
       "sell_time": "2025-08-29T15:38:00-04:00",
       "buy_score": 0.45646689454714456,
       "position_size_pct": 0.05,
-      "selected_symbol": "NEM"
+      "selected_symbol": "NEM",
+      "sell_price": 74.34500122070312,
+      "actual_return": 0.0007403460021264537,
+      "evaluation_time": "2025-08-29T15:53:25.813384-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -10875,7 +10879,7 @@
         "mom_roll_std_6": 0.4584310830268458
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8591d2c5a48490d41a4590cbce714f1f",
