@@ -9645,7 +9645,11 @@
       "sell_time": "2025-08-29T13:05:00-04:00",
       "buy_score": 0.6969545960426331,
       "position_size_pct": 0.05,
-      "selected_symbol": "GRYP"
+      "selected_symbol": "GRYP",
+      "sell_price": 1.5910999774932861,
+      "actual_return": 0.0006917887368516468,
+      "evaluation_time": "2025-08-29T13:21:41.641285-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -9941,7 +9945,7 @@
         "mom_roll_std_6": 0.10455098025199026
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "495582ebe48d6e090731817b4f7553d5",
