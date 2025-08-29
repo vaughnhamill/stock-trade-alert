@@ -41623,7 +41623,11 @@
       "sell_time": "2025-08-28T21:26:30-04:00",
       "buy_score": 0.47452721666564823,
       "position_size_pct": 0.05,
-      "selected_symbol": "SEI/USD"
+      "selected_symbol": "SEI/USD",
+      "sell_price": 0.3012,
+      "actual_return": -0.0176125244618394,
+      "evaluation_time": "2025-08-28T22:53:00.275101-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -41919,7 +41923,7 @@
         "mom_roll_std_6": 0.002344710358800758
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "ec93b1117b72c93f6357eba97340ad59",
@@ -41933,7 +41937,11 @@
       "sell_time": "2025-08-28T21:37:30-04:00",
       "buy_score": 0.570072046630286,
       "position_size_pct": 0.05,
-      "selected_symbol": "SEI/USD"
+      "selected_symbol": "SEI/USD",
+      "sell_price": 0.30144,
+      "actual_return": -0.021870335518203724,
+      "evaluation_time": "2025-08-28T22:53:00.275101-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -42229,6 +42237,6 @@
         "mom_roll_std_6": 0.004285462246557098
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
