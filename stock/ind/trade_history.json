@@ -9331,7 +9331,11 @@
       "sell_time": "2025-08-29T12:47:30-04:00",
       "buy_score": 0.6841968344979816,
       "position_size_pct": 0.05,
-      "selected_symbol": "UPS"
+      "selected_symbol": "UPS",
+      "sell_price": 87.39999771118164,
+      "actual_return": -0.0022831137719544325,
+      "evaluation_time": "2025-08-29T12:54:49.120752-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -9627,7 +9631,7 @@
         "mom_roll_std_6": 0.4724002831828614
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "dae158a88f3529959e1684f3d249641d",
