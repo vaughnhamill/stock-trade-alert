@@ -9017,7 +9017,11 @@
       "sell_time": "2025-08-29T12:14:30-04:00",
       "buy_score": 0.6359000533819199,
       "position_size_pct": 0.05,
-      "selected_symbol": "SNOU"
+      "selected_symbol": "SNOU",
+      "sell_price": 57.86000061035156,
+      "actual_return": 0.010302080458738825,
+      "evaluation_time": "2025-08-29T12:29:43.841028-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -9313,7 +9317,7 @@
         "mom_roll_std_6": 8.173909597867933
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "22769b1a838a69c97f185d4c9923e5a0",
