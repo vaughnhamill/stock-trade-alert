@@ -8703,7 +8703,11 @@
       "sell_time": "2025-08-29T10:35:00-04:00",
       "buy_score": 0.8299596683780353,
       "position_size_pct": 0.05,
-      "selected_symbol": "OPAD"
+      "selected_symbol": "OPAD",
+      "sell_price": 4.880000114440918,
+      "actual_return": -0.039388977131227694,
+      "evaluation_time": "2025-08-29T10:39:29.199297-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -8999,6 +9003,6 @@
         "mom_roll_std_6": 0.6272433082436211
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
