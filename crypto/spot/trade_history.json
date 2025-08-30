@@ -44135,7 +44135,11 @@
       "sell_time": "2025-08-29T19:51:30-04:00",
       "buy_score": 0.548746619203025,
       "position_size_pct": 0.05,
-      "selected_symbol": "PYTH/USD"
+      "selected_symbol": "PYTH/USD",
+      "sell_price": 0.21325,
+      "actual_return": -0.016374538745387444,
+      "evaluation_time": "2025-08-29T21:21:15.359621-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -44431,6 +44435,6 @@
         "mom_roll_std_6": 0.014197323691456768
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
