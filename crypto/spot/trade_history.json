@@ -48225,7 +48225,11 @@
       "sell_time": "2025-08-30T17:17:00-04:00",
       "buy_score": 0.4693174418902009,
       "position_size_pct": 0.05,
-      "selected_symbol": "PI/USD"
+      "selected_symbol": "PI/USD",
+      "sell_price": 0.383,
+      "actual_return": 0.018075491759702363,
+      "evaluation_time": "2025-08-30T17:30:15.316823-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -48521,7 +48525,7 @@
         "mom_roll_std_6": 0.003552886150723124
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b089994a571863d312019bef2d60040d",
@@ -48535,7 +48539,11 @@
       "sell_time": "2025-08-30T17:26:00-04:00",
       "buy_score": 0.5174629595970719,
       "position_size_pct": 0.05,
-      "selected_symbol": "PI/USD"
+      "selected_symbol": "PI/USD",
+      "sell_price": 0.3827,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-08-30T17:30:15.316823-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -48831,7 +48839,7 @@
         "mom_roll_std_6": 0.003552886150723124
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "39e6845354ff8e7323915642bf81934c",
