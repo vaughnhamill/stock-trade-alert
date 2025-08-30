@@ -46007,7 +46007,11 @@
       "sell_time": "2025-08-30T04:38:00-04:00",
       "buy_score": 0.5183340968027775,
       "position_size_pct": 0.05,
-      "selected_symbol": "CRO/USD"
+      "selected_symbol": "CRO/USD",
+      "sell_price": 0.32732,
+      "actual_return": 0.03822120721920895,
+      "evaluation_time": "2025-08-30T04:51:45.426759-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -46303,7 +46307,7 @@
         "mom_roll_std_6": 0.008034467623931264
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5be74f5110d179f3c514ad162dd884b4",
