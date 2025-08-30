@@ -42887,7 +42887,11 @@
       "sell_time": "2025-08-29T21:47:00-04:00",
       "buy_score": 0.699950308480096,
       "position_size_pct": 0.05,
-      "selected_symbol": "BONK/USD"
+      "selected_symbol": "BONK/USD",
+      "sell_price": 2.131e-05,
+      "actual_return": -0.052046263345195756,
+      "evaluation_time": "2025-08-29T22:37:46.825493-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -43183,7 +43187,7 @@
         "mom_roll_std_6": 2.487100051599635e-07
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "383a38f590d932d2e0b846a0dc9e8a20",
