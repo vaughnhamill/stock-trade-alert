@@ -44457,7 +44457,11 @@
       "sell_time": "2025-08-30T05:20:00-04:00",
       "buy_score": 0.4818653836479951,
       "position_size_pct": 0.05,
-      "selected_symbol": "BONK/USD"
+      "selected_symbol": "BONK/USD",
+      "sell_price": 2.191e-05,
+      "actual_return": -0.03819139596136963,
+      "evaluation_time": "2025-08-30T05:31:54.428794-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -44753,7 +44757,7 @@
         "mom_roll_std_6": 1.3404240622529365e-06
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "2ae38bf3fe674df99d478f8bc408e49c",
@@ -44767,7 +44771,11 @@
       "sell_time": "2025-08-30T05:20:00-04:00",
       "buy_score": 0.553525946997719,
       "position_size_pct": 0.05,
-      "selected_symbol": "BONK/USD"
+      "selected_symbol": "BONK/USD",
+      "sell_price": 2.206e-05,
+      "actual_return": -0.026048565121412928,
+      "evaluation_time": "2025-08-30T05:31:54.428794-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -45063,7 +45071,7 @@
         "mom_roll_std_6": 1.3220237012499705e-06
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "09a3786f0ef5ffaeddd018d8d9834063",
