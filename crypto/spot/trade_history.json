@@ -45085,7 +45085,11 @@
       "sell_time": "2025-08-30T07:57:00-04:00",
       "buy_score": 0.483182665500376,
       "position_size_pct": 0.05,
-      "selected_symbol": "ENA/USD"
+      "selected_symbol": "ENA/USD",
+      "sell_price": 0.6714,
+      "actual_return": -0.009149940968122761,
+      "evaluation_time": "2025-08-30T08:35:37.687152-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -45381,7 +45385,7 @@
         "mom_roll_std_6": 0.009375286662284378
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4ce5ba3a4df7e517917c407bab78bde7",
