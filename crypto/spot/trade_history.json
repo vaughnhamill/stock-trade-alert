@@ -49481,7 +49481,11 @@
       "sell_time": "2025-08-31T00:46:00-04:00",
       "buy_score": 0.4716190899570906,
       "position_size_pct": 0.05,
-      "selected_symbol": "POL/USD"
+      "selected_symbol": "POL/USD",
+      "sell_price": 0.2693,
+      "actual_return": 0.039768339768339676,
+      "evaluation_time": "2025-08-31T00:48:39.045526-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -49777,7 +49781,7 @@
         "mom_roll_std_6": 0.0038995726261561825
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b0accab466a3f490c6ce0ef0d433b092",
@@ -51039,7 +51043,11 @@
       "sell_time": "2025-08-31T00:31:00-04:00",
       "buy_score": 0.4742531202720029,
       "position_size_pct": 0.05,
-      "selected_symbol": "POL/USD"
+      "selected_symbol": "POL/USD",
+      "sell_price": 0.2663,
+      "actual_return": 0.004147812971342345,
+      "evaluation_time": "2025-08-31T00:48:39.045526-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -51335,6 +51343,6 @@
         "mom_roll_std_6": 0.0012832251036613467
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
