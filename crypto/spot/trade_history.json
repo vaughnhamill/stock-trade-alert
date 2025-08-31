@@ -50737,7 +50737,11 @@
       "sell_time": "2025-08-31T05:37:00-04:00",
       "buy_score": 0.5104895158463016,
       "position_size_pct": 0.05,
-      "selected_symbol": "PI/USD"
+      "selected_symbol": "PI/USD",
+      "sell_price": 0.3818,
+      "actual_return": -0.016486347243688863,
+      "evaluation_time": "2025-08-31T05:47:14.383411-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -51033,7 +51037,7 @@
         "mom_roll_std_6": 0.007730372996606745
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "86bd562446095c2f0d9b47e77cd2343d",
