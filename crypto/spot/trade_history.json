@@ -52617,7 +52617,11 @@
       "sell_time": "2025-08-31T14:36:00-04:00",
       "buy_score": 0.5353841123066845,
       "position_size_pct": 0.05,
-      "selected_symbol": "FLR/USD"
+      "selected_symbol": "FLR/USD",
+      "sell_price": 0.02211,
+      "actual_return": -0.010295434198746534,
+      "evaluation_time": "2025-08-31T14:51:00.092254-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -52913,6 +52917,6 @@
         "mom_roll_std_6": 0.0001242041330498646
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
