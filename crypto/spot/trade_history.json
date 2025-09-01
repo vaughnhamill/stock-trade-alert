@@ -53245,7 +53245,11 @@
       "sell_time": "2025-08-31T22:02:00-04:00",
       "buy_score": 0.5185127328712531,
       "position_size_pct": 0.05,
-      "selected_symbol": "POL/USD"
+      "selected_symbol": "POL/USD",
+      "sell_price": 0.284,
+      "actual_return": 0.009957325746799322,
+      "evaluation_time": "2025-08-31T23:22:14.923442-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -53541,6 +53545,6 @@
         "mom_roll_std_6": 0.004732758181018748
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
