@@ -54183,7 +54183,11 @@
       "sell_time": "2025-09-01T04:36:00-04:00",
       "buy_score": 0.5430584223102234,
       "position_size_pct": 0.05,
-      "selected_symbol": "TRUMP/USD"
+      "selected_symbol": "TRUMP/USD",
+      "sell_price": 9.08,
+      "actual_return": 0.021372328458942574,
+      "evaluation_time": "2025-09-01T04:58:16.194004-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -54479,7 +54483,7 @@
         "mom_roll_std_6": 0.11781341180018426
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "317629dd5386ae06fba7e8ab29524cb0",
@@ -54493,7 +54497,11 @@
       "sell_time": "2025-09-01T04:46:30-04:00",
       "buy_score": 0.5434179277251862,
       "position_size_pct": 0.05,
-      "selected_symbol": "TRUMP/USD"
+      "selected_symbol": "TRUMP/USD",
+      "sell_price": 9.05,
+      "actual_return": -0.012008733624454086,
+      "evaluation_time": "2025-09-01T04:58:16.194004-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -54789,7 +54797,7 @@
         "mom_roll_std_6": 0.11781341180018426
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "3f2db04f9c5c000bb91930d2f3de9b37",
