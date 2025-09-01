@@ -55745,7 +55745,11 @@
       "sell_time": "2025-09-01T08:29:00-04:00",
       "buy_score": 0.47393950294910514,
       "position_size_pct": 0.05,
-      "selected_symbol": "TRUMP/USD"
+      "selected_symbol": "TRUMP/USD",
+      "sell_price": 8.92,
+      "actual_return": -0.012181616832779562,
+      "evaluation_time": "2025-09-01T08:41:03.852571-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -56041,6 +56045,6 @@
         "mom_roll_std_6": 0.14152738250953373
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
