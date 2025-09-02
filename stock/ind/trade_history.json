@@ -12137,7 +12137,11 @@
       "sell_time": "2025-09-02T12:04:00-04:00",
       "buy_score": 0.8393772944808007,
       "position_size_pct": 0.05,
-      "selected_symbol": "DUO"
+      "selected_symbol": "DUO",
+      "sell_price": 2.82069993019104,
+      "actual_return": -0.04706084667591344,
+      "evaluation_time": "2025-09-02T12:30:21.116023-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -12433,7 +12437,7 @@
         "mom_roll_std_6": 0.2784233790950432
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "bb335568dc6fbb289483d7ed2b42be65",
