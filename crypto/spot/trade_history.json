@@ -57331,7 +57331,11 @@
       "sell_time": "2025-09-02T10:53:30-04:00",
       "buy_score": 0.4539179275172534,
       "position_size_pct": 0.05,
-      "selected_symbol": "ONDO/USD"
+      "selected_symbol": "ONDO/USD",
+      "sell_price": 0.918335,
+      "actual_return": -0.002124330374121244,
+      "evaluation_time": "2025-09-02T11:21:26.039514-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -57627,7 +57631,7 @@
         "mom_roll_std_6": 0.013200999078352546
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "7ec444d070cea851fa8f80291092b898",
@@ -57641,7 +57645,11 @@
       "sell_time": "2025-09-02T10:56:00-04:00",
       "buy_score": 0.8229580546018381,
       "position_size_pct": 0.05,
-      "selected_symbol": "POL/USD"
+      "selected_symbol": "POL/USD",
+      "sell_price": 0.2865,
+      "actual_return": -0.006932409012131722,
+      "evaluation_time": "2025-09-02T11:21:26.039514-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -57937,6 +57945,6 @@
         "mom_roll_std_6": 0.004406548157760957
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
