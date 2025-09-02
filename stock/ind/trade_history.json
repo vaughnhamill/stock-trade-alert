@@ -14017,7 +14017,11 @@
       "sell_time": "2025-09-02T15:10:30-04:00",
       "buy_score": 0.8348192155361176,
       "position_size_pct": 0.05,
-      "selected_symbol": "IFRX"
+      "selected_symbol": "IFRX",
+      "sell_price": 1.7312500178813934,
+      "actual_return": -0.005028730808845987,
+      "evaluation_time": "2025-09-02T15:19:18.309733-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -14313,6 +14317,6 @@
         "mom_roll_std_6": 0.09661196552917768
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
