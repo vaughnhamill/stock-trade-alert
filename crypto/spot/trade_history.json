@@ -58901,7 +58901,11 @@
       "sell_time": "2025-09-02T19:33:00-04:00",
       "buy_score": 0.5241270602913443,
       "position_size_pct": 0.05,
-      "selected_symbol": "IP/USD"
+      "selected_symbol": "IP/USD",
+      "sell_price": 7.7435,
+      "actual_return": -0.011804492087799929,
+      "evaluation_time": "2025-09-02T19:46:53.484176-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -59197,7 +59201,7 @@
         "mom_roll_std_6": 0.10746100067775845
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a0511a96949b32ccaae64224e780047a",
@@ -59839,7 +59843,11 @@
       "sell_time": "2025-09-02T19:35:00-04:00",
       "buy_score": 0.642817097902298,
       "position_size_pct": 0.05,
-      "selected_symbol": "PENGU/USD"
+      "selected_symbol": "PENGU/USD",
+      "sell_price": 0.030482,
+      "actual_return": -0.0049293245845983685,
+      "evaluation_time": "2025-09-02T19:46:53.484176-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -60135,7 +60143,7 @@
         "mom_roll_std_6": 0.000672363716054553
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "3c25ce70f06807c26519292f3849458d",
