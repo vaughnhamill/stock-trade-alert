@@ -11823,7 +11823,11 @@
       "sell_time": "2025-09-02T11:08:30-04:00",
       "buy_score": 0.4589433771149077,
       "position_size_pct": 0.05,
-      "selected_symbol": "COIN"
+      "selected_symbol": "COIN",
+      "sell_price": 307.8625030517578,
+      "actual_return": 0.0017894206555121694,
+      "evaluation_time": "2025-09-02T11:23:57.182268-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -12119,6 +12123,6 @@
         "mom_roll_std_6": 4.509809474369149
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
