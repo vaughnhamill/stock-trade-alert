@@ -14331,7 +14331,11 @@
       "sell_time": "2025-09-02T15:40:00-04:00",
       "buy_score": 0.5161135721206666,
       "position_size_pct": 0.05,
-      "selected_symbol": "MU"
+      "selected_symbol": "MU",
+      "sell_price": 118.33999633789062,
+      "actual_return": 0.0027963240037841178,
+      "evaluation_time": "2025-09-02T15:49:48.381963-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -14627,6 +14631,6 @@
         "mom_roll_std_6": 2.716417624755583
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
