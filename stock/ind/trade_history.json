@@ -13079,7 +13079,11 @@
       "sell_time": "2025-09-02T13:31:00-04:00",
       "buy_score": 0.7317490547895431,
       "position_size_pct": 0.05,
-      "selected_symbol": "LRCX"
+      "selected_symbol": "LRCX",
+      "sell_price": 96.7300033569336,
+      "actual_return": 0.0032151544687347533,
+      "evaluation_time": "2025-09-02T13:40:34.517615-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -13375,7 +13379,7 @@
         "mom_roll_std_6": 2.3166491311025297
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d8a6f114019424909710d25d405fdfa4",
