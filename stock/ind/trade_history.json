@@ -12765,7 +12765,11 @@
       "sell_time": "2025-09-02T13:18:00-04:00",
       "buy_score": 0.8413449481129647,
       "position_size_pct": 0.05,
-      "selected_symbol": "CBRE"
+      "selected_symbol": "CBRE",
+      "sell_price": 160.01499938964844,
+      "actual_return": 0.0023490353384724217,
+      "evaluation_time": "2025-09-02T13:21:34.230877-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -13061,7 +13065,7 @@
         "mom_roll_std_6": 0.39509599612221924
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "1900567543f3502771f359e83247822c",
