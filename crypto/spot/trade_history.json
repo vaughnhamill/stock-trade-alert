@@ -58587,7 +58587,11 @@
       "sell_time": "2025-09-02T18:52:00-04:00",
       "buy_score": 0.5139845335646198,
       "position_size_pct": 0.05,
-      "selected_symbol": "M/USD"
+      "selected_symbol": "M/USD",
+      "sell_price": 0.82596,
+      "actual_return": -0.05846679965802217,
+      "evaluation_time": "2025-09-02T19:16:55.629693-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -58883,7 +58887,7 @@
         "mom_roll_std_6": 0.048248740259893785
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "dcf80ca1b474566c315cf73502cff634",
