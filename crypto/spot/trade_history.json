@@ -59521,7 +59521,11 @@
       "sell_time": "2025-09-02T16:26:00-04:00",
       "buy_score": 0.46682359437348087,
       "position_size_pct": 0.05,
-      "selected_symbol": "ONDO/USD"
+      "selected_symbol": "ONDO/USD",
+      "sell_price": 0.94246,
+      "actual_return": 0.008776999978592668,
+      "evaluation_time": "2025-09-02T16:33:47.363034-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -59817,6 +59821,6 @@
         "mom_roll_std_6": 0.023089572032990637
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
