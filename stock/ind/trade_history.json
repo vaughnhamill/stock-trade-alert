@@ -13703,7 +13703,11 @@
       "sell_time": "2025-09-02T14:11:00-04:00",
       "buy_score": 0.6217626661062241,
       "position_size_pct": 0.05,
-      "selected_symbol": "MRNA"
+      "selected_symbol": "MRNA",
+      "sell_price": 23.889999389648438,
+      "actual_return": -0.0006442031213771553,
+      "evaluation_time": "2025-09-02T14:31:14.292009-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -13999,6 +14003,6 @@
         "mom_roll_std_6": 0.36789484095136005
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
