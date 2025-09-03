@@ -14959,7 +14959,11 @@
       "sell_time": "2025-09-03T11:36:00-04:00",
       "buy_score": 0.5349828833909261,
       "position_size_pct": 0.05,
-      "selected_symbol": "UUU"
+      "selected_symbol": "UUU",
+      "sell_price": 6.019999980926514,
+      "actual_return": -0.03680000305175781,
+      "evaluation_time": "2025-09-03T11:50:34.304444-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -15255,7 +15259,7 @@
         "mom_roll_std_6": 1.3544267302246975
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "3bb240fe7ce15d1461f32cea6046a17b",
