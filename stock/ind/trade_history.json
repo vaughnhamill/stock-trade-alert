@@ -17463,7 +17463,11 @@
       "sell_time": "2025-09-03T15:03:00-04:00",
       "buy_score": 0.5777745872735978,
       "position_size_pct": 0.05,
-      "selected_symbol": "IRM"
+      "selected_symbol": "IRM",
+      "sell_price": 89.08000183105469,
+      "actual_return": 0.0009438585072942002,
+      "evaluation_time": "2025-09-03T15:21:13.042689-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -17759,7 +17763,7 @@
         "mom_roll_std_6": 0.8337239743404634
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c273f8076447a7a3912c5c3865e67b73",
