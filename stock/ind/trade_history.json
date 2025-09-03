@@ -15897,7 +15897,11 @@
       "sell_time": "2025-09-03T13:05:00-04:00",
       "buy_score": 0.7608225151896477,
       "position_size_pct": 0.05,
-      "selected_symbol": "MLYS"
+      "selected_symbol": "MLYS",
+      "sell_price": 29.0,
+      "actual_return": 0.0038075670708036346,
+      "evaluation_time": "2025-09-03T13:25:42.395112-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -16193,7 +16197,7 @@
         "mom_roll_std_6": 7.039808184245758
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "225ade1369a03bd367835c38c5a215a8",
