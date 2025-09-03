@@ -61099,7 +61099,11 @@
       "sell_time": "2025-09-03T10:52:00-04:00",
       "buy_score": 0.6973185420036316,
       "position_size_pct": 0.05,
-      "selected_symbol": "AVAX/USD"
+      "selected_symbol": "AVAX/USD",
+      "sell_price": 25.36,
+      "actual_return": 0.013184178985217669,
+      "evaluation_time": "2025-09-03T11:24:05.878479-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -61395,7 +61399,7 @@
         "mom_roll_std_6": 0.40331955899344285
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "f7d3459c2f124beaeb2ae202976129fb",
@@ -62029,7 +62033,11 @@
       "sell_time": "2025-09-03T11:01:30-04:00",
       "buy_score": 0.4646138092664998,
       "position_size_pct": 0.05,
-      "selected_symbol": "CRO/USD"
+      "selected_symbol": "CRO/USD",
+      "sell_price": 0.27595,
+      "actual_return": 0.021280532938563943,
+      "evaluation_time": "2025-09-03T11:24:05.878479-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -62325,7 +62333,7 @@
         "mom_roll_std_6": 0.006246854141619484
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "0c36f2b775141965e254dd66e3ac578c",
