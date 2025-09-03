@@ -17149,7 +17149,11 @@
       "sell_time": "2025-09-03T14:43:00-04:00",
       "buy_score": 0.49052335272190817,
       "position_size_pct": 0.05,
-      "selected_symbol": "ON"
+      "selected_symbol": "ON",
+      "sell_price": 47.25,
+      "actual_return": 0.002971755207697348,
+      "evaluation_time": "2025-09-03T14:52:38.554652-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -17445,7 +17449,7 @@
         "mom_roll_std_6": 0.6199184737316963
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "2466d3c46fea2fbc6c99c3e1e215d71e",
