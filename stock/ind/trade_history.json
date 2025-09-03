@@ -17777,7 +17777,11 @@
       "sell_time": "2025-09-03T15:39:30-04:00",
       "buy_score": 0.8435109809041024,
       "position_size_pct": 0.05,
-      "selected_symbol": "NSC"
+      "selected_symbol": "NSC",
+      "sell_price": 277.9650115966797,
+      "actual_return": 0.00016191050219927059,
+      "evaluation_time": "2025-09-03T15:49:16.037182-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -18073,7 +18077,7 @@
         "mom_roll_std_6": 0.7604367128053228
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "233937eb57bc6234725ccdbb53feeea9",
@@ -18087,7 +18091,11 @@
       "sell_time": "2025-09-03T15:41:00-04:00",
       "buy_score": 0.503583430002133,
       "position_size_pct": 0.05,
-      "selected_symbol": "DDOG"
+      "selected_symbol": "DDOG",
+      "sell_price": 132.2899932861328,
+      "actual_return": -0.00022682917491377723,
+      "evaluation_time": "2025-09-03T15:49:16.037182-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -18383,6 +18391,6 @@
         "mom_roll_std_6": 1.9325440405165017
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
