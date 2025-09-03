@@ -15587,7 +15587,11 @@
       "sell_time": "2025-09-03T12:58:30-04:00",
       "buy_score": 0.5838272166252136,
       "position_size_pct": 0.05,
-      "selected_symbol": "JBHT"
+      "selected_symbol": "JBHT",
+      "sell_price": 144.5683390299479,
+      "actual_return": 0.004155989471220065,
+      "evaluation_time": "2025-09-03T13:40:54.792814-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -15883,7 +15887,7 @@
         "mom_roll_std_6": 0.9991651110938969
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "3c6473d7b7d4e7812a48ff1ac5843586",
