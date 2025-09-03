@@ -16835,7 +16835,11 @@
       "sell_time": "2025-09-03T14:27:30-04:00",
       "buy_score": 0.9210319995880127,
       "position_size_pct": 0.05,
-      "selected_symbol": "FDX"
+      "selected_symbol": "FDX",
+      "sell_price": 225.6344985961914,
+      "actual_return": 0.0012180421773891098,
+      "evaluation_time": "2025-09-03T14:31:53.844931-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -17131,7 +17135,7 @@
         "mom_roll_std_6": 3.932688762684471
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "51377b0cf92f1c1860f0bcd4dfea93c6",
