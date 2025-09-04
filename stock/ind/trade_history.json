@@ -20591,7 +20591,11 @@
       "sell_time": "2025-09-04T13:59:00-04:00",
       "buy_score": 0.7750050716911043,
       "position_size_pct": 0.05,
-      "selected_symbol": "STZ"
+      "selected_symbol": "STZ",
+      "sell_price": 145.69000244140625,
+      "actual_return": -0.0006858553352857132,
+      "evaluation_time": "2025-09-04T14:36:54.320274-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -20887,7 +20891,7 @@
         "mom_roll_std_6": 5.308329542775171
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "f54286a1e6d10e27a8715b3128ca10af",
