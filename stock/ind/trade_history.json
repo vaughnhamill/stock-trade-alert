@@ -18405,7 +18405,11 @@
       "sell_time": "2025-09-04T10:39:00-04:00",
       "buy_score": 0.6415060378611088,
       "position_size_pct": 0.05,
-      "selected_symbol": "LCFY"
+      "selected_symbol": "LCFY",
+      "sell_price": 5.329999923706055,
+      "actual_return": -0.05663719756814741,
+      "evaluation_time": "2025-09-04T10:42:53.569740-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -18701,7 +18705,7 @@
         "mom_roll_std_6": 0.2825993695298452
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "82003162bbc3fb682ae104b9fc93cce2",
