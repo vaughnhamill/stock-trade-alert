@@ -64239,7 +64239,11 @@
       "sell_time": "2025-09-03T22:16:00-04:00",
       "buy_score": 0.5396898697153912,
       "position_size_pct": 0.05,
-      "selected_symbol": "DOGE/USD"
+      "selected_symbol": "DOGE/USD",
+      "sell_price": 0.21912,
+      "actual_return": -0.017531273819665502,
+      "evaluation_time": "2025-09-03T22:37:59.488908-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -64535,7 +64539,7 @@
         "mom_roll_std_6": 0.0015298551129654648
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "50ec29710d22e75f5b05aaf11c3858e5",
@@ -64863,7 +64867,11 @@
       "sell_time": "2025-09-03T22:06:30-04:00",
       "buy_score": 0.6076711860323323,
       "position_size_pct": 0.05,
-      "selected_symbol": "PUMP/USD"
+      "selected_symbol": "PUMP/USD",
+      "sell_price": 0.0041235,
+      "actual_return": 0.01739452257586979,
+      "evaluation_time": "2025-09-03T22:37:59.488908-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -65159,7 +65167,7 @@
         "mom_roll_std_6": 7.500777737452762e-05
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "3f4e05201aec11df00e35b9dcf012b94",
