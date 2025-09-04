@@ -68313,7 +68313,11 @@
       "sell_time": "2025-09-04T17:44:00-04:00",
       "buy_score": 0.515808382189878,
       "position_size_pct": 0.05,
-      "selected_symbol": "PUMP/USD"
+      "selected_symbol": "PUMP/USD",
+      "sell_price": 0.004256,
+      "actual_return": 0.00047014574518106854,
+      "evaluation_time": "2025-09-04T17:48:20.797987-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -68609,7 +68613,7 @@
         "mom_roll_std_6": 0.00014742274813157722
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "51d89bde14aeca39251f20f9dca5394c",
