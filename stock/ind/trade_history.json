@@ -19657,7 +19657,11 @@
       "sell_time": "2025-09-04T13:05:00-04:00",
       "buy_score": 0.5334787920117379,
       "position_size_pct": 0.05,
-      "selected_symbol": "FANG"
+      "selected_symbol": "FANG",
+      "sell_price": 143.30999755859375,
+      "actual_return": 0.0010477360481101635,
+      "evaluation_time": "2025-09-04T13:25:33.678165-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -19953,7 +19957,7 @@
         "mom_roll_std_6": 3.151075531246215
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "648dac08bce6321a14b6d2ef6e8953f5",
