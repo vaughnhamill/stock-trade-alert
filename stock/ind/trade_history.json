@@ -18719,7 +18719,11 @@
       "sell_time": "2025-09-04T10:52:00-04:00",
       "buy_score": 0.8699591338634491,
       "position_size_pct": 0.05,
-      "selected_symbol": "REGN"
+      "selected_symbol": "REGN",
+      "sell_price": 571.280029296875,
+      "actual_return": -0.001764749985575486,
+      "evaluation_time": "2025-09-04T11:29:50.314154-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -19015,7 +19019,7 @@
         "mom_roll_std_6": 3.8825668600097814
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "ddd7a7a12971747176383be935844a20",
