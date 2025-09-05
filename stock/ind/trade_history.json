@@ -24649,7 +24649,11 @@
       "sell_time": "2025-09-05T14:00:00-04:00",
       "buy_score": 0.47787359337011975,
       "position_size_pct": 0.05,
-      "selected_symbol": "CPRT"
+      "selected_symbol": "CPRT",
+      "sell_price": 47.93000030517578,
+      "actual_return": 0.002195494836618892,
+      "evaluation_time": "2025-09-05T14:34:59.404076-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -24945,7 +24949,7 @@
         "mom_roll_std_6": 0.508719925500792
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d0f1633cb0acb4df86a40962fc79c845",
