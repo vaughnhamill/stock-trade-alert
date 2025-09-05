@@ -25587,7 +25587,11 @@
       "sell_time": "2025-09-05T15:59:00-04:00",
       "buy_score": 0.7564525485038758,
       "position_size_pct": 0.05,
-      "selected_symbol": "BA"
+      "selected_symbol": "BA",
+      "sell_price": 229.63999938964844,
+      "actual_return": 0.0025758407772529263,
+      "evaluation_time": "2025-09-05T16:23:50.482507-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -25883,7 +25887,7 @@
         "mom_roll_std_6": 2.483080135131324
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "9fa7b313c5754ddd7fb691138c66ad98",
