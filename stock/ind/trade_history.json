@@ -25897,7 +25897,11 @@
       "sell_time": "2025-09-05T15:40:00-04:00",
       "buy_score": 0.6547125458717347,
       "position_size_pct": 0.05,
-      "selected_symbol": "CFG"
+      "selected_symbol": "CFG",
+      "sell_price": 51.7400016784668,
+      "actual_return": -0.001061810839323281,
+      "evaluation_time": "2025-09-05T15:50:14.875408-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -26193,7 +26197,7 @@
         "mom_roll_std_6": 0.26416729560742075
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "9272decd5bd7adc25f01e17405695e3f",
