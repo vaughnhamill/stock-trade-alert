@@ -23707,7 +23707,11 @@
       "sell_time": "2025-09-05T13:04:30-04:00",
       "buy_score": 0.6196451362768809,
       "position_size_pct": 0.05,
-      "selected_symbol": "MS"
+      "selected_symbol": "MS",
+      "sell_price": 148.12000274658203,
+      "actual_return": 0.001149076051683309,
+      "evaluation_time": "2025-09-05T13:23:21.138393-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -24003,7 +24007,7 @@
         "mom_roll_std_6": 0.5761066961329834
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "6eec056d23803da829f5969e5cb8f900",
