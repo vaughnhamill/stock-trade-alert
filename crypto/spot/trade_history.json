@@ -72399,7 +72399,11 @@
       "sell_time": "2025-09-05T10:49:00-04:00",
       "buy_score": 0.5140134048136358,
       "position_size_pct": 0.05,
-      "selected_symbol": "FIL/USD"
+      "selected_symbol": "FIL/USD",
+      "sell_price": 2.308,
+      "actual_return": -0.025749261291684415,
+      "evaluation_time": "2025-09-05T11:20:27.340894-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -72695,7 +72699,7 @@
         "mom_roll_std_6": 0.006400520812141574
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "57e360847181ad4749baa21c037146ad",
