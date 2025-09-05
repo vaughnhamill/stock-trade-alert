@@ -23393,7 +23393,11 @@
       "sell_time": "2025-09-05T12:37:00-04:00",
       "buy_score": 0.6637527599930764,
       "position_size_pct": 0.05,
-      "selected_symbol": "HWH"
+      "selected_symbol": "HWH",
+      "sell_price": 5.980000019073486,
+      "actual_return": -0.006561967127821831,
+      "evaluation_time": "2025-09-05T12:54:01.042154-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -23689,7 +23693,7 @@
         "mom_roll_std_6": 1.1598096504839093
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e63f6c6c5a7af387c17b81d3f3eb02bb",
