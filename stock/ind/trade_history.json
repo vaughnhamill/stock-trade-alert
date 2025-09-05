@@ -23079,7 +23079,11 @@
       "sell_time": "2025-09-05T12:24:00-04:00",
       "buy_score": 0.5626965299248695,
       "position_size_pct": 0.05,
-      "selected_symbol": "MCHP"
+      "selected_symbol": "MCHP",
+      "sell_price": 66.12999725341797,
+      "actual_return": -0.010770399957179523,
+      "evaluation_time": "2025-09-05T12:27:15.454726-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -23375,7 +23379,7 @@
         "mom_roll_std_6": 0.24912725980280334
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "bfc62c959cd73c74aace78f18fb4804b",
