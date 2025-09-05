@@ -24331,7 +24331,11 @@
       "sell_time": "2025-09-05T13:46:00-04:00",
       "buy_score": 0.5595955408793507,
       "position_size_pct": 0.05,
-      "selected_symbol": "PLTR"
+      "selected_symbol": "PLTR",
+      "sell_price": 152.91000366210938,
+      "actual_return": -0.003778759595396059,
+      "evaluation_time": "2025-09-05T13:51:07.577063-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -24627,7 +24631,7 @@
         "mom_roll_std_6": 1.9246787226312994
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "819275f2b268031db0a9b980e5f6fdf5",
