@@ -25273,7 +25273,11 @@
       "sell_time": "2025-09-05T15:02:00-04:00",
       "buy_score": 0.5790168821811676,
       "position_size_pct": 0.05,
-      "selected_symbol": "HII"
+      "selected_symbol": "HII",
+      "sell_price": 269.010009765625,
+      "actual_return": 0.0010795630960679418,
+      "evaluation_time": "2025-09-05T15:21:18.444053-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -25569,7 +25573,7 @@
         "mom_roll_std_6": 1.4942984391271137
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8ebe45b2483aecf0853801667ede76f6",
