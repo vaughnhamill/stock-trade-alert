@@ -75857,7 +75857,11 @@
       "sell_time": "2025-09-06T06:58:00-04:00",
       "buy_score": 0.6602354048341984,
       "position_size_pct": 0.05,
-      "selected_symbol": "PUMP/USD"
+      "selected_symbol": "PUMP/USD",
+      "sell_price": 0.004851,
+      "actual_return": -0.01642335766423347,
+      "evaluation_time": "2025-09-06T07:16:59.721541-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -76153,7 +76157,7 @@
         "mom_roll_std_6": 8.435816498715508e-05
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a84878321b9978280f3423244d13156d",
@@ -76787,7 +76791,11 @@
       "sell_time": "2025-09-06T07:02:00-04:00",
       "buy_score": 0.5371842831066026,
       "position_size_pct": 0.05,
-      "selected_symbol": "M/USD"
+      "selected_symbol": "M/USD",
+      "sell_price": 1.72797,
+      "actual_return": 0.008480016808292051,
+      "evaluation_time": "2025-09-06T07:16:59.721541-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -77083,7 +77091,7 @@
         "mom_roll_std_6": 0.0732234815934527
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "23005dcc4252f3b383c90dc91508b759",
