@@ -76171,7 +76171,11 @@
       "sell_time": "2025-09-06T12:17:00-04:00",
       "buy_score": 0.4806770579588255,
       "position_size_pct": 0.05,
-      "selected_symbol": "WLFI/USD"
+      "selected_symbol": "WLFI/USD",
+      "sell_price": 0.1978,
+      "actual_return": -0.001010101010101039,
+      "evaluation_time": "2025-09-06T12:23:49.020347-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -76467,7 +76471,7 @@
         "mom_roll_std_6": 0.004148574052209645
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5eedd9a58d199d841ca14461b49968cf",
