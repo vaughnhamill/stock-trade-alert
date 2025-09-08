@@ -26525,7 +26525,11 @@
       "sell_time": "2025-09-08T13:34:00-04:00",
       "buy_score": 0.8471865057945251,
       "position_size_pct": 0.05,
-      "selected_symbol": "GNPX"
+      "selected_symbol": "GNPX",
+      "sell_price": 0.24860000610351562,
+      "actual_return": 0.010569102588495177,
+      "evaluation_time": "2025-09-08T13:38:56.318528-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -26823,7 +26827,7 @@
         "mom_roll_std_6": 0.005791949400921166
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "f341a54ec4b35e5706ae3c814af11967",
