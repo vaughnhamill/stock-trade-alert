@@ -26841,7 +26841,11 @@
       "sell_time": "2025-09-08T13:51:30-04:00",
       "buy_score": 0.7313700278600057,
       "position_size_pct": 0.05,
-      "selected_symbol": "HOUR"
+      "selected_symbol": "HOUR",
+      "sell_price": 5.754999876022339,
+      "actual_return": -0.012881457045397553,
+      "evaluation_time": "2025-09-08T14:35:11.131270-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -27139,7 +27143,7 @@
         "mom_roll_std_6": 0.8442549854924323
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "150d2c6a4251ebbc373133125c8576be",
@@ -27153,7 +27157,11 @@
       "sell_time": "2025-09-08T14:00:00-04:00",
       "buy_score": 0.6036172103881836,
       "position_size_pct": 0.05,
-      "selected_symbol": "DLTR"
+      "selected_symbol": "DLTR",
+      "sell_price": 98.48999786376953,
+      "actual_return": 0.0010834947809315776,
+      "evaluation_time": "2025-09-08T14:35:11.131270-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -27451,7 +27459,7 @@
         "mom_roll_std_6": 1.5064635753731161
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "243adee72fb0e337dc3aea5f43003c6e",
