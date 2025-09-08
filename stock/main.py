@@ -1230,7 +1230,7 @@ class StockTrader:
             macd = ta.macd(df['close'], talib=False)
             df['macd'] = macd['MACD_12_26_9']
             bbands = ta.bbands(df['close'], length=20, std=2, talib=False)
-            df['bollinger'] = bbands['BBM_20_2.0']
+            df['bollinger'] = bbands['BBM_20_2.0_2.0']
             df['atr'] = ta.atr(df['high'], df['low'], df['close'], length=14, talib=False)
             df['sma_20'] = ta.sma(df['close'], length=20, talib=False)
             df['ema_20'] = ta.ema(df['close'], length=20, talib=False)
