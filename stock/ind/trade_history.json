@@ -28421,7 +28421,11 @@
       "sell_time": "2025-09-08T15:42:00-04:00",
       "buy_score": 0.55,
       "position_size_pct": 0.05,
-      "selected_symbol": "NVFY"
+      "selected_symbol": "NVFY",
+      "sell_price": 4.65500020980835,
+      "actual_return": -0.006403358236412914,
+      "evaluation_time": "2025-09-08T15:51:07.837559-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -28719,7 +28723,7 @@
         "mom_roll_std_6": 0.527782941912041
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "52f7b9226344948a5ee6389aa5348297",
