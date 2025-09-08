@@ -1238,7 +1238,7 @@ class CryptoTrader:
             df['rsi'] = ta.rsi(df['close'], length=14)
             macd = ta.macd(df['close'], fast=12, slow=26, signal=9)
             df['macd'] = macd['MACD_12_26_9']
-            df['bollinger'] = ta.bbands(df['close'], length=20, std=2)['BBM_20_2.0']
+            df['bollinger'] = ta.bbands(df['close'], length=20, std=2)['BBM_20_2.0_2.0']
             df['atr'] = ta.atr(df['high'], df['low'], df['close'], length=14)
             df['sma_20'] = ta.sma(df['close'], length=20)
             df['ema_20'] = ta.ema(df['close'], length=20)
