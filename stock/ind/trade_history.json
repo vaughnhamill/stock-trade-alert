@@ -27473,7 +27473,11 @@
       "sell_time": "2025-09-08T14:47:00-04:00",
       "buy_score": 0.3211612403392792,
       "position_size_pct": 0.05,
-      "selected_symbol": "CIGL"
+      "selected_symbol": "CIGL",
+      "sell_price": 5.300000190734863,
+      "actual_return": 0.011450462259065276,
+      "evaluation_time": "2025-09-08T14:55:11.256633-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -27771,7 +27775,7 @@
         "mom_roll_std_6": 0.6781420857251581
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "09db68fbbe43a0c9427fd777fe757112",
