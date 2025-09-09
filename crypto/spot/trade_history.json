@@ -89101,7 +89101,11 @@
       "sell_time": "2025-09-09T15:13:30-04:00",
       "buy_score": 0.5666863273441162,
       "position_size_pct": 0.05,
-      "selected_symbol": "MNT/USD"
+      "selected_symbol": "MNT/USD",
+      "sell_price": 1.3066,
+      "actual_return": 0.04003820743452998,
+      "evaluation_time": "2025-09-09T15:17:58.251833-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -89399,7 +89403,7 @@
         "mom_roll_std_6": 0.017415787856615947
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "92438033d97f51159f783b43ae6cf0a3",
@@ -89413,7 +89417,11 @@
       "sell_time": "2025-09-09T15:04:30-04:00",
       "buy_score": 0.5530954600702677,
       "position_size_pct": 0.05,
-      "selected_symbol": "ENA/USD"
+      "selected_symbol": "ENA/USD",
+      "sell_price": 0.82935,
+      "actual_return": 0.0007843610474237233,
+      "evaluation_time": "2025-09-09T15:17:58.251833-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -89711,7 +89719,7 @@
         "mom_roll_std_6": 0.013444614783126349
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "f7e39b8da62ab074dbb885912c9d0486",
