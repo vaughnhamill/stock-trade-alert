@@ -29049,7 +29049,11 @@
       "sell_time": "2025-09-09T13:31:00-04:00",
       "buy_score": 0.8349992632865906,
       "position_size_pct": 0.05,
-      "selected_symbol": "HWM"
+      "selected_symbol": "HWM",
+      "sell_price": 178.86500549316406,
+      "actual_return": 0.0014277189515765607,
+      "evaluation_time": "2025-09-09T13:36:36.169234-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -29347,7 +29351,7 @@
         "mom_roll_std_6": 1.9422267641764428
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "2f159ecb8b67e8d2702507eb64b1b7f7",
