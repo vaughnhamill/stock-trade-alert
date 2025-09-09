@@ -84361,7 +84361,11 @@
       "sell_time": "2025-09-09T06:09:00-04:00",
       "buy_score": 0.4762078821659088,
       "position_size_pct": 0.05,
-      "selected_symbol": "SOL/USD"
+      "selected_symbol": "SOL/USD",
+      "sell_price": 219.03,
+      "actual_return": 0.004218055109806921,
+      "evaluation_time": "2025-09-09T06:21:40.635032-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -84659,7 +84663,7 @@
         "mom_roll_std_6": 3.404411353915191
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b3f54e881fb07dce4566b186ff4843d0",
@@ -86241,7 +86245,11 @@
       "sell_time": "2025-09-09T06:07:00-04:00",
       "buy_score": 0.4698106348514557,
       "position_size_pct": 0.05,
-      "selected_symbol": "NEAR/USD"
+      "selected_symbol": "NEAR/USD",
+      "sell_price": 2.774,
+      "actual_return": 0.010196649672250556,
+      "evaluation_time": "2025-09-09T06:21:40.635032-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -86539,6 +86547,6 @@
         "mom_roll_std_6": 0.016797817318528852
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
