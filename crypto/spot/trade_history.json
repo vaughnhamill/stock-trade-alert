@@ -87209,7 +87209,11 @@
       "sell_time": "2025-09-09T14:41:00-04:00",
       "buy_score": 0.4695059359073639,
       "position_size_pct": 0.05,
-      "selected_symbol": "DOGE/USD"
+      "selected_symbol": "DOGE/USD",
+      "sell_price": 0.24015,
+      "actual_return": -0.024652749573552075,
+      "evaluation_time": "2025-09-09T14:51:04.713924-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -87507,7 +87511,7 @@
         "mom_roll_std_6": 0.0012074063110651943
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "67cbcd03b16acd65a34fba3a1c72f6c2",
