@@ -29365,7 +29365,11 @@
       "sell_time": "2025-09-09T13:46:00-04:00",
       "buy_score": 0.5994250996907552,
       "position_size_pct": 0.05,
-      "selected_symbol": "FORD"
+      "selected_symbol": "FORD",
+      "sell_price": 26.23600082397461,
+      "actual_return": 0.0009920541934455007,
+      "evaluation_time": "2025-09-09T13:51:14.579295-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -29663,7 +29667,7 @@
         "mom_roll_std_6": 3.908059177233455
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "cbd9650a8841caf4f45118b6b8fff2ed",
