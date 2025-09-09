@@ -83417,7 +83417,11 @@
       "sell_time": "2025-09-09T06:45:00-04:00",
       "buy_score": 0.5289639830589294,
       "position_size_pct": 0.05,
-      "selected_symbol": "HYPE/USD"
+      "selected_symbol": "HYPE/USD",
+      "sell_price": 55.04,
+      "actual_return": 0.047383444338725066,
+      "evaluation_time": "2025-09-09T06:52:30.209237-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -83715,7 +83719,7 @@
         "mom_roll_std_6": 0.9680375337075937
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "91d3d45d485cb0cda85730342480c719",
