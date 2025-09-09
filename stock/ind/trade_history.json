@@ -29997,7 +29997,11 @@
       "sell_time": "2025-09-09T14:42:00-04:00",
       "buy_score": 0.4941268289089203,
       "position_size_pct": 0.05,
-      "selected_symbol": "PNW"
+      "selected_symbol": "PNW",
+      "sell_price": 87.69000244140625,
+      "actual_return": -0.0013665313805233828,
+      "evaluation_time": "2025-09-09T14:52:58.957944-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -30295,6 +30299,6 @@
         "mom_roll_std_6": 0.38962025340288076
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
