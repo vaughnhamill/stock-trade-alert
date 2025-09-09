@@ -30313,7 +30313,11 @@
       "sell_time": "2025-09-09T15:28:00-04:00",
       "buy_score": 0.5954321026802063,
       "position_size_pct": 0.05,
-      "selected_symbol": "ULTA"
+      "selected_symbol": "ULTA",
+      "sell_price": 511.5199890136719,
+      "actual_return": 0.0004987127183144023,
+      "evaluation_time": "2025-09-09T15:30:34.898112-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -30611,6 +30615,6 @@
         "mom_roll_std_6": 7.671055448873035
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
