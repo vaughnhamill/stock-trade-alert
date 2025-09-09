@@ -84681,7 +84681,11 @@
       "sell_time": "2025-09-09T08:55:00-04:00",
       "buy_score": 0.46999824047088623,
       "position_size_pct": 0.05,
-      "selected_symbol": "FET/USD"
+      "selected_symbol": "FET/USD",
+      "sell_price": 0.6633,
+      "actual_return": -0.02355365817753572,
+      "evaluation_time": "2025-09-09T09:27:17.327824-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -84979,7 +84983,7 @@
         "mom_roll_std_6": 0.0052296908767790785
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e2b7216c776a95db7aec847d37e37006",
@@ -84993,7 +84997,11 @@
       "sell_time": "2025-09-09T09:19:00-04:00",
       "buy_score": 0.4666585922241211,
       "position_size_pct": 0.05,
-      "selected_symbol": "DOT/USD"
+      "selected_symbol": "DOT/USD",
+      "sell_price": 4.126,
+      "actual_return": -0.009125840537944133,
+      "evaluation_time": "2025-09-09T09:27:17.327824-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -85291,7 +85299,7 @@
         "mom_roll_std_6": 0.0251773707920428
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "32fb0478ec9aab0bcbf24aa99104c010",
