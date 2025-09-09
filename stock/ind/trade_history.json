@@ -29681,7 +29681,11 @@
       "sell_time": "2025-09-09T14:02:00-04:00",
       "buy_score": 0.8122378468513489,
       "position_size_pct": 0.05,
-      "selected_symbol": "SBAC"
+      "selected_symbol": "SBAC",
+      "sell_price": 191.42999267578125,
+      "actual_return": -0.0017469648524676047,
+      "evaluation_time": "2025-09-09T14:31:24.441951-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -29979,7 +29983,7 @@
         "mom_roll_std_6": 3.8790308504992352
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e1d7b3e805c412d0252181b4b041b24d",
