@@ -32201,7 +32201,11 @@
       "sell_time": "2025-09-10T13:46:00-04:00",
       "buy_score": 0.7199854254722595,
       "position_size_pct": 0.05,
-      "selected_symbol": "UFG"
+      "selected_symbol": "UFG",
+      "sell_price": 8.130000114440918,
+      "actual_return": -0.008536548347858065,
+      "evaluation_time": "2025-09-10T13:50:18.480018-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -32499,7 +32503,7 @@
         "mom_roll_std_6": 0.5156932663541358
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "bd5b05991e64f186519ff6b0e17e4de3",
