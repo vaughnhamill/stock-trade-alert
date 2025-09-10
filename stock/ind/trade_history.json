@@ -32521,7 +32521,11 @@
       "sell_time": "2025-09-10T14:01:00-04:00",
       "buy_score": 0.7989205718040466,
       "position_size_pct": 0.05,
-      "selected_symbol": "NAKA"
+      "selected_symbol": "NAKA",
+      "sell_price": 4.932400226593018,
+      "actual_return": 0.026514131697366678,
+      "evaluation_time": "2025-09-10T14:34:39.096517-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -32819,7 +32823,7 @@
         "mom_roll_std_6": 0.37039329468846427
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8b4c90ee8e3b8340e57b86c895cc441a",
