@@ -92889,7 +92889,11 @@
       "sell_time": "2025-09-10T10:29:30-04:00",
       "buy_score": 0.4998220047895433,
       "position_size_pct": 0.05,
-      "selected_symbol": "AVAX/USD"
+      "selected_symbol": "AVAX/USD",
+      "sell_price": 28.41,
+      "actual_return": 0.0028238616307801573,
+      "evaluation_time": "2025-09-10T10:37:59.928419-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -93187,6 +93191,6 @@
         "mom_roll_std_6": 0.3543679819998785
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
