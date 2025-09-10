@@ -33777,7 +33777,11 @@
       "sell_time": "2025-09-10T15:42:00-04:00",
       "buy_score": 0.5395666841665904,
       "position_size_pct": 0.05,
-      "selected_symbol": "AWK"
+      "selected_symbol": "AWK",
+      "sell_price": 138.60499572753906,
+      "actual_return": -0.001620731113937749,
+      "evaluation_time": "2025-09-10T15:51:53.123152-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -34075,7 +34079,7 @@
         "mom_roll_std_6": 1.8562974966195436
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c9af4f09904d63ca2cb2fbd07e7315fd",
