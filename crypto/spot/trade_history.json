@@ -93213,7 +93213,11 @@
       "sell_time": "2025-09-10T19:17:00-04:00",
       "buy_score": 0.47537723533040377,
       "position_size_pct": 0.05,
-      "selected_symbol": "LTC/USD"
+      "selected_symbol": "LTC/USD",
+      "sell_price": 116.67,
+      "actual_return": -0.0003427298432010286,
+      "evaluation_time": "2025-09-10T19:18:12.459360-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -93511,7 +93515,7 @@
         "mom_roll_std_6": 0.35200378785838954
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "ea88df64f3e7f46865655cf1fa9cd652",
