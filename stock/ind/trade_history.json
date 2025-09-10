@@ -31885,7 +31885,11 @@
       "sell_time": "2025-09-10T13:31:00-04:00",
       "buy_score": 0.4703405201435089,
       "position_size_pct": 0.05,
-      "selected_symbol": "CINF"
+      "selected_symbol": "CINF",
+      "sell_price": 151.9199981689453,
+      "actual_return": -0.0006578483140704761,
+      "evaluation_time": "2025-09-10T13:36:59.876951-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -32183,7 +32187,7 @@
         "mom_roll_std_6": 0.8047379415261012
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5c04875429068155283fe47967933458",
