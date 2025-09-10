@@ -30941,7 +30941,11 @@
       "sell_time": "2025-09-10T11:57:00-04:00",
       "buy_score": 0.7454527020454407,
       "position_size_pct": 0.05,
-      "selected_symbol": "SOS"
+      "selected_symbol": "SOS",
+      "sell_price": 1.6891000270843506,
+      "actual_return": 0.005416714178902353,
+      "evaluation_time": "2025-09-10T12:32:11.880814-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -31239,7 +31243,7 @@
         "mom_roll_std_6": 0.10483885435290831
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "3ec16879262e2b712c1816451ed0e7b8",
