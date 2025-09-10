@@ -31257,7 +31257,11 @@
       "sell_time": "2025-09-10T13:17:30-04:00",
       "buy_score": 0.813049852848053,
       "position_size_pct": 0.05,
-      "selected_symbol": "TPR"
+      "selected_symbol": "TPR",
+      "sell_price": 103.50249862670898,
+      "actual_return": -0.009284787876220842,
+      "evaluation_time": "2025-09-10T13:22:36.326340-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -31555,7 +31559,7 @@
         "mom_roll_std_6": 0.9004785889443706
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "bb92cdd020a6756b4c64b90fe9b635c4",
