@@ -35349,7 +35349,11 @@
       "sell_time": "2025-09-11T13:34:00-04:00",
       "buy_score": 0.6327528357505798,
       "position_size_pct": 0.05,
-      "selected_symbol": "AKAM"
+      "selected_symbol": "AKAM",
+      "sell_price": 78.30480194091797,
+      "actual_return": 0.0018525879225206518,
+      "evaluation_time": "2025-09-11T13:37:05.273786-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -35647,7 +35651,7 @@
         "mom_roll_std_6": 0.19110240872863352
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "58c62e7f7aef5f4827a519de03fe5adc",
