@@ -96373,7 +96373,11 @@
       "sell_time": "2025-09-11T06:49:00-04:00",
       "buy_score": 0.46077467657213544,
       "position_size_pct": 0.05,
-      "selected_symbol": "BCH/USD"
+      "selected_symbol": "BCH/USD",
+      "sell_price": 600.0450000000001,
+      "actual_return": 0.006061063326794633,
+      "evaluation_time": "2025-09-11T06:52:41.651715-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -96671,7 +96675,7 @@
         "mom_roll_std_6": 3.3577591734172536
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c1072bc01b003e76d11597e081d27ca2",
