@@ -97321,7 +97321,11 @@
       "sell_time": "2025-09-11T07:47:30-04:00",
       "buy_score": 0.590175685964241,
       "position_size_pct": 0.05,
-      "selected_symbol": "SKY/USD"
+      "selected_symbol": "SKY/USD",
+      "sell_price": 0.072325,
+      "actual_return": -0.02579471982758621,
+      "evaluation_time": "2025-09-11T08:38:23.733822-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -97619,6 +97623,6 @@
         "mom_roll_std_6": 0.0005522107085765793
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
