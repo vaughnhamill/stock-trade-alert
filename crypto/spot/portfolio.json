@@ -1,6 +1,6 @@
 [
   {
-    "portfolio_size": 9465.164207933696,
+    "portfolio_size": 9460.1432982157,
     "trades": [
       {
         "trade_id": "5cb67f6c8bfc993cb5bb6ed8b02196ba",
@@ -1561,6 +1561,11 @@
         "trade_id": "e8d01d52f46445e8f6eb46eded1d8042",
         "entry_time": "2025-09-10T23:32:47.655449-04:00",
         "p&l": -6.347796784626036
+      },
+      {
+        "trade_id": "a07eaefdb9fca26cfe7fbd63bc58b780",
+        "entry_time": "2025-09-10T23:52:16.378362-04:00",
+        "p&l": -5.020909717996554
       }
     ],
     "reset_timestamp": "2025-08-08T08:27:12.903526-04:00"
