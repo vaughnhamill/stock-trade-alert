@@ -34721,7 +34721,11 @@
       "sell_time": "2025-09-11T12:16:00-04:00",
       "buy_score": 0.5093851685523987,
       "position_size_pct": 0.05,
-      "selected_symbol": "KMX"
+      "selected_symbol": "KMX",
+      "sell_price": 60.720001220703125,
+      "actual_return": 0.003470548752191749,
+      "evaluation_time": "2025-09-11T12:29:36.097267-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -35019,6 +35023,6 @@
         "mom_roll_std_6": 0.5333366310670097
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
