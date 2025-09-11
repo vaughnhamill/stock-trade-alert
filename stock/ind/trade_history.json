@@ -35669,7 +35669,11 @@
       "sell_time": "2025-09-11T15:00:00-04:00",
       "buy_score": 0.4819920063018799,
       "position_size_pct": 0.05,
-      "selected_symbol": "BR"
+      "selected_symbol": "BR",
+      "sell_price": 254.8000030517578,
+      "actual_return": -0.0005491464199723386,
+      "evaluation_time": "2025-09-11T15:22:33.818214-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -35967,7 +35971,7 @@
         "mom_roll_std_6": 1.1983797587814113
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "de15d82e05aa73b6eadc6b96d657be06",
