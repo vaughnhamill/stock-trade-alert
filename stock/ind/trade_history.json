@@ -36609,7 +36609,11 @@
       "sell_time": "2025-09-11T15:40:00-04:00",
       "buy_score": 0.7288097143173218,
       "position_size_pct": 0.05,
-      "selected_symbol": "FAST"
+      "selected_symbol": "FAST",
+      "sell_price": 47.375,
+      "actual_return": 0.0021152505741613434,
+      "evaluation_time": "2025-09-11T15:50:53.523024-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -36907,6 +36911,6 @@
         "mom_roll_std_6": 0.32988683899871174
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
