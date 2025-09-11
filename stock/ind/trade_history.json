@@ -34405,7 +34405,11 @@
       "sell_time": "2025-09-11T11:33:00-04:00",
       "buy_score": 0.6900184750556946,
       "position_size_pct": 0.05,
-      "selected_symbol": "KIDZ"
+      "selected_symbol": "KIDZ",
+      "sell_price": 1.7599999904632568,
+      "actual_return": 0.007268334832574503,
+      "evaluation_time": "2025-09-11T11:36:40.259556-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -34703,6 +34707,6 @@
         "mom_roll_std_6": 0.19981976538158044
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
