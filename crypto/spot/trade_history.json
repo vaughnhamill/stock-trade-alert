@@ -95109,7 +95109,11 @@
       "sell_time": "2025-09-11T00:04:30-04:00",
       "buy_score": 0.526779509667009,
       "position_size_pct": 0.05,
-      "selected_symbol": "SEI/USD"
+      "selected_symbol": "SEI/USD",
+      "sell_price": 0.325725,
+      "actual_return": -0.00874923919659165,
+      "evaluation_time": "2025-09-11T00:28:48.019533-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -95407,7 +95411,7 @@
         "mom_roll_std_6": 0.0017155174146595217
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e8d01d52f46445e8f6eb46eded1d8042",
