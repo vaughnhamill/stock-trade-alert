@@ -37241,7 +37241,11 @@
       "sell_time": "2025-09-12T11:03:30-04:00",
       "buy_score": 0.8557688779830933,
       "position_size_pct": 0.05,
-      "selected_symbol": "WLDS"
+      "selected_symbol": "WLDS",
+      "sell_price": 9.65500020980835,
+      "actual_return": -0.09851448137787998,
+      "evaluation_time": "2025-09-12T11:24:34.016880-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -37539,7 +37543,7 @@
         "mom_roll_std_6": 1.7223722112898059
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "81984398bfc8ea29a83e74c1c8ff1e6c",
@@ -37553,7 +37557,11 @@
       "sell_time": "2025-09-12T11:05:00-04:00",
       "buy_score": 0.5934796333312988,
       "position_size_pct": 0.05,
-      "selected_symbol": "NUAI"
+      "selected_symbol": "NUAI",
+      "sell_price": 0.45000000298023224,
+      "actual_return": 0.003120839981722659,
+      "evaluation_time": "2025-09-12T11:24:34.016880-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -37851,6 +37859,6 @@
         "mom_roll_std_6": 0.05572711267520154
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
