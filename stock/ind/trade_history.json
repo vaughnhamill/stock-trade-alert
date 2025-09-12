@@ -38821,7 +38821,11 @@
       "sell_time": "2025-09-12T13:34:00-04:00",
       "buy_score": 0.8733276128768921,
       "position_size_pct": 0.05,
-      "selected_symbol": "AIRE"
+      "selected_symbol": "AIRE",
+      "sell_price": 1.4900000095367432,
+      "actual_return": 0.01360542893691104,
+      "evaluation_time": "2025-09-12T13:35:44.956571-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -39119,7 +39123,7 @@
         "mom_roll_std_6": 0.2210286899950949
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "9e0586f3ccadbec687eeb08240f0d51d",
