@@ -39137,7 +39137,11 @@
       "sell_time": "2025-09-12T13:46:00-04:00",
       "buy_score": 0.6773798942565918,
       "position_size_pct": 0.05,
-      "selected_symbol": "MAZE"
+      "selected_symbol": "MAZE",
+      "sell_price": 23.360000610351562,
+      "actual_return": -0.0076465717151714425,
+      "evaluation_time": "2025-09-12T13:55:08.501926-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -39435,7 +39439,7 @@
         "mom_roll_std_6": 2.8862928435813466
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b8677a4085fa1b0361af3adf90f3d5fc",
