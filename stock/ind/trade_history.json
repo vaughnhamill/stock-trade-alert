@@ -36925,7 +36925,11 @@
       "sell_time": "2025-09-12T10:34:00-04:00",
       "buy_score": 0.7253901548385621,
       "position_size_pct": 0.05,
-      "selected_symbol": "WLDS"
+      "selected_symbol": "WLDS",
+      "sell_price": 10.142399787902832,
+      "actual_return": -0.05578314652150721,
+      "evaluation_time": "2025-09-12T10:42:17.139734-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -37223,7 +37227,7 @@
         "mom_roll_std_6": 1.6125581453308886
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "eb2fc94ed0ef0dbacb8756b1a110ec9e",
