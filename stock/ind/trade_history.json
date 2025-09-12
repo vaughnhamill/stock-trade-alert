@@ -37873,7 +37873,11 @@
       "sell_time": "2025-09-12T12:15:30-04:00",
       "buy_score": 0.56451416015625,
       "position_size_pct": 0.05,
-      "selected_symbol": "ETN"
+      "selected_symbol": "ETN",
+      "sell_price": 365.4499969482422,
+      "actual_return": 0.003239629449291059,
+      "evaluation_time": "2025-09-12T12:25:46.215283-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -38171,7 +38175,7 @@
         "mom_roll_std_6": 1.2397426402972969
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "beeb9a4735b3691204a116c881c270da",
