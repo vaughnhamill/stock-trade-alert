@@ -38189,7 +38189,11 @@
       "sell_time": "2025-09-12T12:35:00-04:00",
       "buy_score": 0.8412960875687031,
       "position_size_pct": 0.05,
-      "selected_symbol": "OPEN"
+      "selected_symbol": "OPEN",
+      "sell_price": 9.154999732971191,
+      "actual_return": -0.0054102121730654545,
+      "evaluation_time": "2025-09-12T12:52:02.349657-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -38487,7 +38491,7 @@
         "mom_roll_std_6": 2.029969000656518
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "379c19381e277fc576b79f3dccdbf4cf",
