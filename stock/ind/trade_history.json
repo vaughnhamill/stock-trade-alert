@@ -40705,7 +40705,11 @@
       "sell_time": "2025-09-15T11:37:00-04:00",
       "buy_score": 0.6681089997291565,
       "position_size_pct": 0.05,
-      "selected_symbol": "SLB"
+      "selected_symbol": "SLB",
+      "sell_price": 35.445098876953125,
+      "actual_return": -0.0002793104947152647,
+      "evaluation_time": "2025-09-15T11:51:16.409699-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -41003,7 +41007,7 @@
         "mom_roll_std_6": 0.34043418053393176
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a7443cda1bdcd923887f3c15d7d00923",
