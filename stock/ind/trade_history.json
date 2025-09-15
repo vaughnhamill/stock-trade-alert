@@ -42605,7 +42605,11 @@
       "sell_time": "2025-09-15T15:15:30-04:00",
       "buy_score": 0.7848256754875184,
       "position_size_pct": 0.05,
-      "selected_symbol": "CVS"
+      "selected_symbol": "CVS",
+      "sell_price": 73.2300033569336,
+      "actual_return": 0.0008200791238197482,
+      "evaluation_time": "2025-09-15T15:20:45.763745-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -42903,7 +42907,7 @@
         "mom_roll_std_6": 0.4862482207234602
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "fe1407cd359b08aba70a7bd472b6922d",
