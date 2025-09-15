@@ -41025,7 +41025,11 @@
       "sell_time": "2025-09-15T12:01:00-04:00",
       "buy_score": 0.7482394899640764,
       "position_size_pct": 0.05,
-      "selected_symbol": "OPI"
+      "selected_symbol": "OPI",
+      "sell_price": 0.7325999736785889,
+      "actual_return": 0.027633596887481997,
+      "evaluation_time": "2025-09-15T12:30:50.346620-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -41323,7 +41327,7 @@
         "mom_roll_std_6": 0.1513619552830536
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "48abc7b0d572ca48433b378e488f0038",
