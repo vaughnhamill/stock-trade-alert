@@ -40389,7 +40389,11 @@
       "sell_time": "2025-09-15T11:01:00-04:00",
       "buy_score": 0.7914019227027893,
       "position_size_pct": 0.05,
-      "selected_symbol": "ISPC"
+      "selected_symbol": "ISPC",
+      "sell_price": 2.0106000900268555,
+      "actual_return": 0.002793005120350838,
+      "evaluation_time": "2025-09-15T11:27:33.949575-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -40687,7 +40691,7 @@
         "mom_roll_std_6": 0.2622657583797672
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e8fe86d2f491e2f15024ae4a8b99235a",
