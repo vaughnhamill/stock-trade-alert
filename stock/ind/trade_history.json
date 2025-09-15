@@ -41657,7 +41657,11 @@
       "sell_time": "2025-09-15T13:31:00-04:00",
       "buy_score": 0.7430630326271057,
       "position_size_pct": 0.05,
-      "selected_symbol": "ATCH"
+      "selected_symbol": "ATCH",
+      "sell_price": 1.039199948310852,
+      "actual_return": 0.006586532560451314,
+      "evaluation_time": "2025-09-15T13:34:36.821629-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -41955,6 +41959,6 @@
         "mom_roll_std_6": 0.050716751701774476
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
