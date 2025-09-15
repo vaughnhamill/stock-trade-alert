@@ -43237,7 +43237,11 @@
       "sell_time": "2025-09-15T15:41:00-04:00",
       "buy_score": 0.6257865762710572,
       "position_size_pct": 0.05,
-      "selected_symbol": "KVUE"
+      "selected_symbol": "KVUE",
+      "sell_price": 18.295000076293945,
+      "actual_return": -0.002997291772883116,
+      "evaluation_time": "2025-09-15T15:51:48.532111-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -43535,7 +43539,7 @@
         "mom_roll_std_6": 0.1893001821486307
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "3d0e2f570b112a3153dba6b239c1e856",
