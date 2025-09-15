@@ -42289,7 +42289,11 @@
       "sell_time": "2025-09-15T14:45:00-04:00",
       "buy_score": 0.7396501302719116,
       "position_size_pct": 0.05,
-      "selected_symbol": "SONN"
+      "selected_symbol": "SONN",
+      "sell_price": 5.749799966812134,
+      "actual_return": -0.0035008690088654524,
+      "evaluation_time": "2025-09-15T14:55:45.620013-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -42587,7 +42591,7 @@
         "mom_roll_std_6": 0.4373386270412651
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "ae740341537c3b07c118967d4209c5c7",
