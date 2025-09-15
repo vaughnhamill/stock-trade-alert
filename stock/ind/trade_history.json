@@ -42921,7 +42921,11 @@
       "sell_time": "2025-09-15T15:30:00-04:00",
       "buy_score": 0.46471190452575684,
       "position_size_pct": 0.05,
-      "selected_symbol": "CZR"
+      "selected_symbol": "CZR",
+      "sell_price": 25.825000762939453,
+      "actual_return": -0.0025105688776096567,
+      "evaluation_time": "2025-09-15T15:31:57.657414-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -43219,7 +43223,7 @@
         "mom_roll_std_6": 0.3677821188124681
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "1d1ef5b41f4c82c244c11d495ae6ec6f",
