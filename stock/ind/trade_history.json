@@ -45125,7 +45125,11 @@
       "sell_time": "2025-09-16T13:05:00-04:00",
       "buy_score": 0.5960268878936767,
       "position_size_pct": 0.05,
-      "selected_symbol": "CCL"
+      "selected_symbol": "CCL",
+      "sell_price": 30.815000534057617,
+      "actual_return": -0.0006485665966862175,
+      "evaluation_time": "2025-09-16T13:22:27.759922-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -45423,7 +45427,7 @@
         "mom_roll_std_6": 0.3236511368964406
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "40002206ab2f266af977175ab578a851",
