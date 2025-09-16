@@ -44497,7 +44497,11 @@
       "sell_time": "2025-09-16T12:02:00-04:00",
       "buy_score": 0.7518455845752702,
       "position_size_pct": 0.05,
-      "selected_symbol": "TECH"
+      "selected_symbol": "TECH",
+      "sell_price": 51.380001068115234,
+      "actual_return": -0.0002918453062523849,
+      "evaluation_time": "2025-09-16T12:34:19.163943-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -44795,7 +44799,7 @@
         "mom_roll_std_6": 0.465020546026173
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4cde062829d16e1edecc5c8dbab90a3a",
