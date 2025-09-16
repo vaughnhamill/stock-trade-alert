@@ -43865,7 +43865,11 @@
       "sell_time": "2025-09-16T10:37:00-04:00",
       "buy_score": 0.7256718277931213,
       "position_size_pct": 0.05,
-      "selected_symbol": "GLUE"
+      "selected_symbol": "GLUE",
+      "sell_price": 6.820000171661377,
+      "actual_return": -0.024320401290884867,
+      "evaluation_time": "2025-09-16T10:49:28.729882-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -44163,6 +44167,6 @@
         "mom_roll_std_6": 0.6837300050312233
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
