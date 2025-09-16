@@ -45757,7 +45757,11 @@
       "sell_time": "2025-09-16T13:47:00-04:00",
       "buy_score": 0.7980725765228271,
       "position_size_pct": 0.05,
-      "selected_symbol": "ORCL"
+      "selected_symbol": "ORCL",
+      "sell_price": 305.0867004394531,
+      "actual_return": 0.0002560402588538001,
+      "evaluation_time": "2025-09-16T13:51:05.952339-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -46055,7 +46059,7 @@
         "mom_roll_std_6": 8.122647529965903
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a3dbc7ff586e32ce3002c759ceb39c31",
