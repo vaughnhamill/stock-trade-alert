@@ -45441,7 +45441,11 @@
       "sell_time": "2025-09-16T13:32:00-04:00",
       "buy_score": 0.5000585913658142,
       "position_size_pct": 0.05,
-      "selected_symbol": "LDOS"
+      "selected_symbol": "LDOS",
+      "sell_price": 182.7449951171875,
+      "actual_return": -0.00030091867424497583,
+      "evaluation_time": "2025-09-16T13:37:49.861595-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -45739,7 +45743,7 @@
         "mom_roll_std_6": 1.3741347408632452
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c422323cde49db1b9bf67600665d59d4",
