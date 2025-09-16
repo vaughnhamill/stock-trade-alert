@@ -149,7 +149,7 @@
       "mom_roll_std_6",
       "STOCHh_14_3_3"
     ],
-    "score": 0.41330766908212563
+    "score": 0.38644466644466646
   },
   "global_1h_0.0050": {
     "clf_path": "crypto/spot/models/clf_1h_0.0050.joblib",
@@ -301,6 +301,6 @@
       "mom_roll_std_6",
       "STOCHh_14_3_3"
     ],
-    "score": 0.4006029542672749
+    "score": 0.41836124103386213
   }
 }
