@@ -46389,7 +46389,11 @@
       "sell_time": "2025-09-16T14:43:00-04:00",
       "buy_score": 0.5427340865135193,
       "position_size_pct": 0.05,
-      "selected_symbol": "PHM"
+      "selected_symbol": "PHM",
+      "sell_price": 134.0500030517578,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-09-16T14:56:28.133695-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -46687,7 +46691,7 @@
         "mom_roll_std_6": 1.1408480603979152
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d04ac784446398ccc284fbaa7e522731",
