@@ -49533,7 +49533,11 @@
       "sell_time": "2025-09-17T13:56:00-04:00",
       "buy_score": 0.8150151371955872,
       "position_size_pct": 0.05,
-      "selected_symbol": "HCWC"
+      "selected_symbol": "HCWC",
+      "sell_price": 0.9099000096321106,
+      "actual_return": 0.022474413171561104,
+      "evaluation_time": "2025-09-17T14:39:09.639984-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -49831,7 +49835,7 @@
         "mom_roll_std_6": 0.045157371818871604
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b1523eee088c99c9fd28db7962624ad8",
