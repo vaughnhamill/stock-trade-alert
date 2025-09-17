@@ -47957,7 +47957,11 @@
       "sell_time": "2025-09-17T10:35:00-04:00",
       "buy_score": 0.8722017407417297,
       "position_size_pct": 0.05,
-      "selected_symbol": "CNFR"
+      "selected_symbol": "CNFR",
+      "sell_price": 1.7999999523162842,
+      "actual_return": 0.006429969956058861,
+      "evaluation_time": "2025-09-17T10:40:13.188830-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -48255,6 +48259,6 @@
         "mom_roll_std_6": 0.18576525368851649
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
