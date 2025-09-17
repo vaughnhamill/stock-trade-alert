@@ -50161,7 +50161,11 @@
       "sell_time": "2025-09-17T15:05:00-04:00",
       "buy_score": 0.5525288322993687,
       "position_size_pct": 0.05,
-      "selected_symbol": "DLR"
+      "selected_symbol": "DLR",
+      "sell_price": 172.07000732421875,
+      "actual_return": 0.005522321836194302,
+      "evaluation_time": "2025-09-17T15:19:28.557180-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -50459,6 +50463,6 @@
         "mom_roll_std_6": 0.5466410560346052
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
