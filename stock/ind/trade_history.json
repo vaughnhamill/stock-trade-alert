@@ -48585,7 +48585,11 @@
       "sell_time": "2025-09-17T13:03:00-04:00",
       "buy_score": 0.8682815432548523,
       "position_size_pct": 0.05,
-      "selected_symbol": "BSX"
+      "selected_symbol": "BSX",
+      "sell_price": 98.0199966430664,
+      "actual_return": -0.004064230169891627,
+      "evaluation_time": "2025-09-17T13:23:24.883112-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -48883,7 +48887,7 @@
         "mom_roll_std_6": 0.46108009790139587
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "98e7be9f9e70803e7c45298a4e43033a",
