@@ -48901,7 +48901,11 @@
       "sell_time": "2025-09-17T14:37:30-04:00",
       "buy_score": 0.6114898252487183,
       "position_size_pct": 0.05,
-      "selected_symbol": "CBOE"
+      "selected_symbol": "CBOE",
+      "sell_price": 236.03250122070312,
+      "actual_return": 0.0003072321782218234,
+      "evaluation_time": "2025-09-17T14:39:09.639984-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -49199,7 +49203,7 @@
         "mom_roll_std_6": 1.436250158951673
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a1051ffa817d53f2086eab3ba14ba83a",
