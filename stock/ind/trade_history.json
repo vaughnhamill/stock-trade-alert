@@ -49213,7 +49213,11 @@
       "sell_time": "2025-09-17T13:49:00-04:00",
       "buy_score": 0.8767274141311645,
       "position_size_pct": 0.05,
-      "selected_symbol": "HUM"
+      "selected_symbol": "HUM",
+      "sell_price": 271.864990234375,
+      "actual_return": 0.00016548785572872027,
+      "evaluation_time": "2025-09-17T13:50:18.467518-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -49511,7 +49515,7 @@
         "mom_roll_std_6": 3.2003741287237517
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "6b738968267b68d5208b0de59a10d209",
