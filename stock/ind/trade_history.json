@@ -52049,7 +52049,11 @@
       "sell_time": "2025-09-18T13:42:30-04:00",
       "buy_score": 0.7930771858351571,
       "position_size_pct": 0.05,
-      "selected_symbol": "GNRC"
+      "selected_symbol": "GNRC",
+      "sell_price": 182.1500015258789,
+      "actual_return": -0.0033376723533126125,
+      "evaluation_time": "2025-09-18T13:52:55.039268-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -52347,7 +52351,7 @@
         "mom_roll_std_6": 1.141667665308699
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b6f16a87a43f4fb08949fb9b10a79276",
