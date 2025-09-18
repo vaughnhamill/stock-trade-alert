@@ -53313,7 +53313,11 @@
       "sell_time": "2025-09-18T14:45:30-04:00",
       "buy_score": 0.6382700953751932,
       "position_size_pct": 0.05,
-      "selected_symbol": "PSA"
+      "selected_symbol": "PSA",
+      "sell_price": 284.44749450683594,
+      "actual_return": -0.0029182006310403607,
+      "evaluation_time": "2025-09-18T14:55:53.166597-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -53611,7 +53615,7 @@
         "mom_roll_std_6": 1.682504061834949
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "42c52b340b70f3144727b5801e60c5ec",
