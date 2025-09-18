@@ -51101,7 +51101,11 @@
       "sell_time": "2025-09-18T11:35:30-04:00",
       "buy_score": 0.7008816599845886,
       "position_size_pct": 0.05,
-      "selected_symbol": "MHK"
+      "selected_symbol": "MHK",
+      "sell_price": 133.3849983215332,
+      "actual_return": -0.0029526122093581613,
+      "evaluation_time": "2025-09-18T11:52:28.640688-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -51399,7 +51403,7 @@
         "mom_roll_std_6": 1.858046023455042
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "66644fcd7a16ca1322bc784b82dd730f",
