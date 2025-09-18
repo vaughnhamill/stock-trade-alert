@@ -51417,7 +51417,11 @@
       "sell_time": "2025-09-18T12:04:00-04:00",
       "buy_score": 0.73989974653222,
       "position_size_pct": 0.05,
-      "selected_symbol": "AMD"
+      "selected_symbol": "AMD",
+      "sell_price": 154.75,
+      "actual_return": -0.0031564382622083823,
+      "evaluation_time": "2025-09-18T12:31:31.946160-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -51715,7 +51719,7 @@
         "mom_roll_std_6": 0.8937427060810831
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "cd58defba492c982ded2e734f6b16d51",
