@@ -52997,7 +52997,11 @@
       "sell_time": "2025-09-18T14:18:00-04:00",
       "buy_score": 0.8059035967645191,
       "position_size_pct": 0.05,
-      "selected_symbol": "DRI"
+      "selected_symbol": "DRI",
+      "sell_price": 193.5800018310547,
+      "actual_return": 0.010756043821214353,
+      "evaluation_time": "2025-09-18T14:34:41.543780-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -53295,7 +53299,7 @@
         "mom_roll_std_6": 1.7049851935531297
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "560a20b830efac7615e716f07aa0fedc",
