@@ -53941,7 +53941,11 @@
       "sell_time": "2025-09-18T15:48:00-04:00",
       "buy_score": 0.5291054066022237,
       "position_size_pct": 0.05,
-      "selected_symbol": "SPRC"
+      "selected_symbol": "SPRC",
+      "sell_price": 4.440299987792969,
+      "actual_return": -0.0032996489707809596,
+      "evaluation_time": "2025-09-18T15:50:38.175237-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -54239,7 +54243,7 @@
         "mom_roll_std_6": 0.2522560255704739
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "13f28e4bba8da9a3e180e6200550374b",
