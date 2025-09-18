@@ -51733,7 +51733,11 @@
       "sell_time": "2025-09-18T12:54:00-04:00",
       "buy_score": 0.7663015723228455,
       "position_size_pct": 0.05,
-      "selected_symbol": "CF"
+      "selected_symbol": "CF",
+      "sell_price": 84.26000213623047,
+      "actual_return": 0.001069311741037478,
+      "evaluation_time": "2025-09-18T12:55:13.053863-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -52031,7 +52035,7 @@
         "mom_roll_std_6": 0.22170701926667524
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e005beba8d84a97f618d80f17e77de7a",
