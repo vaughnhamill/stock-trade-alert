@@ -57409,7 +57409,11 @@
       "sell_time": "2025-09-19T15:07:00-04:00",
       "buy_score": 0.6689639687538147,
       "position_size_pct": 0.05,
-      "selected_symbol": "BKR"
+      "selected_symbol": "BKR",
+      "sell_price": 47.025001525878906,
+      "actual_return": 0.0027721732987788495,
+      "evaluation_time": "2025-09-19T15:19:56.041897-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -57707,7 +57711,7 @@
         "mom_roll_std_6": 0.31322040157254877
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a0dec0b53adf33909daa7709be2dc36e",
