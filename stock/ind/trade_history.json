@@ -58041,7 +58041,11 @@
       "sell_time": "2025-09-19T15:41:00-04:00",
       "buy_score": 0.6040531992912292,
       "position_size_pct": 0.05,
-      "selected_symbol": "ARQQW"
+      "selected_symbol": "ARQQW",
+      "sell_price": 0.9276000261306763,
+      "actual_return": -0.013191459060200882,
+      "evaluation_time": "2025-09-19T15:50:05.037211-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -58339,6 +58343,6 @@
         "mom_roll_std_6": 0.08971826544161066
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
