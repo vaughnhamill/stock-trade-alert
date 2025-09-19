@@ -55513,7 +55513,11 @@
       "sell_time": "2025-09-19T11:59:00-04:00",
       "buy_score": 0.5680854923762972,
       "position_size_pct": 0.05,
-      "selected_symbol": "AVGO"
+      "selected_symbol": "AVGO",
+      "sell_price": 344.25421142578125,
+      "actual_return": 0.0023124089863811774,
+      "evaluation_time": "2025-09-19T12:29:24.832172-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -55811,7 +55815,7 @@
         "mom_roll_std_6": 1.6531552654291588
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e4224bd1c1cc7314f6c773902dc54618",
