@@ -56145,7 +56145,11 @@
       "sell_time": "2025-09-19T13:05:00-04:00",
       "buy_score": 0.6950084702173869,
       "position_size_pct": 0.05,
-      "selected_symbol": "GEV"
+      "selected_symbol": "GEV",
+      "sell_price": 613.52001953125,
+      "actual_return": 0.0032705388803674247,
+      "evaluation_time": "2025-09-19T13:22:37.783681-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -56443,7 +56447,7 @@
         "mom_roll_std_6": 3.8733452729918096
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "be1332b6782be2dc53d5b3945672d84b",
