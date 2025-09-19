@@ -54569,7 +54569,11 @@
       "sell_time": "2025-09-19T14:18:00-04:00",
       "buy_score": 0.810201108455658,
       "position_size_pct": 0.05,
-      "selected_symbol": "CDLX"
+      "selected_symbol": "CDLX",
+      "sell_price": 2.5011000633239746,
+      "actual_return": -0.20115617289318735,
+      "evaluation_time": "2025-09-19T14:38:14.178090-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -54867,7 +54871,7 @@
         "mom_roll_std_6": 0.18721147561079554
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "04ccb49801f936ffd1760dde470a1f9a",
@@ -56777,7 +56781,11 @@
       "sell_time": "2025-09-19T14:04:00-04:00",
       "buy_score": 0.7888503074645996,
       "position_size_pct": 0.05,
-      "selected_symbol": "CDLX"
+      "selected_symbol": "CDLX",
+      "sell_price": 2.514400005340576,
+      "actual_return": 0.007775599467471295,
+      "evaluation_time": "2025-09-19T14:38:14.178090-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -57075,7 +57083,7 @@
         "mom_roll_std_6": 0.47823637831825944
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d31f7fcb241c60400bacf9005100b270",
