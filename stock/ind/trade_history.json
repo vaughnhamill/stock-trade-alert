@@ -55197,7 +55197,11 @@
       "sell_time": "2025-09-19T11:35:00-04:00",
       "buy_score": 0.5942505288124085,
       "position_size_pct": 0.05,
-      "selected_symbol": "LKQ"
+      "selected_symbol": "LKQ",
+      "sell_price": 30.934999465942383,
+      "actual_return": -0.0014525525164257936,
+      "evaluation_time": "2025-09-19T11:50:17.416753-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -55495,7 +55499,7 @@
         "mom_roll_std_6": 0.2131120461939171
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "43ad6da1010f73eab46afeb20b477b46",
