@@ -54881,7 +54881,11 @@
       "sell_time": "2025-09-19T11:06:00-04:00",
       "buy_score": 0.862938461303711,
       "position_size_pct": 0.05,
-      "selected_symbol": "MKC"
+      "selected_symbol": "MKC",
+      "sell_price": 66.19999694824219,
+      "actual_return": -0.0012070282517819954,
+      "evaluation_time": "2025-09-19T11:25:28.755256-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -55179,7 +55183,7 @@
         "mom_roll_std_6": 0.5365986207916851
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "f2f64502df32642e16c3d0d81e8c46b7",
