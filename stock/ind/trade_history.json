@@ -56461,7 +56461,11 @@
       "sell_time": "2025-09-19T13:31:00-04:00",
       "buy_score": 0.5586403611939134,
       "position_size_pct": 0.05,
-      "selected_symbol": "ICE"
+      "selected_symbol": "ICE",
+      "sell_price": 170.18250274658203,
+      "actual_return": 0.001869115139378993,
+      "evaluation_time": "2025-09-19T13:35:57.058087-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -56759,6 +56763,6 @@
         "mom_roll_std_6": 0.30900878153779193
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
