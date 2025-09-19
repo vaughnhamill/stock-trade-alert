@@ -55829,7 +55829,11 @@
       "sell_time": "2025-09-19T12:39:00-04:00",
       "buy_score": 0.6082615256309509,
       "position_size_pct": 0.05,
-      "selected_symbol": "ADAP"
+      "selected_symbol": "ADAP",
+      "sell_price": 0.15279999375343323,
+      "actual_return": 0.04585896117181671,
+      "evaluation_time": "2025-09-19T12:54:42.803872-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -56127,7 +56131,7 @@
         "mom_roll_std_6": 0.027212420028119022
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4d9ae8fb615c5f59bb61bf967d971289",
