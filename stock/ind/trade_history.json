@@ -57725,7 +57725,11 @@
       "sell_time": "2025-09-19T15:29:00-04:00",
       "buy_score": 0.7639308571815491,
       "position_size_pct": 0.05,
-      "selected_symbol": "DHI"
+      "selected_symbol": "DHI",
+      "sell_price": 169.4199981689453,
+      "actual_return": 0.0002361157455419978,
+      "evaluation_time": "2025-09-19T15:31:46.543098-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -58023,7 +58027,7 @@
         "mom_roll_std_6": 1.1138507743007164
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "7515c2b1ab73c05aaa20f85bac78c21e",
