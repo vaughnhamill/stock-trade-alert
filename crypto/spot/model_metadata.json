@@ -20,6 +20,7 @@
       "obv",
       "STOCHk_14_3_3",
       "STOCHd_14_3_3",
+      "mom",
       "open_lag_1",
       "open_lag_3",
       "open_lag_5",
@@ -139,7 +140,6 @@
       "sentiment_roll_std_3",
       "sentiment_roll_mean_6",
       "sentiment_roll_std_6",
-      "mom",
       "mom_lag_1",
       "mom_lag_3",
       "mom_lag_5",
@@ -149,7 +149,7 @@
       "mom_roll_std_6",
       "STOCHh_14_3_3"
     ],
-    "score": 0.4815626585489599
+    "score": 0.4541084164999984
   },
   "global_1h_0.0050": {
     "clf_path": "crypto/spot/models/clf_1h_0.0050.joblib",
@@ -172,6 +172,7 @@
       "obv",
       "STOCHk_14_3_3",
       "STOCHd_14_3_3",
+      "mom",
       "open_lag_1",
       "open_lag_3",
       "open_lag_5",
@@ -291,7 +292,6 @@
       "sentiment_roll_std_3",
       "sentiment_roll_mean_6",
       "sentiment_roll_std_6",
-      "mom",
       "mom_lag_1",
       "mom_lag_3",
       "mom_lag_5",
@@ -301,6 +301,6 @@
       "mom_roll_std_6",
       "STOCHh_14_3_3"
     ],
-    "score": 0.39509733237202593
+    "score": 0.36037027574143593
   }
 }
