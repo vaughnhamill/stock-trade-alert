@@ -59929,7 +59929,11 @@
       "sell_time": "2025-09-22T13:11:30-04:00",
       "buy_score": 0.844113826751709,
       "position_size_pct": 0.05,
-      "selected_symbol": "SMUP"
+      "selected_symbol": "SMUP",
+      "sell_price": 16.828999519348145,
+      "actual_return": 0.01624396510150815,
+      "evaluation_time": "2025-09-22T13:36:02.462863-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -60227,7 +60231,7 @@
         "mom_roll_std_6": 1.8511785645573038
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e927bed8fd435a847bee7bc3570cf010",
