@@ -61189,7 +61189,11 @@
       "sell_time": "2025-09-22T14:44:00-04:00",
       "buy_score": 0.6773795485496521,
       "position_size_pct": 0.05,
-      "selected_symbol": "SMU"
+      "selected_symbol": "SMU",
+      "sell_price": 34.040000915527344,
+      "actual_return": 0.001406262993287622,
+      "evaluation_time": "2025-09-22T14:57:06.121895-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -61487,7 +61491,7 @@
         "mom_roll_std_6": 2.8242080563387746
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "3266e16f613816d41b768356780567f5",
