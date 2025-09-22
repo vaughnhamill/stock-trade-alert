@@ -59613,7 +59613,11 @@
       "sell_time": "2025-09-22T12:43:00-04:00",
       "buy_score": 0.9153047204017639,
       "position_size_pct": 0.05,
-      "selected_symbol": "OKLL"
+      "selected_symbol": "OKLL",
+      "sell_price": 94.81600189208984,
+      "actual_return": 0.010939342856884875,
+      "evaluation_time": "2025-09-22T12:53:22.941838-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -59911,7 +59915,7 @@
         "mom_roll_std_6": 11.194271231810216
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "eb3190499c995487519676a97213aa29",
