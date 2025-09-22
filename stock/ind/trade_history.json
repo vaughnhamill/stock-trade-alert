@@ -60557,7 +60557,11 @@
       "sell_time": "2025-09-22T14:28:30-04:00",
       "buy_score": 0.6854901909828186,
       "position_size_pct": 0.05,
-      "selected_symbol": "SMU"
+      "selected_symbol": "SMU",
+      "sell_price": 33.98914909362793,
+      "actual_return": 0.021001747037335903,
+      "evaluation_time": "2025-09-22T14:31:52.773596-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -60855,7 +60859,7 @@
         "mom_roll_std_6": 2.8242080563387746
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "59026170cb5a28515e32904bb9bc44d7",
@@ -60869,7 +60873,11 @@
       "sell_time": "2025-09-22T14:02:30-04:00",
       "buy_score": 0.8643480539321899,
       "position_size_pct": 0.05,
-      "selected_symbol": "SMU"
+      "selected_symbol": "SMU",
+      "sell_price": 33.66109848022461,
+      "actual_return": 0.016988465136091663,
+      "evaluation_time": "2025-09-22T14:31:52.773596-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -61167,7 +61175,7 @@
         "mom_roll_std_6": 2.8242080563387746
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "eb719d1598dacbed6928ab19e2d23c99",
