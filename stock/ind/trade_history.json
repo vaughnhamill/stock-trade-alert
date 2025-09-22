@@ -58981,7 +58981,11 @@
       "sell_time": "2025-09-22T11:36:00-04:00",
       "buy_score": 0.7216041088104248,
       "position_size_pct": 0.05,
-      "selected_symbol": "QMCO"
+      "selected_symbol": "QMCO",
+      "sell_price": 12.210000038146973,
+      "actual_return": -0.0008183493177833956,
+      "evaluation_time": "2025-09-22T11:51:20.787697-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -59279,7 +59283,7 @@
         "mom_roll_std_6": 1.215637726195528
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "567db8c56b2b605d506d5a23d5120d90",
