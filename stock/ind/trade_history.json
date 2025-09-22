@@ -59297,7 +59297,11 @@
       "sell_time": "2025-09-22T12:07:00-04:00",
       "buy_score": 0.8573647141456604,
       "position_size_pct": 0.05,
-      "selected_symbol": "QUBX"
+      "selected_symbol": "QUBX",
+      "sell_price": 25.219999313354492,
+      "actual_return": -0.013687930608015311,
+      "evaluation_time": "2025-09-22T12:31:29.170295-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -59595,7 +59599,7 @@
         "mom_roll_std_6": 5.60487828572278
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4ff553225e01a8ac8625d64c0591e3e1",
