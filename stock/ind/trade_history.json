@@ -61817,7 +61817,11 @@
       "sell_time": "2025-09-22T15:26:00-04:00",
       "buy_score": 0.550965428352356,
       "position_size_pct": 0.05,
-      "selected_symbol": "FICO"
+      "selected_symbol": "FICO",
+      "sell_price": 1540.0,
+      "actual_return": 0.00023381137677478414,
+      "evaluation_time": "2025-09-22T15:32:16.024062-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -62115,7 +62119,7 @@
         "mom_roll_std_6": 19.708076339952328
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "ced23440d7ab73396cd659a855debc96",
