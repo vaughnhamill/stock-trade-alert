@@ -62757,7 +62757,11 @@
       "sell_time": "2025-09-23T13:17:30-04:00",
       "buy_score": 0.4529012166989314,
       "position_size_pct": 0.05,
-      "selected_symbol": "EXC"
+      "selected_symbol": "EXC",
+      "sell_price": 43.88249969482422,
+      "actual_return": 0.0038316262530405662,
+      "evaluation_time": "2025-09-23T13:32:35.872804-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -63055,7 +63059,7 @@
         "mom_roll_std_6": 0.028734561792641684
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c72e6aa7d4876206f4d99b591a8f4b2e",
@@ -63381,7 +63385,11 @@
       "sell_time": "2025-09-23T13:08:00-04:00",
       "buy_score": 0.8060262203216553,
       "position_size_pct": 0.05,
-      "selected_symbol": "SLNH"
+      "selected_symbol": "SLNH",
+      "sell_price": 2.7200000286102295,
+      "actual_return": 0.001730911982427639,
+      "evaluation_time": "2025-09-23T13:32:35.872804-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -63679,7 +63687,7 @@
         "mom_roll_std_6": 0.2787670962283684
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "37d89795d9850c4f8b0a06598aac8e24",
