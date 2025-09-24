@@ -64641,7 +64641,11 @@
       "sell_time": "2025-09-24T10:33:00-04:00",
       "buy_score": 0.5664893984794617,
       "position_size_pct": 0.05,
-      "selected_symbol": "IPDN"
+      "selected_symbol": "IPDN",
+      "sell_price": 4.240099906921387,
+      "actual_return": 0.00954764273269484,
+      "evaluation_time": "2025-09-24T10:39:22.814107-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -64939,6 +64943,6 @@
         "mom_roll_std_6": 0.5249586015055308
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
