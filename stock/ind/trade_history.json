@@ -65273,7 +65273,11 @@
       "sell_time": "2025-09-24T13:35:00-04:00",
       "buy_score": 0.6751046180725098,
       "position_size_pct": 0.05,
-      "selected_symbol": "TTWO"
+      "selected_symbol": "TTWO",
+      "sell_price": 244.0,
+      "actual_return": 0.004218515776259278,
+      "evaluation_time": "2025-09-24T13:40:08.666864-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -65571,6 +65575,6 @@
         "mom_roll_std_6": 1.5108164042376533
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
