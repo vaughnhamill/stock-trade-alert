@@ -65905,7 +65905,11 @@
       "sell_time": "2025-09-24T15:27:00-04:00",
       "buy_score": 0.6035784700711568,
       "position_size_pct": 0.05,
-      "selected_symbol": "GE"
+      "selected_symbol": "GE",
+      "sell_price": 301.4599914550781,
+      "actual_return": 0.002660772245143055,
+      "evaluation_time": "2025-09-24T15:31:55.212008-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -66203,7 +66207,7 @@
         "mom_roll_std_6": 2.21800023482404
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "86b9ed01dfffbc2cdcc62cb02fac449e",
