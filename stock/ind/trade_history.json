@@ -69049,7 +69049,11 @@
       "sell_time": "2025-09-25T14:02:00-04:00",
       "buy_score": 0.8128788471221924,
       "position_size_pct": 0.05,
-      "selected_symbol": "BMY"
+      "selected_symbol": "BMY",
+      "sell_price": 43.489898681640625,
+      "actual_return": 0.00241789476007325,
+      "evaluation_time": "2025-09-25T14:35:24.342582-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -69347,7 +69351,7 @@
         "mom_roll_std_6": 0.36365411111170537
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "28cae0a6f8a1c220cdb9f8070f6d0176",
