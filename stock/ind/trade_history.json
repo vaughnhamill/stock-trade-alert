@@ -66845,7 +66845,11 @@
       "sell_time": "2025-09-25T10:35:00-04:00",
       "buy_score": 0.8781514167785645,
       "position_size_pct": 0.05,
-      "selected_symbol": "RCT"
+      "selected_symbol": "RCT",
+      "sell_price": 1.6349999904632568,
+      "actual_return": 0.021874978812411742,
+      "evaluation_time": "2025-09-25T10:51:39.109689-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -67143,6 +67147,6 @@
         "mom_roll_std_6": 0.056803547412816686
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
