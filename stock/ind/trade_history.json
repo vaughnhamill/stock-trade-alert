@@ -69365,7 +69365,11 @@
       "sell_time": "2025-09-25T14:56:00-04:00",
       "buy_score": 0.6860796256643353,
       "position_size_pct": 0.05,
-      "selected_symbol": "LAC"
+      "selected_symbol": "LAC",
+      "sell_price": 7.175000190734863,
+      "actual_return": 0.013418116956571987,
+      "evaluation_time": "2025-09-25T14:56:03.339734-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -69663,7 +69667,7 @@
         "mom_roll_std_6": 0.1391316609087033
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "97ef7da246eeb08318795dc0968ae785",
