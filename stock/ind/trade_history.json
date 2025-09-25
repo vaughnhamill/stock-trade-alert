@@ -67473,7 +67473,11 @@
       "sell_time": "2025-09-25T12:48:30-04:00",
       "buy_score": 0.8886458396911621,
       "position_size_pct": 0.05,
-      "selected_symbol": "IR"
+      "selected_symbol": "IR",
+      "sell_price": 80.4800033569336,
+      "actual_return": 0.0017426814217682191,
+      "evaluation_time": "2025-09-25T12:57:13.310272-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -67771,7 +67775,7 @@
         "mom_roll_std_6": 0.2173469953728392
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "71f998a9c0a0fe618671ecef23f5ea6a",
@@ -67785,7 +67789,11 @@
       "sell_time": "2025-09-25T12:49:00-04:00",
       "buy_score": 0.7275449172655741,
       "position_size_pct": 0.05,
-      "selected_symbol": "QURE"
+      "selected_symbol": "QURE",
+      "sell_price": 50.744998931884766,
+      "actual_return": -0.023007310866768427,
+      "evaluation_time": "2025-09-25T12:57:13.310272-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -68083,7 +68091,7 @@
         "mom_roll_std_6": 17.024699085433653
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8414146307f60810cfab071565fdb413",
