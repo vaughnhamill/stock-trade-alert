@@ -68105,7 +68105,11 @@
       "sell_time": "2025-09-25T13:06:00-04:00",
       "buy_score": 0.5447542667388916,
       "position_size_pct": 0.05,
-      "selected_symbol": "BXP"
+      "selected_symbol": "BXP",
+      "sell_price": 75.08999633789062,
+      "actual_return": -0.0006654651605533697,
+      "evaluation_time": "2025-09-25T13:21:52.891171-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -68403,7 +68407,7 @@
         "mom_roll_std_6": 0.5820613542674447
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "66135f853895c5e88d87a7011b07d6e5",
