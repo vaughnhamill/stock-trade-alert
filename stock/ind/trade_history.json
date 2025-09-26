@@ -72209,7 +72209,11 @@
       "sell_time": "2025-09-26T15:07:00-04:00",
       "buy_score": 0.737514078617096,
       "position_size_pct": 0.05,
-      "selected_symbol": "PSTV"
+      "selected_symbol": "PSTV",
+      "sell_price": 0.6287000179290771,
+      "actual_return": 0.019127882344359082,
+      "evaluation_time": "2025-09-26T15:18:49.035238-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -72507,6 +72511,6 @@
         "mom_roll_std_6": 0.024539312919145597
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
