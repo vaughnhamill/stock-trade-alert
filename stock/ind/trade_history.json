@@ -70625,7 +70625,11 @@
       "sell_time": "2025-09-26T11:13:00-04:00",
       "buy_score": 0.5594325709342957,
       "position_size_pct": 0.05,
-      "selected_symbol": "KDP"
+      "selected_symbol": "KDP",
+      "sell_price": 25.559999465942383,
+      "actual_return": -0.004091231086667719,
+      "evaluation_time": "2025-09-26T11:25:44.850006-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -70923,7 +70927,7 @@
         "mom_roll_std_6": 0.3390968065271781
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e72e10e89ecbbf4699e12c49562ba0aa",
