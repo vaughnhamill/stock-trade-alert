@@ -71261,7 +71261,11 @@
       "sell_time": "2025-09-26T13:23:44.292578-04:00",
       "buy_score": 0.548826277256012,
       "position_size_pct": 0.05,
-      "selected_symbol": "IDXX"
+      "selected_symbol": "IDXX",
+      "sell_price": 630.2208168472117,
+      "actual_return": -0.0027538145963626358,
+      "evaluation_time": "2025-09-26T13:36:52.328637-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -71559,7 +71563,7 @@
         "mom_roll_std_6": 8.618621578157656
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "93b56c8cf51cf4402b4c97b532a81fd2",
