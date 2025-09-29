@@ -72837,7 +72837,11 @@
       "sell_time": "2025-09-29T11:00:00-04:00",
       "buy_score": 0.8203867835061833,
       "position_size_pct": 0.05,
-      "selected_symbol": "DE"
+      "selected_symbol": "DE",
+      "sell_price": 466.10499572753906,
+      "actual_return": -0.005748703360930651,
+      "evaluation_time": "2025-09-29T11:25:49.159167-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -73135,7 +73139,7 @@
         "mom_roll_std_6": 2.9415362638860185
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5f43f767492bb46a120d69c4dab7e7d5",
@@ -73149,7 +73153,11 @@
       "sell_time": "2025-09-29T11:03:00-04:00",
       "buy_score": 0.5177503228187561,
       "position_size_pct": 0.05,
-      "selected_symbol": "AQMS"
+      "selected_symbol": "AQMS",
+      "sell_price": 6.809999942779541,
+      "actual_return": -0.0207779497394657,
+      "evaluation_time": "2025-09-29T11:25:49.159167-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -73447,7 +73455,7 @@
         "mom_roll_std_6": 0.6551172205634599
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e5fa9ea6e19579e5aa8c2ec972b3dce8",
