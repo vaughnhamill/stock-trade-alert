@@ -73785,7 +73785,11 @@
       "sell_time": "2025-09-29T12:41:00-04:00",
       "buy_score": 0.5963396072387696,
       "position_size_pct": 0.05,
-      "selected_symbol": "DFLI"
+      "selected_symbol": "DFLI",
+      "sell_price": 0.692300021648407,
+      "actual_return": 0.0033333681746958587,
+      "evaluation_time": "2025-09-29T12:50:58.870465-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -74083,7 +74087,7 @@
         "mom_roll_std_6": 0.07497483460133242
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d104aca7951fd0af953784aa38637a55",
