@@ -73469,7 +73469,11 @@
       "sell_time": "2025-09-29T11:35:00-04:00",
       "buy_score": 0.9080936732292175,
       "position_size_pct": 0.05,
-      "selected_symbol": "UAL"
+      "selected_symbol": "UAL",
+      "sell_price": 97.15499877929688,
+      "actual_return": -0.0009768763054305912,
+      "evaluation_time": "2025-09-29T11:49:48.073068-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -73767,6 +73771,6 @@
         "mom_roll_std_6": 0.3426931943263469
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
