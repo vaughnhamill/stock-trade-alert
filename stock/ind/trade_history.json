@@ -75045,7 +75045,11 @@
       "sell_time": "2025-09-29T15:41:00-04:00",
       "buy_score": 0.4589846134185791,
       "position_size_pct": 0.05,
-      "selected_symbol": "KEY"
+      "selected_symbol": "KEY",
+      "sell_price": 18.895000457763672,
+      "actual_return": 0.003185631866607311,
+      "evaluation_time": "2025-09-29T15:50:49.416792-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -75343,6 +75347,6 @@
         "mom_roll_std_6": 0.042632508099431136
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
