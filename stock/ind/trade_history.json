@@ -77253,7 +77253,11 @@
       "sell_time": "2025-09-30T15:30:00-04:00",
       "buy_score": 0.8188190460205078,
       "position_size_pct": 0.05,
-      "selected_symbol": "MSOX"
+      "selected_symbol": "MSOX",
+      "sell_price": 7.690000057220459,
+      "actual_return": -0.0012986691288804173,
+      "evaluation_time": "2025-09-30T15:32:45.240796-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -77551,7 +77555,7 @@
         "mom_roll_std_6": 0.501404223539098
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c3d8ad9aa12983bb3671d9290b0e98cb",
