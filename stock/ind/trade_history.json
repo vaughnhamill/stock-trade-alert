@@ -75361,7 +75361,11 @@
       "sell_time": "2025-09-30T11:30:00-04:00",
       "buy_score": 0.8971812574068705,
       "position_size_pct": 0.05,
-      "selected_symbol": "JFB"
+      "selected_symbol": "JFB",
+      "sell_price": 11.815249919891357,
+      "actual_return": -0.008413391795159188,
+      "evaluation_time": "2025-09-30T11:50:54.210080-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -75659,6 +75663,6 @@
         "mom_roll_std_6": 2.204787666311868
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
