@@ -77569,7 +77569,11 @@
       "sell_time": "2025-09-30T15:42:00-04:00",
       "buy_score": 0.6268349289894104,
       "position_size_pct": 0.05,
-      "selected_symbol": "SYF"
+      "selected_symbol": "SYF",
+      "sell_price": 71.08100128173828,
+      "actual_return": -0.00125048320214605,
+      "evaluation_time": "2025-09-30T15:50:36.644916-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -77867,6 +77871,6 @@
         "mom_roll_std_6": 0.2183576075294106
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
