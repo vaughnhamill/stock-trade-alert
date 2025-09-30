@@ -75993,7 +75993,11 @@
       "sell_time": "2025-09-30T14:23:00-04:00",
       "buy_score": 0.4596077496190092,
       "position_size_pct": 0.05,
-      "selected_symbol": "PM"
+      "selected_symbol": "PM",
+      "sell_price": 163.26499938964844,
+      "actual_return": 0.0016257631266775308,
+      "evaluation_time": "2025-09-30T14:31:38.867310-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -76291,7 +76295,7 @@
         "mom_roll_std_6": 0.580278957619523
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "9fb52aa8e16c0095c55cdfade5803252",
