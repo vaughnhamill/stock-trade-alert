@@ -76621,7 +76621,11 @@
       "sell_time": "2025-09-30T14:41:00-04:00",
       "buy_score": 0.8013659660551283,
       "position_size_pct": 0.05,
-      "selected_symbol": "TLRY"
+      "selected_symbol": "TLRY",
+      "sell_price": 1.7000000476837158,
+      "actual_return": 0.0,
+      "evaluation_time": "2025-09-30T14:55:37.395214-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -76919,7 +76923,7 @@
         "mom_roll_std_6": 0.20273070443657523
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "518f2df81c1651036b556c62d45ca9c4",
