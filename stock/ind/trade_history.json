@@ -75677,7 +75677,11 @@
       "sell_time": "2025-09-30T12:42:00-04:00",
       "buy_score": 0.571406755037982,
       "position_size_pct": 0.05,
-      "selected_symbol": "LYV"
+      "selected_symbol": "LYV",
+      "sell_price": 166.82000732421875,
+      "actual_return": -0.0007786141144029902,
+      "evaluation_time": "2025-09-30T12:54:59.877204-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -75975,6 +75979,6 @@
         "mom_roll_std_6": 1.0332535050164904
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
