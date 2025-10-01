@@ -79145,7 +79145,11 @@
       "sell_time": "2025-10-01T15:48:30-04:00",
       "buy_score": 0.7252259789875576,
       "position_size_pct": 0.05,
-      "selected_symbol": "ADM"
+      "selected_symbol": "ADM",
+      "sell_price": 59.42499923706055,
+      "actual_return": -0.0012605170241924894,
+      "evaluation_time": "2025-10-01T15:52:25.334324-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -79443,7 +79447,7 @@
         "mom_roll_std_6": 0.4209125980092982
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8adba6f06e6ff1d68c278f228378609b",
@@ -79773,7 +79777,11 @@
       "sell_time": "2025-10-01T15:48:00-04:00",
       "buy_score": 0.6454579830169678,
       "position_size_pct": 0.05,
-      "selected_symbol": "IT"
+      "selected_symbol": "IT",
+      "sell_price": 248.7899932861328,
+      "actual_return": -0.0002813120792696726,
+      "evaluation_time": "2025-10-01T15:52:25.334324-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -80071,7 +80079,7 @@
         "mom_roll_std_6": 2.0295338414683273
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "802ca42e8c2f27597a6a70eb3aaf90ae",
