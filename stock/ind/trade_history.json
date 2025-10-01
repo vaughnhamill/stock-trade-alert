@@ -78829,7 +78829,11 @@
       "sell_time": "2025-10-01T13:51:00-04:00",
       "buy_score": 0.6961356997489929,
       "position_size_pct": 0.05,
-      "selected_symbol": "AIIO"
+      "selected_symbol": "AIIO",
+      "sell_price": 2.630000114440918,
+      "actual_return": -0.013133151186904066,
+      "evaluation_time": "2025-10-01T14:36:37.179116-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -79127,7 +79131,7 @@
         "mom_roll_std_6": 0.3266143078502381
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8db5a0151b7689af3d45d34039f7729d",
