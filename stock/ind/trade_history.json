@@ -77885,7 +77885,11 @@
       "sell_time": "2025-10-01T10:36:00-04:00",
       "buy_score": 0.677016019821167,
       "position_size_pct": 0.05,
-      "selected_symbol": "IBG"
+      "selected_symbol": "IBG",
+      "sell_price": 3.810499906539917,
+      "actual_return": -0.05587212115161615,
+      "evaluation_time": "2025-10-01T10:56:38.644514-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -78183,7 +78187,7 @@
         "mom_roll_std_6": 0.5692089920407212
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "f5047e2cc9638d01997a42d8b9f80a7e",
