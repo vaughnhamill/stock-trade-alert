@@ -79457,7 +79457,11 @@
       "sell_time": "2025-10-01T15:18:00-04:00",
       "buy_score": 0.6422760486602783,
       "position_size_pct": 0.05,
-      "selected_symbol": "SWK"
+      "selected_symbol": "SWK",
+      "sell_price": 73.44499969482422,
+      "actual_return": -0.0023771128121281874,
+      "evaluation_time": "2025-10-01T15:19:49.174227-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -79755,6 +79759,6 @@
         "mom_roll_std_6": 0.4477744444973923
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
