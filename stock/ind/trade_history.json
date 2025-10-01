@@ -78513,7 +78513,11 @@
       "sell_time": "2025-10-01T13:08:00-04:00",
       "buy_score": 0.5578980286090405,
       "position_size_pct": 0.05,
-      "selected_symbol": "GL"
+      "selected_symbol": "GL",
+      "sell_price": 140.35499572753906,
+      "actual_return": 0.0006059132565009217,
+      "evaluation_time": "2025-10-01T13:22:41.092443-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -78811,6 +78815,6 @@
         "mom_roll_std_6": 1.0545647753034124
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
