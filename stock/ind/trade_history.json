@@ -82609,7 +82609,11 @@
       "sell_time": "2025-10-02T14:01:00-04:00",
       "buy_score": 0.8506397445996603,
       "position_size_pct": 0.05,
-      "selected_symbol": "LYB"
+      "selected_symbol": "LYB",
+      "sell_price": 49.43000030517578,
+      "actual_return": 0.004046240848614152,
+      "evaluation_time": "2025-10-02T14:33:45.839460-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -82907,7 +82911,7 @@
         "mom_roll_std_6": 0.42459475640638095
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d7c6f0a95a76252d6b0bc0932bbaca75",
