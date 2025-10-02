@@ -82293,7 +82293,11 @@
       "sell_time": "2025-10-02T13:44:00-04:00",
       "buy_score": 0.5572823263031601,
       "position_size_pct": 0.05,
-      "selected_symbol": "GEN"
+      "selected_symbol": "GEN",
+      "sell_price": 28.145000457763672,
+      "actual_return": 0.0028505227929346614,
+      "evaluation_time": "2025-10-02T13:50:48.244855-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -82591,7 +82595,7 @@
         "mom_roll_std_6": 0.31638189805609873
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "70eed4633bfcd04fbd42463c32124fe9",
