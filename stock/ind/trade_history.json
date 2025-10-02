@@ -81977,7 +81977,11 @@
       "sell_time": "2025-10-02T13:31:00-04:00",
       "buy_score": 0.5169062678813934,
       "position_size_pct": 0.05,
-      "selected_symbol": "CPB"
+      "selected_symbol": "CPB",
+      "sell_price": 31.485000610351562,
+      "actual_return": 0.0007947084108863169,
+      "evaluation_time": "2025-10-02T13:35:01.329170-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -82275,7 +82279,7 @@
         "mom_roll_std_6": 0.08689525397234313
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a4855b48a6646f34b21471d6e4cb6963",
