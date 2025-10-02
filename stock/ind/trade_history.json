@@ -80405,7 +80405,11 @@
       "sell_time": "2025-10-02T10:35:00-04:00",
       "buy_score": 0.5863431692123413,
       "position_size_pct": 0.05,
-      "selected_symbol": "AMBI"
+      "selected_symbol": "AMBI",
+      "sell_price": 1.3279999494552612,
+      "actual_return": -0.09345352294410567,
+      "evaluation_time": "2025-10-02T10:52:32.853225-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -80703,7 +80707,7 @@
         "mom_roll_std_6": 0.09302158916132862
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "fb1958d0c553f0de9f40e34dbd532784",
