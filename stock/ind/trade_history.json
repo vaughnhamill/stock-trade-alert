@@ -80721,7 +80721,11 @@
       "sell_time": "2025-10-02T11:05:00-04:00",
       "buy_score": 0.776947074731191,
       "position_size_pct": 0.05,
-      "selected_symbol": "ED"
+      "selected_symbol": "ED",
+      "sell_price": 98.2699966430664,
+      "actual_return": 0.0015286780705843384,
+      "evaluation_time": "2025-10-02T11:29:39.340686-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -81019,7 +81023,7 @@
         "mom_roll_std_6": 0.8255909207098782
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "cefe996d70ae48a79de8f01f748f2712",
