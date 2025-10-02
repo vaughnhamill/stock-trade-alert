@@ -82925,7 +82925,11 @@
       "sell_time": "2025-10-02T14:44:00-04:00",
       "buy_score": 0.5621349620819092,
       "position_size_pct": 0.05,
-      "selected_symbol": "PALI"
+      "selected_symbol": "PALI",
+      "sell_price": 1.659999966621399,
+      "actual_return": 0.01219511042741837,
+      "evaluation_time": "2025-10-02T14:58:35.122674-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -83223,7 +83227,7 @@
         "mom_roll_std_6": 0.14884495609184728
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "45e922b06750017079ff883314f43e1f",
