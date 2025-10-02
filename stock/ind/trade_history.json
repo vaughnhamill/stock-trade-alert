@@ -81661,7 +81661,11 @@
       "sell_time": "2025-10-02T12:42:00-04:00",
       "buy_score": 0.6568422317504883,
       "position_size_pct": 0.05,
-      "selected_symbol": "ARBK"
+      "selected_symbol": "ARBK",
+      "sell_price": 0.32934999465942383,
+      "actual_return": 0.028254703309658027,
+      "evaluation_time": "2025-10-02T12:54:42.641145-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -81959,6 +81963,6 @@
         "mom_roll_std_6": 0.025467127218060794
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
