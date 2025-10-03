@@ -84185,7 +84185,11 @@
       "sell_time": "2025-10-03T11:35:00-04:00",
       "buy_score": 0.5218150615692139,
       "position_size_pct": 0.05,
-      "selected_symbol": "BQ"
+      "selected_symbol": "BQ",
+      "sell_price": 14.864999771118164,
+      "actual_return": -0.02048001065796601,
+      "evaluation_time": "2025-10-03T11:47:40.951926-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -84483,6 +84487,6 @@
         "mom_roll_std_6": 1.6751505163561005
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
