@@ -85761,7 +85761,11 @@
       "sell_time": "2025-10-03T15:27:00-04:00",
       "buy_score": 0.6413443684577942,
       "position_size_pct": 0.05,
-      "selected_symbol": "PWR"
+      "selected_symbol": "PWR",
+      "sell_price": 421.55999755859375,
+      "actual_return": 9.491494108142362e-05,
+      "evaluation_time": "2025-10-03T15:30:54.197975-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -86059,7 +86063,7 @@
         "mom_roll_std_6": 4.96262360981646
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5201555262f4ebdc05dde670d0c6fca0",
