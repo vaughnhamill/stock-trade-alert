@@ -84501,7 +84501,11 @@
       "sell_time": "2025-10-03T13:05:00-04:00",
       "buy_score": 0.8647253513336182,
       "position_size_pct": 0.05,
-      "selected_symbol": "ASBP"
+      "selected_symbol": "ASBP",
+      "sell_price": 0.38499999046325684,
+      "actual_return": -0.020106896966034,
+      "evaluation_time": "2025-10-03T13:20:04.399382-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -84799,6 +84803,6 @@
         "mom_roll_std_6": 0.09046757420314165
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
