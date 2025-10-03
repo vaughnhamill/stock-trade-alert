@@ -85445,7 +85445,11 @@
       "sell_time": "2025-10-03T15:05:00-04:00",
       "buy_score": 0.627126932144165,
       "position_size_pct": 0.05,
-      "selected_symbol": "TSHA"
+      "selected_symbol": "TSHA",
+      "sell_price": 4.695000171661377,
+      "actual_return": 0.0032052016822571028,
+      "evaluation_time": "2025-10-03T15:19:22.642802-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -85743,7 +85747,7 @@
         "mom_roll_std_6": 0.12675521731468334
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5e722199c69b919b2aa0a2e978bcc1e7",
