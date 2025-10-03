@@ -86077,7 +86077,11 @@
       "sell_time": "2025-10-03T15:42:00-04:00",
       "buy_score": 0.4396861493587494,
       "position_size_pct": 0.05,
-      "selected_symbol": "MIGI"
+      "selected_symbol": "MIGI",
+      "sell_price": 0.8295000195503235,
+      "actual_return": -0.0040820845209476085,
+      "evaluation_time": "2025-10-03T15:50:34.002568-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -86375,7 +86379,7 @@
         "mom_roll_std_6": 0.023215226993869777
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5a6d18b6162e73616624424a6280e257",
