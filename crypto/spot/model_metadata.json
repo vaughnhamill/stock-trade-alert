@@ -20,6 +20,7 @@
       "obv",
       "STOCHk_14_3_3",
       "STOCHd_14_3_3",
+      "STOCHh_14_3_3",
       "mom",
       "open_lag_1",
       "open_lag_3",
@@ -146,10 +147,9 @@
       "mom_roll_mean_3",
       "mom_roll_std_3",
       "mom_roll_mean_6",
-      "mom_roll_std_6",
-      "STOCHh_14_3_3"
+      "mom_roll_std_6"
     ],
-    "score": 0.4806849977293703
+    "score": 0.46692131398013753
   },
   "global_1h_0.0050": {
     "clf_path": "crypto/spot/models/clf_1h_0.0050.joblib",
@@ -172,6 +172,7 @@
       "obv",
       "STOCHk_14_3_3",
       "STOCHd_14_3_3",
+      "STOCHh_14_3_3",
       "mom",
       "open_lag_1",
       "open_lag_3",
@@ -298,9 +299,8 @@
       "mom_roll_mean_3",
       "mom_roll_std_3",
       "mom_roll_mean_6",
-      "mom_roll_std_6",
-      "STOCHh_14_3_3"
+      "mom_roll_std_6"
     ],
-    "score": 0.4301826382557872
+    "score": 0.39152650628060465
   }
 }
