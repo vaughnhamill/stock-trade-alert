@@ -86705,7 +86705,11 @@
       "sell_time": "2025-10-06T10:36:00-04:00",
       "buy_score": 0.7830132842063904,
       "position_size_pct": 0.05,
-      "selected_symbol": "ANRO"
+      "selected_symbol": "ANRO",
+      "sell_price": 7.235000133514404,
+      "actual_return": -0.004814284388436666,
+      "evaluation_time": "2025-10-06T10:55:41.176811-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -87003,7 +87007,7 @@
         "mom_roll_std_6": 1.0384916264957298
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "f31b6d71b7896c4c9fb699a3213e4164",
