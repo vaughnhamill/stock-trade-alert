@@ -87969,7 +87969,11 @@
       "sell_time": "2025-10-06T12:41:00-04:00",
       "buy_score": 0.797705141662354,
       "position_size_pct": 0.05,
-      "selected_symbol": "PEG"
+      "selected_symbol": "PEG",
+      "sell_price": 80.86000061035156,
+      "actual_return": 0.0006187730883367032,
+      "evaluation_time": "2025-10-06T12:55:40.803057-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -88267,7 +88271,7 @@
         "mom_roll_std_6": 0.6267363935469894
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "3f64217f05a1343ce2e548c04c6f2043",
