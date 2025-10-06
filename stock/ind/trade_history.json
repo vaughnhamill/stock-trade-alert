@@ -87021,7 +87021,11 @@
       "sell_time": "2025-10-06T12:22:30-04:00",
       "buy_score": 0.601287508394811,
       "position_size_pct": 0.05,
-      "selected_symbol": "O"
+      "selected_symbol": "O",
+      "sell_price": 60.1200008392334,
+      "actual_return": -0.0024887940499584192,
+      "evaluation_time": "2025-10-06T12:30:15.446843-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -87319,7 +87323,7 @@
         "mom_roll_std_6": 0.27823851496702323
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "22b36351efe412465116f83bbcc00f0f",
