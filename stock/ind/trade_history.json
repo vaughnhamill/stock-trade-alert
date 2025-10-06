@@ -88917,7 +88917,11 @@
       "sell_time": "2025-10-06T14:01:00-04:00",
       "buy_score": 0.8758913779258728,
       "position_size_pct": 0.05,
-      "selected_symbol": "EQR"
+      "selected_symbol": "EQR",
+      "sell_price": 62.814998626708984,
+      "actual_return": -0.0003978600543952518,
+      "evaluation_time": "2025-10-06T14:37:04.391618-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -89215,7 +89219,7 @@
         "mom_roll_std_6": 0.38498101438524446
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "dcb280675fa1916fb75eeeacafc89add",
