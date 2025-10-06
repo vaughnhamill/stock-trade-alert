@@ -87333,7 +87333,11 @@
       "sell_time": "2025-10-06T11:35:00-04:00",
       "buy_score": 0.7451925277709961,
       "position_size_pct": 0.05,
-      "selected_symbol": "ELPW"
+      "selected_symbol": "ELPW",
+      "sell_price": 0.6539000272750854,
+      "actual_return": 0.18804506734761506,
+      "evaluation_time": "2025-10-06T11:51:03.237618-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -87631,7 +87635,7 @@
         "mom_roll_std_6": 0.03146060669800242
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "ef8ef4d08c8642b39bdce0449860fccf",
