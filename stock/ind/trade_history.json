@@ -89233,7 +89233,11 @@
       "sell_time": "2025-10-06T15:53:00-04:00",
       "buy_score": 0.6542320847511292,
       "position_size_pct": 0.05,
-      "selected_symbol": "CDNS"
+      "selected_symbol": "CDNS",
+      "sell_price": 352.9700012207031,
+      "actual_return": -0.003423359181213064,
+      "evaluation_time": "2025-10-06T16:24:45.209964-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -89531,7 +89535,7 @@
         "mom_roll_std_6": 1.6577997244525593
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e67aab60bc504ebccdde190b801e2749",
