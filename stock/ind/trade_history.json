@@ -88285,7 +88285,11 @@
       "sell_time": "2025-10-06T13:04:00-04:00",
       "buy_score": 0.7705512762069702,
       "position_size_pct": 0.05,
-      "selected_symbol": "IBKR"
+      "selected_symbol": "IBKR",
+      "sell_price": 70.4000015258789,
+      "actual_return": -0.001560071011472008,
+      "evaluation_time": "2025-10-06T13:22:56.828319-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -88583,7 +88587,7 @@
         "mom_roll_std_6": 0.8747208758981895
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "6d3ad6e621af836d59befbbb2b227528",
