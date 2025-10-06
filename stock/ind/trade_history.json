@@ -87653,7 +87653,11 @@
       "sell_time": "2025-10-06T11:59:00-04:00",
       "buy_score": 0.5876486301422119,
       "position_size_pct": 0.05,
-      "selected_symbol": "GIPR"
+      "selected_symbol": "GIPR",
+      "sell_price": 1.6829999685287476,
+      "actual_return": 0.0079050934734165,
+      "evaluation_time": "2025-10-06T12:30:15.446843-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -87951,7 +87955,7 @@
         "mom_roll_std_6": 0.22649941238850707
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8b359518832bb8916ef18fbe87439e5c",
