@@ -91749,7 +91749,11 @@
       "sell_time": "2025-10-07T15:31:00-04:00",
       "buy_score": 0.5827935934066772,
       "position_size_pct": 0.05,
-      "selected_symbol": "AMUU"
+      "selected_symbol": "AMUU",
+      "sell_price": 66.40227966308593,
+      "actual_return": 0.0020640714602825046,
+      "evaluation_time": "2025-10-07T15:48:17.206310-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -92047,7 +92051,7 @@
         "mom_roll_std_6": 0.9947213083254456
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "76a8741133c2b8c433b06e1500045604",
@@ -92061,7 +92065,11 @@
       "sell_time": "2025-10-07T15:43:00-04:00",
       "buy_score": 0.8346918106079102,
       "position_size_pct": 0.05,
-      "selected_symbol": "DVLT"
+      "selected_symbol": "DVLT",
+      "sell_price": 2.5350000858306885,
+      "actual_return": -0.019342341036144073,
+      "evaluation_time": "2025-10-07T15:48:17.206310-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -92359,6 +92367,6 @@
         "mom_roll_std_6": 0.40409700485658967
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
