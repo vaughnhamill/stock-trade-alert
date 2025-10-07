@@ -90489,7 +90489,11 @@
       "sell_time": "2025-10-07T12:47:30-04:00",
       "buy_score": 0.4636257290840149,
       "position_size_pct": 0.05,
-      "selected_symbol": "MDLZ"
+      "selected_symbol": "MDLZ",
+      "sell_price": 63.03750038146973,
+      "actual_return": -0.0016787301641002156,
+      "evaluation_time": "2025-10-07T12:55:31.204897-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -90787,7 +90791,7 @@
         "mom_roll_std_6": 0.4726649071485003
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "de8fe6675d0f5dc59168074c0bb887c6",
