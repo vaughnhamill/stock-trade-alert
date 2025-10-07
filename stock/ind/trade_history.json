@@ -91433,7 +91433,11 @@
       "sell_time": "2025-10-07T15:21:00-04:00",
       "buy_score": 0.5233908421993255,
       "position_size_pct": 0.05,
-      "selected_symbol": "COF"
+      "selected_symbol": "COF",
+      "sell_price": 213.88999938964844,
+      "actual_return": -0.0012607595622146904,
+      "evaluation_time": "2025-10-07T15:32:43.356979-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -91731,7 +91735,7 @@
         "mom_roll_std_6": 0.9857497075068231
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e3fab57ee6c7da10023a8c4f18736004",
