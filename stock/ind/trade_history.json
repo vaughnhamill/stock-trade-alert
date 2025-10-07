@@ -90805,7 +90805,11 @@
       "sell_time": "2025-10-07T13:05:00-04:00",
       "buy_score": 0.9102084636688232,
       "position_size_pct": 0.05,
-      "selected_symbol": "AMDL"
+      "selected_symbol": "AMDL",
+      "sell_price": 16.770000457763672,
+      "actual_return": -0.009368751733712566,
+      "evaluation_time": "2025-10-07T13:21:01.565419-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -91103,6 +91107,6 @@
         "mom_roll_std_6": 3.094398057950487
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
