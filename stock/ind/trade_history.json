@@ -90173,7 +90173,11 @@
       "sell_time": "2025-10-07T11:34:00-04:00",
       "buy_score": 0.5184885449409484,
       "position_size_pct": 0.05,
-      "selected_symbol": "DPZ"
+      "selected_symbol": "DPZ",
+      "sell_price": 417.5400085449219,
+      "actual_return": 0.0007761492289709714,
+      "evaluation_time": "2025-10-07T11:53:24.127188-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -90471,7 +90475,7 @@
         "mom_roll_std_6": 2.8023789707276627
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "0d2ddda5f24b6b35ffb3b1370709ab0b",
