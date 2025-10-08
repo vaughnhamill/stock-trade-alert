@@ -94277,7 +94277,11 @@
       "sell_time": "2025-10-08T14:58:00-04:00",
       "buy_score": 0.7822385828835624,
       "position_size_pct": 0.05,
-      "selected_symbol": "GSIW"
+      "selected_symbol": "GSIW",
+      "sell_price": 0.16090000420808792,
+      "actual_return": 0.0056250487780209356,
+      "evaluation_time": "2025-10-08T15:20:35.297904-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -94575,7 +94579,7 @@
         "mom_roll_std_6": 0.007704395994357768
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "2790a730344aadb0be84c047403c1a10",
@@ -94589,7 +94593,11 @@
       "sell_time": "2025-10-08T15:07:00-04:00",
       "buy_score": 0.6050861477851868,
       "position_size_pct": 0.05,
-      "selected_symbol": "RVSN"
+      "selected_symbol": "RVSN",
+      "sell_price": 0.659600019454956,
+      "actual_return": 0.004875067706751334,
+      "evaluation_time": "2025-10-08T15:20:35.297904-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -94887,7 +94895,7 @@
         "mom_roll_std_6": 0.07688915332992637
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4cfee7d883bd7cee449596529272e54b",
