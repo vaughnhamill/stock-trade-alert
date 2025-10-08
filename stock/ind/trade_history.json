@@ -92697,7 +92697,11 @@
       "sell_time": "2025-10-08T11:09:00-04:00",
       "buy_score": 0.577238199710846,
       "position_size_pct": 0.05,
-      "selected_symbol": "TYL"
+      "selected_symbol": "TYL",
+      "sell_price": 509.56166585286456,
+      "actual_return": 0.008983064226936215,
+      "evaluation_time": "2025-10-08T11:26:56.303992-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -92995,7 +92999,7 @@
         "mom_roll_std_6": 5.599119916827989
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "60b4aed0446ce762f4c9d120487eea1e",
