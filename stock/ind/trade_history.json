@@ -93961,7 +93961,11 @@
       "sell_time": "2025-10-08T14:07:00-04:00",
       "buy_score": 0.9497447776794434,
       "position_size_pct": 0.05,
-      "selected_symbol": "BTQ"
+      "selected_symbol": "BTQ",
+      "sell_price": 14.829999923706055,
+      "actual_return": 0.006481386732881806,
+      "evaluation_time": "2025-10-08T14:36:16.314276-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -94259,7 +94263,7 @@
         "mom_roll_std_6": 0.6725809751044759
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a95a76e2092b7bab111b931b3e919b3c",
