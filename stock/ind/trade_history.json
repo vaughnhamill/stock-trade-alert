@@ -93013,7 +93013,11 @@
       "sell_time": "2025-10-08T11:48:00-04:00",
       "buy_score": 0.8206830024719238,
       "position_size_pct": 0.05,
-      "selected_symbol": "MPC"
+      "selected_symbol": "MPC",
+      "sell_price": 189.9199981689453,
+      "actual_return": -0.0016295934687279843,
+      "evaluation_time": "2025-10-08T11:51:16.911266-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -93311,6 +93315,6 @@
         "mom_roll_std_6": 2.07421436647597
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
