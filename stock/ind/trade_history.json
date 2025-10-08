@@ -92381,7 +92381,11 @@
       "sell_time": "2025-10-08T10:36:00-04:00",
       "buy_score": 0.7151241898536682,
       "position_size_pct": 0.05,
-      "selected_symbol": "EW"
+      "selected_symbol": "EW",
+      "sell_price": 75.16999816894531,
+      "actual_return": -0.0016601368356438187,
+      "evaluation_time": "2025-10-08T10:55:14.939223-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -92679,7 +92683,7 @@
         "mom_roll_std_6": 0.6680816814955306
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8f1f68ba62deebc1d7e4840a177bb475",
