@@ -94909,7 +94909,11 @@
       "sell_time": "2025-10-08T15:31:00-04:00",
       "buy_score": 0.864824607372284,
       "position_size_pct": 0.05,
-      "selected_symbol": "VTR"
+      "selected_symbol": "VTR",
+      "sell_price": 67.94999694824219,
+      "actual_return": -0.0007353389964384191,
+      "evaluation_time": "2025-10-08T15:31:40.579872-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -95207,6 +95211,6 @@
         "mom_roll_std_6": 0.6067265699470387
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
