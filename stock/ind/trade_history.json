@@ -93645,7 +93645,11 @@
       "sell_time": "2025-10-08T13:49:00-04:00",
       "buy_score": 0.837502658367157,
       "position_size_pct": 0.05,
-      "selected_symbol": "BURU"
+      "selected_symbol": "BURU",
+      "sell_price": 0.6680999994277954,
+      "actual_return": 0.0030025133991880668,
+      "evaluation_time": "2025-10-08T13:51:42.553906-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -93943,7 +93947,7 @@
         "mom_roll_std_6": 0.05442834472509105
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c89102182ee9d1ac4c7210529ecf4a18",
