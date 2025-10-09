@@ -95537,7 +95537,11 @@
       "sell_time": "2025-10-09T10:35:00-04:00",
       "buy_score": 0.5468290796279908,
       "position_size_pct": 0.05,
-      "selected_symbol": "MGM"
+      "selected_symbol": "MGM",
+      "sell_price": 32.61000061035156,
+      "actual_return": 0.0012281521615642016,
+      "evaluation_time": "2025-10-09T11:23:12.768333-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -95835,7 +95839,7 @@
         "mom_roll_std_6": 0.3303233124836993
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e381869f74f62f12be375478f0ae0590",
