@@ -149,7 +149,7 @@
       "mom_roll_mean_6",
       "mom_roll_std_6"
     ],
-    "score": 0.578689528475199
+    "score": 0.5081034150106116
   },
   "global_1h_0.0050": {
     "clf_path": "crypto/spot/models/clf_1h_0.0050.joblib",
@@ -301,6 +301,6 @@
       "mom_roll_mean_6",
       "mom_roll_std_6"
     ],
-    "score": 0.3667121083367987
+    "score": 0.37809039903344865
   }
 }
