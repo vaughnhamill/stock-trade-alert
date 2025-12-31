@@ -149,7 +149,7 @@
       "mom_roll_mean_6",
       "mom_roll_std_6"
     ],
-    "score": 0.518095238095238
+    "score": 0.4798534798534799
   },
   "global_1h_0.0050": {
     "clf_path": "stock/ind/models/clf_1h_0.0050.joblib",
@@ -301,6 +301,6 @@
       "mom_roll_mean_6",
       "mom_roll_std_6"
     ],
-    "score": 0.48935064935064937
+    "score": 0.5546594982078853
   }
 }
