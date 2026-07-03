@@ -409517,7 +409517,11 @@
       "sell_time": "2026-07-03T14:47:30-04:00",
       "buy_score": 0.49862624023025304,
       "position_size_pct": 0.05,
-      "selected_symbol": "XMR/USD"
+      "selected_symbol": "XMR/USD",
+      "sell_price": 323.745,
+      "actual_return": -0.0039534812171183225,
+      "evaluation_time": "2026-07-03T15:43:38.372011-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -409815,6 +409819,6 @@
         "mom_roll_std_6": 1.1510820995912538
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
