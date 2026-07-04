@@ -409833,7 +409833,11 @@
       "sell_time": "2026-07-03T22:56:00-04:00",
       "buy_score": 0.5445791424082871,
       "position_size_pct": 0.05,
-      "selected_symbol": "HBAR/USD"
+      "selected_symbol": "HBAR/USD",
+      "sell_price": 0.07269,
+      "actual_return": -0.015707515233581507,
+      "evaluation_time": "2026-07-04T00:56:35.075134-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -410131,6 +410135,6 @@
         "mom_roll_std_6": 0.00028542366171477546
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
