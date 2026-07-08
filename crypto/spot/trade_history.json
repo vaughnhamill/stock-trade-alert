@@ -410465,7 +410465,11 @@
       "sell_time": "2026-07-07T20:58:00-04:00",
       "buy_score": 0.4830038724508082,
       "position_size_pct": 0.05,
-      "selected_symbol": "STABLE/USD"
+      "selected_symbol": "STABLE/USD",
+      "sell_price": 0.03521,
+      "actual_return": 0.0077275329135660965,
+      "evaluation_time": "2026-07-07T21:09:08.915514-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -410763,7 +410767,7 @@
         "mom_roll_std_6": 0.0002365586608010798
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b216fa2209fdaa7278c6b85e3c0c70bd",
@@ -410777,7 +410781,11 @@
       "sell_time": "2026-07-07T19:40:00-04:00",
       "buy_score": 0.5128891625021788,
       "position_size_pct": 0.05,
-      "selected_symbol": "ZEC/USD"
+      "selected_symbol": "ZEC/USD",
+      "sell_price": 485.5,
+      "actual_return": 0.0002060156571899933,
+      "evaluation_time": "2026-07-07T21:09:08.915514-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -411075,6 +411083,6 @@
         "mom_roll_std_6": 20.940168735391474
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
