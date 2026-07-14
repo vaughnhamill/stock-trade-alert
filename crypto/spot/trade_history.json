@@ -412677,7 +412677,11 @@
       "sell_time": "2026-07-14T17:52:00-04:00",
       "buy_score": 0.5494971381509989,
       "position_size_pct": 0.05,
-      "selected_symbol": "AAVE/USD"
+      "selected_symbol": "AAVE/USD",
+      "sell_price": 98.69,
+      "actual_return": -0.009733092514549457,
+      "evaluation_time": "2026-07-14T18:07:32.582514-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -412975,7 +412979,7 @@
         "mom_roll_std_6": 0.44549597828338167
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "9fea41f947fa028c4c878b16181388af",
