@@ -414573,7 +414573,11 @@
       "sell_time": "2026-07-25T10:23:00-04:00",
       "buy_score": 0.5209316029798722,
       "position_size_pct": 0.05,
-      "selected_symbol": "MORPHO/USD"
+      "selected_symbol": "MORPHO/USD",
+      "sell_price": 1.9959,
+      "actual_return": -0.015099925980754977,
+      "evaluation_time": "2026-07-25T11:36:19.417987-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -414871,7 +414875,7 @@
         "mom_roll_std_6": 0.06060061880872188
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "1bfd7dd80663e28f6ccae40447c9e7b7",
