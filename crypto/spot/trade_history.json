@@ -414889,7 +414889,11 @@
       "sell_time": "2026-07-25T13:46:30-04:00",
       "buy_score": 0.4871174820164609,
       "position_size_pct": 0.05,
-      "selected_symbol": "SHIB/USD"
+      "selected_symbol": "SHIB/USD",
+      "sell_price": 5.06e-06,
+      "actual_return": 0.10964912280701741,
+      "evaluation_time": "2026-07-25T14:43:56.248711-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -415187,7 +415191,7 @@
         "mom_roll_std_6": 1.673320053068187e-08
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b616699095fb7463b706138ef8e59b2e",
@@ -415201,7 +415205,11 @@
       "sell_time": "2026-07-25T13:51:00-04:00",
       "buy_score": 0.5132069594558011,
       "position_size_pct": 0.05,
-      "selected_symbol": "AVAX/USD"
+      "selected_symbol": "AVAX/USD",
+      "sell_price": 6.656,
+      "actual_return": -0.0013503375843961502,
+      "evaluation_time": "2026-07-25T14:43:56.248711-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -415499,7 +415507,7 @@
         "mom_roll_std_6": 0.03844996749023365
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "9ea3b55f129534d12e0132daac339f70",
