@@ -415837,7 +415837,11 @@
       "sell_time": "2026-07-26T11:12:00-04:00",
       "buy_score": 0.49499173295297205,
       "position_size_pct": 0.05,
-      "selected_symbol": "M/USD"
+      "selected_symbol": "M/USD",
+      "sell_price": 1.23368,
+      "actual_return": -0.060547217082067305,
+      "evaluation_time": "2026-07-26T11:34:41.659462-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -416135,7 +416139,7 @@
         "mom_roll_std_6": 0.02559085279287709
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b85c2adc158f5a08ef5d4386d513a901",
