@@ -415521,7 +415521,11 @@
       "sell_time": "2026-07-25T20:35:00-04:00",
       "buy_score": 0.564654447446417,
       "position_size_pct": 0.05,
-      "selected_symbol": "DOGE/USD"
+      "selected_symbol": "DOGE/USD",
+      "sell_price": 0.07174,
+      "actual_return": -0.016586703221384547,
+      "evaluation_time": "2026-07-26T00:02:06.055951-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -415819,6 +415823,6 @@
         "mom_roll_std_6": 0.0002134478859112915
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
