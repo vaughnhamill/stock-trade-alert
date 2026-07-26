@@ -416153,7 +416153,11 @@
       "sell_time": "2026-07-26T14:03:00-04:00",
       "buy_score": 0.5180770474277702,
       "position_size_pct": 0.05,
-      "selected_symbol": "UNI/USD"
+      "selected_symbol": "UNI/USD",
+      "sell_price": 3.891,
+      "actual_return": 0.014073494917904567,
+      "evaluation_time": "2026-07-26T14:44:34.676321-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -416451,7 +416455,7 @@
         "mom_roll_std_6": 0.014555640372950434
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "07329ed2d2a707ef7bbb6fa4855a0e09",
@@ -416465,7 +416469,11 @@
       "sell_time": "2026-07-26T13:55:30-04:00",
       "buy_score": 0.45804811804543444,
       "position_size_pct": 0.05,
-      "selected_symbol": "ONDO/USD"
+      "selected_symbol": "ONDO/USD",
+      "sell_price": 0.404585,
+      "actual_return": 0.0037337501240448014,
+      "evaluation_time": "2026-07-26T14:44:34.676321-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -416763,7 +416771,7 @@
         "mom_roll_std_6": 0.0019290800916496327
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e7b6f69c5ba13645eb1e4fbf2f675892",
