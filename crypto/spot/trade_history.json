@@ -417733,7 +417733,11 @@
       "sell_time": "2026-07-26T22:54:00-04:00",
       "buy_score": 0.45213061526603926,
       "position_size_pct": 0.05,
-      "selected_symbol": "LINK/USD"
+      "selected_symbol": "LINK/USD",
+      "sell_price": 8.741,
+      "actual_return": -0.005913795064255613,
+      "evaluation_time": "2026-07-27T00:08:41.964002-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -418031,7 +418035,7 @@
         "mom_roll_std_6": 0.01776513439296148
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5b2e3445f7a6459edff01798173fb33f",
@@ -418045,7 +418049,11 @@
       "sell_time": "2026-07-26T22:10:00-04:00",
       "buy_score": 0.5453000672658285,
       "position_size_pct": 0.05,
-      "selected_symbol": "ENA/USD"
+      "selected_symbol": "ENA/USD",
+      "sell_price": 0.09,
+      "actual_return": 0.01010101010101008,
+      "evaluation_time": "2026-07-27T00:08:41.964002-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -418343,6 +418351,6 @@
         "mom_roll_std_6": 0.0006853223086013467
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
