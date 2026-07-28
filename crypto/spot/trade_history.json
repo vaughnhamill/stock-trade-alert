@@ -418365,7 +418365,11 @@
       "sell_time": "2026-07-28T17:20:00-04:00",
       "buy_score": 0.8401383696511064,
       "position_size_pct": 0.05,
-      "selected_symbol": "LIGHTER/USD"
+      "selected_symbol": "LIGHTER/USD",
+      "sell_price": 2.2960000000000003,
+      "actual_return": -0.02339430029774552,
+      "evaluation_time": "2026-07-28T18:28:48.398633-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -418663,6 +418667,6 @@
         "mom_roll_std_6": 0.05332166539034597
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
