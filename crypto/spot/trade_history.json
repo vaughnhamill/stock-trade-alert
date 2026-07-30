@@ -420577,7 +420577,11 @@
       "sell_time": "2026-07-30T17:15:30-04:00",
       "buy_score": 0.546785339313496,
       "position_size_pct": 0.05,
-      "selected_symbol": "FIL/USD"
+      "selected_symbol": "FIL/USD",
+      "sell_price": 0.722,
+      "actual_return": 0.008379888268156433,
+      "evaluation_time": "2026-07-30T17:37:55.152607-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -420875,7 +420879,7 @@
         "mom_roll_std_6": 0.0021679483388677982
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "21c3a2b078988b6b12e07a0ac6cba99a",
@@ -420889,7 +420893,11 @@
       "sell_time": "2026-07-30T16:36:30-04:00",
       "buy_score": 0.7499353912345718,
       "position_size_pct": 0.05,
-      "selected_symbol": "PUMP/USD"
+      "selected_symbol": "PUMP/USD",
+      "sell_price": 0.002007,
+      "actual_return": -0.010842779694430697,
+      "evaluation_time": "2026-07-30T17:37:55.152607-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -421187,6 +421195,6 @@
         "mom_roll_std_6": 1.9001754304975445e-05
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
