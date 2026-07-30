@@ -420261,7 +420261,11 @@
       "sell_time": "2026-07-30T15:13:00-04:00",
       "buy_score": 0.4752558229584256,
       "position_size_pct": 0.05,
-      "selected_symbol": "UNI/USD"
+      "selected_symbol": "UNI/USD",
+      "sell_price": 4.387,
+      "actual_return": 0.038589015151515,
+      "evaluation_time": "2026-07-30T16:16:15.337619-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -420559,7 +420563,7 @@
         "mom_roll_std_6": 0.033130046785358164
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "93c046481ab27b3a140cb5605822089c",
