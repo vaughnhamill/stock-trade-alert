@@ -421841,7 +421841,11 @@
       "sell_time": "2026-08-01T10:05:20.610130-04:00",
       "buy_score": 0.5708110241668672,
       "position_size_pct": 0.05,
-      "selected_symbol": "US/USD"
+      "selected_symbol": "US/USD",
+      "sell_price": 0.05342,
+      "actual_return": 0.010976532929598867,
+      "evaluation_time": "2026-08-01T11:11:02.247118-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -422139,6 +422143,6 @@
         "mom_roll_std_6": 0.004799455871936579
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
