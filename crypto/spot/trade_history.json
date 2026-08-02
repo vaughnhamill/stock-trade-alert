@@ -422789,7 +422789,11 @@
       "sell_time": "2026-08-02T05:23:00-04:00",
       "buy_score": 0.5144664976525501,
       "position_size_pct": 0.05,
-      "selected_symbol": "ADA/USD"
+      "selected_symbol": "ADA/USD",
+      "sell_price": 0.1866,
+      "actual_return": 0.03839732888146906,
+      "evaluation_time": "2026-08-02T06:42:05.210458-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -423087,7 +423091,7 @@
         "mom_roll_std_6": 0.0018229097618916738
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d829465407ec90433480ec6a05bd5226",
