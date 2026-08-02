@@ -423421,7 +423421,11 @@
       "sell_time": "2026-08-02T09:58:00-04:00",
       "buy_score": 0.5173124697995588,
       "position_size_pct": 0.05,
-      "selected_symbol": "LIT/USD"
+      "selected_symbol": "LIT/USD",
+      "sell_price": 0.0845,
+      "actual_return": 0.0,
+      "evaluation_time": "2026-08-02T10:46:02.615808-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -423719,7 +423723,7 @@
         "mom_roll_std_6": 0.00528598776641288
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a23d6247d97f9c827f3e2fe548fd1020",
