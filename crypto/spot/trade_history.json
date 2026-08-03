@@ -424369,7 +424369,11 @@
       "sell_time": "2026-08-03T16:01:00-04:00",
       "buy_score": 0.7595656865911661,
       "position_size_pct": 0.05,
-      "selected_symbol": "ALGO/USD"
+      "selected_symbol": "ALGO/USD",
+      "sell_price": 0.09114,
+      "actual_return": -0.01256771397616462,
+      "evaluation_time": "2026-08-03T16:42:36.710542-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -424667,7 +424671,7 @@
         "mom_roll_std_6": 0.0009914635646356257
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "7c8de22b9ca64c8ada860a205e4e7ab2",
