@@ -425949,7 +425949,11 @@
       "sell_time": "2026-08-05T22:21:00-04:00",
       "buy_score": 0.5302881023429201,
       "position_size_pct": 0.05,
-      "selected_symbol": "M/USD"
+      "selected_symbol": "M/USD",
+      "sell_price": 1.19518,
+      "actual_return": -0.01940385451621651,
+      "evaluation_time": "2026-08-05T23:45:36.206717-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -426247,7 +426251,7 @@
         "mom_roll_std_6": 0.009582376879810606
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "238204514405fd3bc161ae668da2dde2",
@@ -426261,7 +426265,11 @@
       "sell_time": "2026-08-05T20:08:22.868192-04:00",
       "buy_score": 0.5438414535067843,
       "position_size_pct": 0.05,
-      "selected_symbol": "M/USD"
+      "selected_symbol": "M/USD",
+      "sell_price": 1.21692,
+      "actual_return": 0.0,
+      "evaluation_time": "2026-08-05T23:45:36.206717-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -426559,6 +426567,6 @@
         "mom_roll_std_6": 0.009124235127760822
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
