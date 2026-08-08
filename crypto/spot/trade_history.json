@@ -428793,7 +428793,11 @@
       "sell_time": "2026-08-08T19:07:00-04:00",
       "buy_score": 0.46156994399690954,
       "position_size_pct": 0.05,
-      "selected_symbol": "ICP/USD"
+      "selected_symbol": "ICP/USD",
+      "sell_price": 2.195,
+      "actual_return": -0.00036433190636686217,
+      "evaluation_time": "2026-08-08T19:49:43.794727-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -429091,7 +429095,7 @@
         "mom_roll_std_6": 0.007914480399874482
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "cac1c1414e5533dd082adfb823f681a9",
