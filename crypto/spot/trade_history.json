@@ -428477,7 +428477,11 @@
       "sell_time": "2026-08-08T17:05:00-04:00",
       "buy_score": 0.4763477679453215,
       "position_size_pct": 0.05,
-      "selected_symbol": "SUI/USD"
+      "selected_symbol": "SUI/USD",
+      "sell_price": 0.6978,
+      "actual_return": -0.0034275921165382297,
+      "evaluation_time": "2026-08-08T17:50:43.090040-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -428775,7 +428779,7 @@
         "mom_roll_std_6": 0.004884123940551313
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5127d00ac9717e7dc6f15c5d29bf8314",
