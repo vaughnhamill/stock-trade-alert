@@ -428161,7 +428161,11 @@
       "sell_time": "2026-08-08T08:33:30-04:00",
       "buy_score": 0.500403860276081,
       "position_size_pct": 0.05,
-      "selected_symbol": "PI/USD"
+      "selected_symbol": "PI/USD",
+      "sell_price": 0.09123,
+      "actual_return": 0.0018669009444322808,
+      "evaluation_time": "2026-08-08T09:06:34.779266-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -428459,6 +428463,6 @@
         "mom_roll_std_6": 0.0006928323510537396
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
