@@ -431321,7 +431321,11 @@
       "sell_time": "2026-08-09T18:57:00-04:00",
       "buy_score": 0.5641153282681963,
       "position_size_pct": 0.05,
-      "selected_symbol": "WLD/USD"
+      "selected_symbol": "WLD/USD",
+      "sell_price": 0.316,
+      "actual_return": -0.013732833957553104,
+      "evaluation_time": "2026-08-09T19:53:54.108333-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -431619,7 +431623,7 @@
         "mom_roll_std_6": 0.0018250114154894823
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d52ead0deab609d06b63edca804c9e5a",
