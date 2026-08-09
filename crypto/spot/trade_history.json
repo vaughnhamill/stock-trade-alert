@@ -429741,7 +429741,11 @@
       "sell_time": "2026-08-08T22:15:00-04:00",
       "buy_score": 0.5219949499380709,
       "position_size_pct": 0.05,
-      "selected_symbol": "TAO/USD"
+      "selected_symbol": "TAO/USD",
+      "sell_price": 206.0775,
+      "actual_return": 0.0035974691582886156,
+      "evaluation_time": "2026-08-08T23:43:18.133598-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -430039,6 +430043,6 @@
         "mom_roll_std_6": 1.1345259444660838
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
