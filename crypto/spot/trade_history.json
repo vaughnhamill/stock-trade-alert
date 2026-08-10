@@ -432901,7 +432901,11 @@
       "sell_time": "2026-08-10T15:02:00-04:00",
       "buy_score": 0.4938160502615308,
       "position_size_pct": 0.05,
-      "selected_symbol": "PUMP/USD"
+      "selected_symbol": "PUMP/USD",
+      "sell_price": 0.002773,
+      "actual_return": -0.014570007107320624,
+      "evaluation_time": "2026-08-10T15:26:34.746140-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -433199,6 +433203,6 @@
         "mom_roll_std_6": 6.213211729854372e-05
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
