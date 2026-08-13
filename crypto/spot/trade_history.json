@@ -435745,7 +435745,11 @@
       "sell_time": "2026-08-13T10:19:30-04:00",
       "buy_score": 0.5007241955076555,
       "position_size_pct": 0.05,
-      "selected_symbol": "ATOM/USD"
+      "selected_symbol": "ATOM/USD",
+      "sell_price": 1.508,
+      "actual_return": 0.006675567423230981,
+      "evaluation_time": "2026-08-13T10:59:29.466876-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -436043,7 +436047,7 @@
         "mom_roll_std_6": 0.006501281924871782
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "bb370c1d8330fea1d4b4f517c055437a",
