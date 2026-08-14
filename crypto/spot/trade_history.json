@@ -437957,7 +437957,11 @@
       "sell_time": "2026-08-14T18:00:00-04:00",
       "buy_score": 0.5253254076421446,
       "position_size_pct": 0.05,
-      "selected_symbol": "SHIB/USD"
+      "selected_symbol": "SHIB/USD",
+      "sell_price": 4.52e-06,
+      "actual_return": -0.02586206896551718,
+      "evaluation_time": "2026-08-14T18:23:13.098407-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -438255,7 +438259,7 @@
         "mom_roll_std_6": 4.58984386081564e-08
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "ced42a88b5d734d42a48f65af211ce43",
@@ -438269,7 +438273,11 @@
       "sell_time": "2026-08-14T18:19:30-04:00",
       "buy_score": 0.5303356239342628,
       "position_size_pct": 0.05,
-      "selected_symbol": "M/USD"
+      "selected_symbol": "M/USD",
+      "sell_price": 1.105235,
+      "actual_return": -0.002819481035042806,
+      "evaluation_time": "2026-08-14T18:23:13.098407-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -438567,7 +438575,7 @@
         "mom_roll_std_6": 0.03517749375192459
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "22b3efcf0ceeac2bbf4b9a8910e62951",
