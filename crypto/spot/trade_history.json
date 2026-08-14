@@ -437641,7 +437641,11 @@
       "sell_time": "2026-08-14T16:44:00-04:00",
       "buy_score": 0.48182943779378967,
       "position_size_pct": 0.05,
-      "selected_symbol": "OKB/USD"
+      "selected_symbol": "OKB/USD",
+      "sell_price": 108.47,
+      "actual_return": 0.03699808795411094,
+      "evaluation_time": "2026-08-14T17:05:30.396482-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -437939,7 +437943,7 @@
         "mom_roll_std_6": 0.5956313177349186
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "1763bffbdf72a38f46918075ebd9f9de",
