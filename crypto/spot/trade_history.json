@@ -439537,7 +439537,11 @@
       "sell_time": "2026-08-15T06:00:00-04:00",
       "buy_score": 0.47728819543399376,
       "position_size_pct": 0.05,
-      "selected_symbol": "AVAX/USD"
+      "selected_symbol": "AVAX/USD",
+      "sell_price": 6.583,
+      "actual_return": -0.027765470388421167,
+      "evaluation_time": "2026-08-15T06:02:19.992330-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -439835,7 +439839,7 @@
         "mom_roll_std_6": 0.01763802710055916
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "9269a0fa31e55f2189a563cf36083515",
