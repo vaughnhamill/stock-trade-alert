@@ -442377,7 +442377,11 @@
       "sell_time": "2026-08-16T11:25:30-04:00",
       "buy_score": 0.4690940195187051,
       "position_size_pct": 0.05,
-      "selected_symbol": "WLFI/USD"
+      "selected_symbol": "WLFI/USD",
+      "sell_price": 0.0614,
+      "actual_return": -0.01759999999999995,
+      "evaluation_time": "2026-08-16T11:57:13.421102-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -442675,7 +442679,7 @@
         "mom_roll_std_6": 0.0003082207001484657
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "5927538cb61885c14c02d87c756992bd",
@@ -442689,7 +442693,11 @@
       "sell_time": "2026-08-16T11:43:30-04:00",
       "buy_score": 0.4727961157938143,
       "position_size_pct": 0.05,
-      "selected_symbol": "XMR/USD"
+      "selected_symbol": "XMR/USD",
+      "sell_price": 415.26,
+      "actual_return": 0.0006265060240963637,
+      "evaluation_time": "2026-08-16T11:57:13.421102-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -442987,7 +442995,7 @@
         "mom_roll_std_6": 3.0730744648750363
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c27058ff5721d78a449113abac7e0502",
