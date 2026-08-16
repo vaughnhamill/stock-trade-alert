@@ -442065,7 +442065,11 @@
       "sell_time": "2026-08-16T14:42:00-04:00",
       "buy_score": 0.47961951484862747,
       "position_size_pct": 0.05,
-      "selected_symbol": "KAS/USD"
+      "selected_symbol": "KAS/USD",
+      "sell_price": 0.0264,
+      "actual_return": -0.012715033657442035,
+      "evaluation_time": "2026-08-16T15:01:29.223097-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -442363,7 +442367,7 @@
         "mom_roll_std_6": 9.579491983747173e-05
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "bacec82a0405e71178014819f91d8613",
@@ -443949,7 +443953,11 @@
       "sell_time": "2026-08-16T14:56:30-04:00",
       "buy_score": 0.5099097756915859,
       "position_size_pct": 0.05,
-      "selected_symbol": "WLD/USD"
+      "selected_symbol": "WLD/USD",
+      "sell_price": 0.3616,
+      "actual_return": -0.015518649605227438,
+      "evaluation_time": "2026-08-16T15:01:29.223097-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -444247,7 +444255,7 @@
         "mom_roll_std_6": 0.001518771433319385
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "adfac791f55c13fb3223cb83a43a37d8",
