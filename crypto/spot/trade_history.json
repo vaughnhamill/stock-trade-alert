@@ -441749,7 +441749,11 @@
       "sell_time": "2026-08-16T02:26:30-04:00",
       "buy_score": 0.6942762206525219,
       "position_size_pct": 0.05,
-      "selected_symbol": "CC/USD"
+      "selected_symbol": "CC/USD",
+      "sell_price": 0.095725,
+      "actual_return": -0.038229679493619904,
+      "evaluation_time": "2026-08-16T02:39:44.978382-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -442047,6 +442051,6 @@
         "mom_roll_std_6": 0.0013314353157401243
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
