@@ -446169,7 +446169,11 @@
       "sell_time": "2026-08-17T10:31:00-04:00",
       "buy_score": 0.5524959639541318,
       "position_size_pct": 0.05,
-      "selected_symbol": "POL/USD"
+      "selected_symbol": "POL/USD",
+      "sell_price": 0.07795,
+      "actual_return": -0.0011532547411582889,
+      "evaluation_time": "2026-08-17T10:49:42.808072-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -446467,6 +446471,6 @@
         "mom_roll_std_6": 0.00022232108911811825
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
