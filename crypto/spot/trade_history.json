@@ -446801,7 +446801,11 @@
       "sell_time": "2026-08-17T23:57:00-04:00",
       "buy_score": 0.504474333145192,
       "position_size_pct": 0.05,
-      "selected_symbol": "VVV/USD"
+      "selected_symbol": "VVV/USD",
+      "sell_price": 13.0176,
+      "actual_return": -0.015406956955821255,
+      "evaluation_time": "2026-08-18T00:20:19.938804-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -447099,7 +447103,7 @@
         "mom_roll_std_6": 0.2248439347636494
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "6aa8011a3ec7bc434c971d5627884d16",
@@ -447425,7 +447429,11 @@
       "sell_time": "2026-08-17T23:42:00-04:00",
       "buy_score": 0.5050876238575229,
       "position_size_pct": 0.05,
-      "selected_symbol": "STABLE/USD"
+      "selected_symbol": "STABLE/USD",
+      "sell_price": 0.03044,
+      "actual_return": 0.004952129415648642,
+      "evaluation_time": "2026-08-18T00:20:19.938804-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -447723,6 +447731,6 @@
         "mom_roll_std_6": 0.00020951531368055762
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
