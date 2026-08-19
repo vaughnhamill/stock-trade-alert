@@ -450277,7 +450277,11 @@
       "sell_time": "2026-08-19T19:02:00-04:00",
       "buy_score": 0.5677952912175652,
       "position_size_pct": 0.05,
-      "selected_symbol": "ARB/USD"
+      "selected_symbol": "ARB/USD",
+      "sell_price": 0.0898,
+      "actual_return": 0.11552795031055904,
+      "evaluation_time": "2026-08-19T19:28:43.344252-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -450575,7 +450579,7 @@
         "mom_roll_std_6": 0.0006274286147974542
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "74ce22720be1396dd8268a6b7456afd1",
