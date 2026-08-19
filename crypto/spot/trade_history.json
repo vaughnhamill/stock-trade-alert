@@ -451845,7 +451845,11 @@
       "sell_time": "2026-08-19T18:20:00-04:00",
       "buy_score": 0.5887836798985769,
       "position_size_pct": 0.05,
-      "selected_symbol": "SKY/USD"
+      "selected_symbol": "SKY/USD",
+      "sell_price": 0.06006,
+      "actual_return": -0.008092485549132904,
+      "evaluation_time": "2026-08-19T18:32:29.755682-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -452143,7 +452147,7 @@
         "mom_roll_std_6": 0.0004366577607234286
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "86b74f53df0d8313fabaf0109b710938",
