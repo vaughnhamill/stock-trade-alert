@@ -449957,7 +449957,11 @@
       "sell_time": "2026-08-19T14:38:30-04:00",
       "buy_score": 0.8584903511934124,
       "position_size_pct": 0.05,
-      "selected_symbol": "ZEC/USD"
+      "selected_symbol": "ZEC/USD",
+      "sell_price": 550.185,
+      "actual_return": 0.005455043859648939,
+      "evaluation_time": "2026-08-19T15:12:50.944097-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -450255,7 +450259,7 @@
         "mom_roll_std_6": 2.7908135014722664
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "488d3e67f112ca9d374dc4f8e3eda382",
