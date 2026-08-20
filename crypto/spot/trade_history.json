@@ -453437,7 +453437,11 @@
       "sell_time": "2026-08-20T03:12:00-04:00",
       "buy_score": 0.7245997846739632,
       "position_size_pct": 0.05,
-      "selected_symbol": "ICP/USD"
+      "selected_symbol": "ICP/USD",
+      "sell_price": 2.2945,
+      "actual_return": -0.015574051827698549,
+      "evaluation_time": "2026-08-20T03:12:37.397085-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -453735,7 +453739,7 @@
         "mom_roll_std_6": 0.021288189213740146
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "450976bc0492abe2c0ef5127d8dd4c28",
@@ -454377,7 +454381,11 @@
       "sell_time": "2026-08-20T02:49:00-04:00",
       "buy_score": 0.47268054883399774,
       "position_size_pct": 0.05,
-      "selected_symbol": "M/USD"
+      "selected_symbol": "M/USD",
+      "sell_price": 1.23234,
+      "actual_return": 0.0007552318074403306,
+      "evaluation_time": "2026-08-20T03:12:37.397085-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -454675,6 +454683,6 @@
         "mom_roll_std_6": 0.025118464921249146
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
