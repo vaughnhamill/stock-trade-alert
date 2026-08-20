@@ -455961,7 +455961,11 @@
       "sell_time": "2026-08-20T09:11:30-04:00",
       "buy_score": 0.5463809074052439,
       "position_size_pct": 0.05,
-      "selected_symbol": "QNT/USD"
+      "selected_symbol": "QNT/USD",
+      "sell_price": 61.89,
+      "actual_return": -0.0016131634134538058,
+      "evaluation_time": "2026-08-20T10:04:21.373598-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -456259,6 +456263,6 @@
         "mom_roll_std_6": 0.4015179531062973
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
