@@ -451541,7 +451541,11 @@
       "sell_time": "2026-08-19T23:34:00-04:00",
       "buy_score": 0.472289069873156,
       "position_size_pct": 0.05,
-      "selected_symbol": "XRP/USD"
+      "selected_symbol": "XRP/USD",
+      "sell_price": 1.0911,
+      "actual_return": -0.028752002848495634,
+      "evaluation_time": "2026-08-20T00:20:43.901074-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -451839,7 +451843,7 @@
         "mom_roll_std_6": 0.010928205098124168
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "703fdbb4ec914fc2f4b2f7d7db450f07",
