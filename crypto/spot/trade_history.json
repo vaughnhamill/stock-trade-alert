@@ -455333,7 +455333,11 @@
       "sell_time": "2026-08-20T07:51:30-04:00",
       "buy_score": 0.4861392190043611,
       "position_size_pct": 0.05,
-      "selected_symbol": "WBT/USD"
+      "selected_symbol": "WBT/USD",
+      "sell_price": 60.34,
+      "actual_return": -0.009032681885367008,
+      "evaluation_time": "2026-08-20T08:00:00.848413-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -455631,7 +455635,7 @@
         "mom_roll_std_6": 1.2854635998995338
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "4dc1cb0b9c06d7fb5afe0d034bc0f0fe",
