@@ -460381,7 +460381,11 @@
       "sell_time": "2026-08-21T05:19:30-04:00",
       "buy_score": 0.4997606043933672,
       "position_size_pct": 0.05,
-      "selected_symbol": "APT/USD"
+      "selected_symbol": "APT/USD",
+      "sell_price": 0.60685,
+      "actual_return": -0.007279568133485939,
+      "evaluation_time": "2026-08-21T05:25:16.145429-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -460679,7 +460683,7 @@
         "mom_roll_std_6": 0.001718914386078357
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "61afd37f47b3a9153d53dd9372a101f2",
