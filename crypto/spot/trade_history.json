@@ -457545,7 +457545,11 @@
       "sell_time": "2026-08-20T20:53:00-04:00",
       "buy_score": 0.46845137828329503,
       "position_size_pct": 0.05,
-      "selected_symbol": "WLD/USD"
+      "selected_symbol": "WLD/USD",
+      "sell_price": 0.3752,
+      "actual_return": 0.019011406844106328,
+      "evaluation_time": "2026-08-20T21:27:39.938277-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -457843,7 +457847,7 @@
         "mom_roll_std_6": 0.005332041510216057
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "45d179256dad6fb9f2388c5d914a51bd",
@@ -457857,7 +457861,11 @@
       "sell_time": "2026-08-20T21:04:00-04:00",
       "buy_score": 0.45118291952104084,
       "position_size_pct": 0.05,
-      "selected_symbol": "XDC/USD"
+      "selected_symbol": "XDC/USD",
+      "sell_price": 0.02872,
+      "actual_return": -0.020797817933856103,
+      "evaluation_time": "2026-08-20T21:27:39.938277-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -458155,7 +458163,7 @@
         "mom_roll_std_6": 0.0003769217425408093
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "af50eb3ae522508ce9172605518eb452",
