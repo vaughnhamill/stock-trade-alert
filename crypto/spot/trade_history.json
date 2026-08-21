@@ -462597,7 +462597,11 @@
       "sell_time": "2026-08-21T11:01:30-04:00",
       "buy_score": 0.46989484807470433,
       "position_size_pct": 0.05,
-      "selected_symbol": "HYPE/USD"
+      "selected_symbol": "HYPE/USD",
+      "sell_price": 76.98,
+      "actual_return": 0.00653765690376569,
+      "evaluation_time": "2026-08-21T11:08:52.109417-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -462895,6 +462899,6 @@
         "mom_roll_std_6": 0.8339484396531388
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
