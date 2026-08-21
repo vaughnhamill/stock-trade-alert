@@ -458809,7 +458809,11 @@
       "sell_time": "2026-08-21T04:31:00-04:00",
       "buy_score": 0.5402900131468298,
       "position_size_pct": 0.05,
-      "selected_symbol": "XLM/USD"
+      "selected_symbol": "XLM/USD",
+      "sell_price": 0.19142,
+      "actual_return": 0.03846362502034402,
+      "evaluation_time": "2026-08-21T04:43:43.468013-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -459107,7 +459111,7 @@
         "mom_roll_std_6": 0.00694057250280311
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b016d749e16342bfc3470b6abc88cfb8",
