@@ -463865,7 +463865,11 @@
       "sell_time": "2026-08-21T18:48:00-04:00",
       "buy_score": 0.4756033651980148,
       "position_size_pct": 0.05,
-      "selected_symbol": "CAKE/USD"
+      "selected_symbol": "CAKE/USD",
+      "sell_price": 1.776,
+      "actual_return": -0.020948180815876533,
+      "evaluation_time": "2026-08-21T19:02:57.397747-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -464163,7 +464167,7 @@
         "mom_roll_std_6": 0.017758566008173975
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c2b6d6b32f3447e622c1c3d3f61a1da4",
