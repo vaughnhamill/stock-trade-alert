@@ -460697,7 +460697,11 @@
       "sell_time": "2026-08-21T05:53:00-04:00",
       "buy_score": 0.5227914258971723,
       "position_size_pct": 0.05,
-      "selected_symbol": "ETH/USD"
+      "selected_symbol": "ETH/USD",
+      "sell_price": 2406.69,
+      "actual_return": 0.0067347391229779716,
+      "evaluation_time": "2026-08-21T05:59:39.622916-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -460995,7 +460999,7 @@
         "mom_roll_std_6": 21.186244043403693
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e8a30377a7f9cc7daf0fc61e7bf3c0cf",
