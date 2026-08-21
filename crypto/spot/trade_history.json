@@ -459125,7 +459125,11 @@
       "sell_time": "2026-08-21T07:16:00-04:00",
       "buy_score": 0.4700823080011695,
       "position_size_pct": 0.05,
-      "selected_symbol": "ZEC/USD"
+      "selected_symbol": "ZEC/USD",
+      "sell_price": 650.94,
+      "actual_return": 0.08729204249348585,
+      "evaluation_time": "2026-08-21T07:49:09.199323-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -459423,7 +459427,7 @@
         "mom_roll_std_6": 7.467799542033827
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "aef4f668bb569ed4e19ad386cd8894bd",
@@ -461329,7 +461333,11 @@
       "sell_time": "2026-08-21T07:48:00-04:00",
       "buy_score": 0.4756185369810534,
       "position_size_pct": 0.05,
-      "selected_symbol": "CRO/USD"
+      "selected_symbol": "CRO/USD",
+      "sell_price": 0.05656,
+      "actual_return": -0.0059753954305799654,
+      "evaluation_time": "2026-08-21T07:49:09.199323-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -461627,7 +461635,7 @@
         "mom_roll_std_6": 0.0007063615693585486
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "80b4af53265842fa7ce8fb51fbc9f53f",
