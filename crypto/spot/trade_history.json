@@ -466709,7 +466709,11 @@
       "sell_time": "2026-08-22T04:25:00-04:00",
       "buy_score": 0.551056593630393,
       "position_size_pct": 0.05,
-      "selected_symbol": "BGB/USD"
+      "selected_symbol": "BGB/USD",
+      "sell_price": 1.913,
+      "actual_return": -0.027452974072191178,
+      "evaluation_time": "2026-08-22T04:39:38.698242-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -467007,7 +467011,7 @@
         "mom_roll_std_6": 0.01870204979852927
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "c8e86cdc1bb06a02bb447bf56cd8fa5f",
