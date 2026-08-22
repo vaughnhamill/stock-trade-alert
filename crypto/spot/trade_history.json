@@ -464805,7 +464805,11 @@
       "sell_time": "2026-08-21T20:01:30-04:00",
       "buy_score": 0.4801120902730273,
       "position_size_pct": 0.05,
-      "selected_symbol": "RENDER/USD"
+      "selected_symbol": "RENDER/USD",
+      "sell_price": 1.52735,
+      "actual_return": 0.004637242649477078,
+      "evaluation_time": "2026-08-21T21:23:20.765580-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -465103,7 +465107,7 @@
         "mom_roll_std_6": 0.012991753794875898
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8445cd69db0f826ef2dce75a65555f64",
@@ -465117,7 +465121,11 @@
       "sell_time": "2026-08-21T20:01:00-04:00",
       "buy_score": 0.48380859217361716,
       "position_size_pct": 0.05,
-      "selected_symbol": "TAO/USD"
+      "selected_symbol": "TAO/USD",
+      "sell_price": 230.65,
+      "actual_return": -0.007956989247311804,
+      "evaluation_time": "2026-08-21T21:23:20.765580-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -465415,7 +465423,7 @@
         "mom_roll_std_6": 2.483816955145163
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d227078a041fbc840372473731238f29",
@@ -465429,7 +465437,11 @@
       "sell_time": "2026-08-21T20:55:00-04:00",
       "buy_score": 0.4800266768170642,
       "position_size_pct": 0.05,
-      "selected_symbol": "RENDER/USD"
+      "selected_symbol": "RENDER/USD",
+      "sell_price": 1.5374,
+      "actual_return": 0.0033938128181700126,
+      "evaluation_time": "2026-08-21T21:23:20.765580-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -465727,7 +465739,7 @@
         "mom_roll_std_6": 0.012979124264243407
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "2113c3a10d3738386398f81e2fe55370",
@@ -466053,7 +466065,11 @@
       "sell_time": "2026-08-21T21:21:00-04:00",
       "buy_score": 0.48598472517131136,
       "position_size_pct": 0.05,
-      "selected_symbol": "QNT/USD"
+      "selected_symbol": "QNT/USD",
+      "sell_price": 66.34,
+      "actual_return": -0.005844447774614125,
+      "evaluation_time": "2026-08-21T21:23:20.765580-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -466351,7 +466367,7 @@
         "mom_roll_std_6": 0.2582763377986273
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "1769ff80285c96ecd94f067be8a306a0",
