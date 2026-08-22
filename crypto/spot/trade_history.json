@@ -470501,7 +470501,11 @@
       "sell_time": "2026-08-22T14:22:00-04:00",
       "buy_score": 0.5810506185492639,
       "position_size_pct": 0.05,
-      "selected_symbol": "SHIB/USD"
+      "selected_symbol": "SHIB/USD",
+      "sell_price": 5.55e-06,
+      "actual_return": 0.0036166365280288983,
+      "evaluation_time": "2026-08-22T14:30:41.534558-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -470799,6 +470803,6 @@
         "mom_roll_std_6": 4.189391363909565e-07
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
