@@ -464181,7 +464181,11 @@
       "sell_time": "2026-08-21T22:25:00-04:00",
       "buy_score": 0.4689110886682687,
       "position_size_pct": 0.05,
-      "selected_symbol": "ETHFI/USD"
+      "selected_symbol": "ETHFI/USD",
+      "sell_price": 0.615,
+      "actual_return": -0.011254019292604512,
+      "evaluation_time": "2026-08-21T22:34:31.678934-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -464479,7 +464483,7 @@
         "mom_roll_std_6": 0.011052903087726123
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "15c03f498eedd273693ab796e709f80f",
