@@ -474925,7 +474925,11 @@
       "sell_time": "2026-08-23T11:43:00-04:00",
       "buy_score": 0.6036471562853067,
       "position_size_pct": 0.05,
-      "selected_symbol": "LIGHTER/USD"
+      "selected_symbol": "LIGHTER/USD",
+      "sell_price": 3.336,
+      "actual_return": 0.01583434835566384,
+      "evaluation_time": "2026-08-23T11:57:03.892344-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -475223,7 +475227,7 @@
         "mom_roll_std_6": 0.08235229201424751
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a56b799ca95cd1434b86217d73e81d99",
@@ -477117,7 +477121,11 @@
       "sell_time": "2026-08-23T11:53:00-04:00",
       "buy_score": 0.6295813354637142,
       "position_size_pct": 0.05,
-      "selected_symbol": "ARB/USD"
+      "selected_symbol": "ARB/USD",
+      "sell_price": 0.1028,
+      "actual_return": 0.01181102362204731,
+      "evaluation_time": "2026-08-23T11:57:03.892344-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -477415,7 +477423,7 @@
         "mom_roll_std_6": 0.0016545895765012852
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "ae2be67d7f169c071bb9174702a685f7",
@@ -477429,7 +477437,11 @@
       "sell_time": "2026-08-23T11:41:00-04:00",
       "buy_score": 0.53350384986867,
       "position_size_pct": 0.05,
-      "selected_symbol": "ETHFI/USD"
+      "selected_symbol": "ETHFI/USD",
+      "sell_price": 0.63,
+      "actual_return": -0.006309148264984233,
+      "evaluation_time": "2026-08-23T11:57:03.892344-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -477727,7 +477739,7 @@
         "mom_roll_std_6": 0.024951285872008032
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "473576647f313ea18fac86128953a468",
