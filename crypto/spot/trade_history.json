@@ -474293,7 +474293,11 @@
       "sell_time": "2026-08-23T10:30:00-04:00",
       "buy_score": 0.5217143135538309,
       "position_size_pct": 0.05,
-      "selected_symbol": "LIGHTER/USD"
+      "selected_symbol": "LIGHTER/USD",
+      "sell_price": 3.352,
+      "actual_return": 0.030750307503075062,
+      "evaluation_time": "2026-08-23T11:02:04.909179-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -474591,7 +474595,7 @@
         "mom_roll_std_6": 0.10626711626839183
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "350fa48f7f392de217d866d3c118c01f",
@@ -476169,7 +476173,11 @@
       "sell_time": "2026-08-23T10:29:30-04:00",
       "buy_score": 0.5095882749742598,
       "position_size_pct": 0.05,
-      "selected_symbol": "AAVE/USD"
+      "selected_symbol": "AAVE/USD",
+      "sell_price": 138.41000000000003,
+      "actual_return": -0.004459469179313645,
+      "evaluation_time": "2026-08-23T11:02:04.909179-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -476467,7 +476475,7 @@
         "mom_roll_std_6": 3.309896775832551
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "b84fdb613cb883c9730040299cd66730",
@@ -476793,7 +476801,11 @@
       "sell_time": "2026-08-23T10:59:30-04:00",
       "buy_score": 0.8484259876396175,
       "position_size_pct": 0.05,
-      "selected_symbol": "ARB/USD"
+      "selected_symbol": "ARB/USD",
+      "sell_price": 0.10145,
+      "actual_return": -0.010533502389544501,
+      "evaluation_time": "2026-08-23T11:02:04.909179-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -477091,7 +477103,7 @@
         "mom_roll_std_6": 0.001672240014670945
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "7b456bfa8b4d4d5bab6460dc0b1485a0",
