@@ -479973,7 +479973,11 @@
       "sell_time": "2026-08-23T18:21:30-04:00",
       "buy_score": 0.60800924842354,
       "position_size_pct": 0.05,
-      "selected_symbol": "ASTER/USD"
+      "selected_symbol": "ASTER/USD",
+      "sell_price": 0.68281,
+      "actual_return": -0.006243632659001624,
+      "evaluation_time": "2026-08-23T18:22:22.651657-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -480271,6 +480275,6 @@
         "mom_roll_std_6": 0.012596429123631243
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
