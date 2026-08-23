@@ -472081,7 +472081,11 @@
       "sell_time": "2026-08-22T22:48:00-04:00",
       "buy_score": 0.5842493332345594,
       "position_size_pct": 0.05,
-      "selected_symbol": "PEPE/USD"
+      "selected_symbol": "PEPE/USD",
+      "sell_price": 4.09e-06,
+      "actual_return": -0.012077294685990426,
+      "evaluation_time": "2026-08-22T22:50:18.326291-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -472379,7 +472383,7 @@
         "mom_roll_std_6": 1.0481730137084587e-07
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8929fce575e9a8f730e678dab310637a",
