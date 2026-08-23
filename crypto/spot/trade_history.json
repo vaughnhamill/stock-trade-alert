@@ -478709,7 +478709,11 @@
       "sell_time": "2026-08-23T15:05:00-04:00",
       "buy_score": 0.652045160399167,
       "position_size_pct": 0.05,
-      "selected_symbol": "LIGHTER/USD"
+      "selected_symbol": "LIGHTER/USD",
+      "sell_price": 3.404,
+      "actual_return": 0.0026509572901325176,
+      "evaluation_time": "2026-08-23T15:41:54.958166-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -479007,7 +479011,7 @@
         "mom_roll_std_6": 0.1611294510634226
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "527dbd296d4d149520aee78afeee7d1c",
@@ -479021,7 +479025,11 @@
       "sell_time": "2026-08-23T15:22:00-04:00",
       "buy_score": 0.8512335380042183,
       "position_size_pct": 0.05,
-      "selected_symbol": "TAO/USD"
+      "selected_symbol": "TAO/USD",
+      "sell_price": 237.81,
+      "actual_return": -0.004354197194892159,
+      "evaluation_time": "2026-08-23T15:41:54.958166-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -479319,6 +479327,6 @@
         "mom_roll_std_6": 2.9195867287454735
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
