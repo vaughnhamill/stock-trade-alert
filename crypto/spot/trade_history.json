@@ -478401,7 +478401,11 @@
       "sell_time": "2026-08-23T19:25:00-04:00",
       "buy_score": 0.5249930692000937,
       "position_size_pct": 0.05,
-      "selected_symbol": "MANTLE/USD"
+      "selected_symbol": "MANTLE/USD",
+      "sell_price": 0.5131,
+      "actual_return": -0.005041690905565341,
+      "evaluation_time": "2026-08-23T19:42:23.345390-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -478699,7 +478703,7 @@
         "mom_roll_std_6": 0.0029886451780029907
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "606d26c1ffba053b006f1f6f4d831aee",
