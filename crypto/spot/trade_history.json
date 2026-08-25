@@ -484089,7 +484089,11 @@
       "sell_time": "2026-08-25T11:23:00-04:00",
       "buy_score": 0.6970442382806054,
       "position_size_pct": 0.05,
-      "selected_symbol": "VVV/USD"
+      "selected_symbol": "VVV/USD",
+      "sell_price": 18.075,
+      "actual_return": -5.5321973888095935e-05,
+      "evaluation_time": "2026-08-25T12:05:20.516519-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -484387,6 +484391,6 @@
         "mom_roll_std_6": 0.2199512824847042
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
