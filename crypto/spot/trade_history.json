@@ -480297,7 +480297,11 @@
       "sell_time": "2026-08-24T20:56:30-04:00",
       "buy_score": 0.46570246230333723,
       "position_size_pct": 0.05,
-      "selected_symbol": "XMR/USD"
+      "selected_symbol": "XMR/USD",
+      "sell_price": 440.47,
+      "actual_return": -0.01186737257717149,
+      "evaluation_time": "2026-08-24T21:17:02.821559-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -480595,7 +480599,7 @@
         "mom_roll_std_6": 3.967178678439702
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "f07edf4bf29b01c52cbf57c59c1db290",
@@ -480925,7 +480929,11 @@
       "sell_time": "2026-08-24T20:24:00-04:00",
       "buy_score": 0.5854102930203995,
       "position_size_pct": 0.05,
-      "selected_symbol": "LIGHTER/USD"
+      "selected_symbol": "LIGHTER/USD",
+      "sell_price": 3.383,
+      "actual_return": -0.03563283922462942,
+      "evaluation_time": "2026-08-24T21:17:02.821559-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -481223,7 +481231,7 @@
         "mom_roll_std_6": 0.08405811481746842
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d357413d103ed5935d4912d540c61227",
