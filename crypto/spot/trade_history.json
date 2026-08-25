@@ -483141,7 +483141,11 @@
       "sell_time": "2026-08-25T08:23:00-04:00",
       "buy_score": 0.5063799444291582,
       "position_size_pct": 0.05,
-      "selected_symbol": "RENDER/USD"
+      "selected_symbol": "RENDER/USD",
+      "sell_price": 1.515,
+      "actual_return": -0.030710172744721716,
+      "evaluation_time": "2026-08-25T09:05:15.298331-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -483439,7 +483443,7 @@
         "mom_roll_std_6": 0.04763367156399632
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "6072f2794a893de1bd1415598e74a709",
@@ -483765,7 +483769,11 @@
       "sell_time": "2026-08-25T08:18:00-04:00",
       "buy_score": 0.887079165199901,
       "position_size_pct": 0.05,
-      "selected_symbol": "POL/USD"
+      "selected_symbol": "POL/USD",
+      "sell_price": 0.12304,
+      "actual_return": 0.007286123618501858,
+      "evaluation_time": "2026-08-25T09:05:15.298331-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -484063,6 +484071,6 @@
         "mom_roll_std_6": 0.003309147422927319
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
