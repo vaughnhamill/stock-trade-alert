@@ -485037,7 +485037,11 @@
       "sell_time": "2026-08-25T16:28:00-04:00",
       "buy_score": 0.4527654668996747,
       "position_size_pct": 0.05,
-      "selected_symbol": "PENGU/USD"
+      "selected_symbol": "PENGU/USD",
+      "sell_price": 0.009795,
+      "actual_return": -0.012102874432677792,
+      "evaluation_time": "2026-08-25T16:30:21.884646-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -485335,7 +485339,7 @@
         "mom_roll_std_6": 0.00024922713870416646
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d3aae6743e2ef9cfa458fa00efff5e93",
@@ -485349,7 +485353,11 @@
       "sell_time": "2026-08-25T16:04:00-04:00",
       "buy_score": 0.5031394383619244,
       "position_size_pct": 0.05,
-      "selected_symbol": "PENGU/USD"
+      "selected_symbol": "PENGU/USD",
+      "sell_price": 0.009745,
+      "actual_return": -0.005612244897959132,
+      "evaluation_time": "2026-08-25T16:30:21.884646-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -485647,7 +485655,7 @@
         "mom_roll_std_6": 0.0002578198983786956
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "e8020b74323ed9542bfba252007b9ede",
