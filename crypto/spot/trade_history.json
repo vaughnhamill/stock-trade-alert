@@ -516953,7 +516953,11 @@
       "sell_time": "2026-10-15T21:15:00-04:00",
       "buy_score": 0.5484503423367171,
       "position_size_pct": 0.05,
-      "selected_symbol": "ETHFI/USD"
+      "selected_symbol": "ETHFI/USD",
+      "sell_price": 0.6726,
+      "actual_return": -0.0004458314757023004,
+      "evaluation_time": "2026-10-16T01:33:24.784276-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -517251,7 +517255,7 @@
         "mom_roll_std_6": 0.007141055010758113
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "69a45de6ac2e55b7d9a09fc5026f4c2a",
@@ -517265,7 +517269,11 @@
       "sell_time": "2026-10-15T22:19:30-04:00",
       "buy_score": 0.8477735557710872,
       "position_size_pct": 0.05,
-      "selected_symbol": "FIL/USD"
+      "selected_symbol": "FIL/USD",
+      "sell_price": 1.1555,
+      "actual_return": -0.015758091993185657,
+      "evaluation_time": "2026-10-16T01:33:24.784276-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -517563,7 +517571,7 @@
         "mom_roll_std_6": 0.04231784493567669
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "a65d272d588b4ce3df32d3d6b373635c",
