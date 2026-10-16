@@ -517585,7 +517585,11 @@
       "sell_time": "2026-10-16T02:44:30-04:00",
       "buy_score": 0.47439166462462096,
       "position_size_pct": 0.05,
-      "selected_symbol": "KAS/USD"
+      "selected_symbol": "KAS/USD",
+      "sell_price": 0.03723,
+      "actual_return": 0.010860711376595101,
+      "evaluation_time": "2026-10-16T06:08:50.158243-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -517883,7 +517887,7 @@
         "mom_roll_std_6": 0.00023158151912448967
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "ff28b48ada6cedf0bd77bc007228907f",
