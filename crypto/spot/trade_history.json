@@ -520429,7 +520429,11 @@
       "sell_time": "2026-10-21T12:33:00-04:00",
       "buy_score": 0.5185654251059413,
       "position_size_pct": 0.05,
-      "selected_symbol": "NIGHT/USD"
+      "selected_symbol": "NIGHT/USD",
+      "sell_price": 0.04254,
+      "actual_return": -0.010927691234596564,
+      "evaluation_time": "2026-10-21T16:08:21.879319-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -520727,7 +520731,7 @@
         "mom_roll_std_6": 0.0005179478738251777
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "8504d3b417f659bc11f71f97a3bdd742",
