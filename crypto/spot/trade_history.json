@@ -519797,7 +519797,11 @@
       "sell_time": "2026-10-20T20:59:30-04:00",
       "buy_score": 0.7705874593705466,
       "position_size_pct": 0.05,
-      "selected_symbol": "ZRO/USD"
+      "selected_symbol": "ZRO/USD",
+      "sell_price": 2.0558500000000004,
+      "actual_return": -0.00021883966347293457,
+      "evaluation_time": "2026-10-21T01:47:44.048618-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -520095,7 +520099,7 @@
         "mom_roll_std_6": 0.05251056084255887
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "159311513d36940df2968bfdb21e592b",
@@ -520109,7 +520113,11 @@
       "sell_time": "2026-10-20T21:32:30-04:00",
       "buy_score": 0.8756209472694783,
       "position_size_pct": 0.05,
-      "selected_symbol": "PUMP/USD"
+      "selected_symbol": "PUMP/USD",
+      "sell_price": 0.004833,
+      "actual_return": -0.0073937153419594255,
+      "evaluation_time": "2026-10-21T01:47:44.048618-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -520407,6 +520415,6 @@
         "mom_roll_std_6": 0.00010018466283152341
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
