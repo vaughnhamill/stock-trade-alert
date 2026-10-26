@@ -522009,7 +522009,11 @@
       "sell_time": "2026-10-26T02:15:00-04:00",
       "buy_score": 0.5458249800659362,
       "position_size_pct": 0.05,
-      "selected_symbol": "ENA/USD"
+      "selected_symbol": "ENA/USD",
+      "sell_price": 0.2076,
+      "actual_return": -0.011899095668729187,
+      "evaluation_time": "2026-10-26T08:46:46.197450-04:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -522307,6 +522311,6 @@
         "mom_roll_std_6": 0.0028930376192967096
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
