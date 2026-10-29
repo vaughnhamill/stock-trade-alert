@@ -522641,7 +522641,11 @@
       "sell_time": "2026-10-28T17:01:00-04:00",
       "buy_score": 0.5515996618757837,
       "position_size_pct": 0.05,
-      "selected_symbol": "LTC/USD"
+      "selected_symbol": "LTC/USD",
+      "sell_price": 58.795,
+      "actual_return": 0.0020110094244764065,
+      "evaluation_time": "2026-10-28T20:38:25.332857-04:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -522939,6 +522943,6 @@
         "mom_roll_std_6": 0.4453891182625134
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
