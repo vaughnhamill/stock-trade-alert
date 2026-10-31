@@ -523905,7 +523905,11 @@
       "sell_time": "2026-10-31T19:32:00-04:00",
       "buy_score": 0.5704616842470641,
       "position_size_pct": 0.05,
-      "selected_symbol": "LIGHTER/USD"
+      "selected_symbol": "LIGHTER/USD",
+      "sell_price": 3.174,
+      "actual_return": 0.07922475348520915,
+      "evaluation_time": "2026-10-31T19:47:11.521023-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -524203,7 +524207,7 @@
         "mom_roll_std_6": 0.048603497816516454
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "168d9feabc86e70fe4d706b5de9dfead",
@@ -524217,7 +524221,11 @@
       "sell_time": "2026-10-31T16:53:00-04:00",
       "buy_score": 0.8246690922776861,
       "position_size_pct": 0.05,
-      "selected_symbol": "ZRO/USD"
+      "selected_symbol": "ZRO/USD",
+      "sell_price": 1.8095,
+      "actual_return": 0.008021837223553112,
+      "evaluation_time": "2026-10-31T19:47:11.521023-04:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -524515,6 +524523,6 @@
         "mom_roll_std_6": 0.002871004469983036
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
