@@ -524537,7 +524537,11 @@
       "sell_time": "2026-11-01T01:10:00-04:00",
       "buy_score": 0.8776137904050121,
       "position_size_pct": 0.05,
-      "selected_symbol": "ZRO/USD"
+      "selected_symbol": "ZRO/USD",
+      "sell_price": 1.868,
+      "actual_return": 0.007008086253369339,
+      "evaluation_time": "2026-11-01T06:31:12.843761-05:00",
+      "outcome": "profitable"
     },
     "features": {
       "1m": {
@@ -524835,6 +524839,6 @@
         "mom_roll_std_6": 0.0240970260959031
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
