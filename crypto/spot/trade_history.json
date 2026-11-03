@@ -524853,7 +524853,11 @@
       "sell_time": "2026-11-03T14:00:00-05:00",
       "buy_score": 0.5514957706927989,
       "position_size_pct": 0.05,
-      "selected_symbol": "INJ/USD"
+      "selected_symbol": "INJ/USD",
+      "sell_price": 7.25,
+      "actual_return": -0.017482043637349176,
+      "evaluation_time": "2026-11-03T15:03:18.200071-05:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -525151,6 +525155,6 @@
         "mom_roll_std_6": 0.09602794732090632
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
