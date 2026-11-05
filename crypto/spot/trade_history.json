@@ -525801,7 +525801,11 @@
       "sell_time": "2026-11-05T05:21:30-05:00",
       "buy_score": 0.5190277681108071,
       "position_size_pct": 0.05,
-      "selected_symbol": "BCH/USD"
+      "selected_symbol": "BCH/USD",
+      "sell_price": 287.42499999999995,
+      "actual_return": -0.0013029881862406422,
+      "evaluation_time": "2026-11-05T12:19:45.288181-05:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -526099,6 +526103,6 @@
         "mom_roll_std_6": 5.026041848877372
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
