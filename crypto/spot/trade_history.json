@@ -526433,7 +526433,11 @@
       "sell_time": "2026-11-10T21:23:30-05:00",
       "buy_score": 0.46466435603489953,
       "position_size_pct": 0.05,
-      "selected_symbol": "PYTH/USD"
+      "selected_symbol": "PYTH/USD",
+      "sell_price": 0.066455,
+      "actual_return": -0.01722863058266784,
+      "evaluation_time": "2026-11-11T03:55:20.688392-05:00",
+      "outcome": "loss"
     },
     "features": {
       "1m": {
@@ -526731,6 +526735,6 @@
         "mom_roll_std_6": 0.0011425877063344608
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
