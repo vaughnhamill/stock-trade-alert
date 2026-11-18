@@ -528013,7 +528013,11 @@
       "sell_time": "2026-11-18T00:58:00-05:00",
       "buy_score": 0.5218499972783203,
       "position_size_pct": 0.05,
-      "selected_symbol": "NEAR/USD"
+      "selected_symbol": "NEAR/USD",
+      "sell_price": 3.409,
+      "actual_return": 0.0035325287017957054,
+      "evaluation_time": "2026-11-18T01:54:48.774327-05:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -528311,7 +528315,7 @@
         "mom_roll_std_6": 0.08677422812486685
       }
     },
-    "status": "pending"
+    "status": "completed"
   },
   {
     "trade_id": "d4d259a3358fb8026517843aacabcdbd",
