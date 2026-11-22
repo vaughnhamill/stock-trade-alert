@@ -529909,7 +529909,11 @@
       "sell_time": "2026-11-22T13:00:30-05:00",
       "buy_score": 0.5258965834177632,
       "position_size_pct": 0.05,
-      "selected_symbol": "ETHFI/USD"
+      "selected_symbol": "ETHFI/USD",
+      "sell_price": 0.5036,
+      "actual_return": 0.00358708648864094,
+      "evaluation_time": "2026-11-22T17:47:52.157562-05:00",
+      "outcome": "break_even"
     },
     "features": {
       "1m": {
@@ -530207,6 +530211,6 @@
         "mom_roll_std_6": 0.002780467586575348
       }
     },
-    "status": "pending"
+    "status": "completed"
   }
 ]
